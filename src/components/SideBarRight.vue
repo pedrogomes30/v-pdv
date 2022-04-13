@@ -1,7 +1,8 @@
 <template>
-  <v-navigation-drawer app color="white" right width="400">
+  <v-navigation-drawer app color="white" right width="500">
       <strong class="ml-3">Resumo da venda</strong>
       <v-list subheader two-line class="mt-1">
+          <!-- componentes de vendedor e cliente -->
           <v-list-item>
               <v-list-item-avatar rouded>
                   <v-img src="../assets/defaultUser.jpg" />  
@@ -29,8 +30,9 @@
               </v-list-item-content>
           </v-list-item>
         </v-list>
+        <!-- componente de produtos selecionados -->
       <strong class="ml-3">Produtos selecionados</strong>
-      <v-list subheader two-line  class="mt-1">
+      <v-list subheader two-line overflow:auto  class="mt-1">
           <v-list-item v-for="(produto,i) in produtos" :key="i" active-class="border" :ripple="false">
               <v-list-item-avatar rounded color="grey lighten-4">
                   <v-img v-bind:src="produto.img"></v-img>
@@ -52,9 +54,115 @@
             <strong>R$ {{subtotal}}</strong>
     </v-toolbar>
     <v-toolbar color="rgba(0,0,0,0)" flat>
-        <span>Descontos R${{desconto}}</span>
-            
+        <span>Descontos</span>
+        <v-spacer></v-spacer>
+        <span>R${{desconto}}</span>
     </v-toolbar>
+    <v-divider class="mx-4"></v-divider>
+    <v-toolbar color="rgba(0,0,0,0)" flat>
+        <strong>Total</strong><v-spacer></v-spacer><strong>R$ {{subtotal - desconto}}</strong>
+    </v-toolbar>
+    <strong class="ml-5">Pagamentos</strong>
+    <input v-model="valorPagamento" placeholder="valor pagamento">
+    <v-item-group mandatory class="mt-n1">
+        <v-container>
+            <v-row justify="center">
+                <v-col cols="12" md="4">
+                    <v-item v-slot="{active,toggle}">
+                        <v-card color="#f6efee" :class="active ? 'borderme' : ''" class="d-flex align-center rouded-lg" dark height="70" @click="toggle" flat>
+                            <v-row>
+                                <v-col cols="12" md="12">
+                                    <v-list-item three-line class="text-center mt-1">
+                                        <v-list-item-content>
+                                            <div>
+                                                <v-icon :color="active ? '#d40279' : 'black'"> fas fa-money-bill-wave</v-icon>
+                                            </div>
+                                            <v-list-item-subtitle :class="'black--text'" class="mt-n2 caption">Dinheiro</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-item>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-item v-slot="{active,toggle}">
+                        <v-card color="#f6efee" :class="active ? 'borderme' : ''" class="d-flex align-center rouded-lg" dark height="70" @click="toggle" flat>
+                            <v-row>
+                                <v-col cols="12" md="12">
+                                    <v-list-item three-line class="text-center mt-1">
+                                        <v-list-item-content>
+                                            <div>
+                                                <v-icon :color="active ? '#d40279' : 'black'"> fas fa-credit-card</v-icon>
+                                            </div>
+                                            <v-list-item-subtitle :class="'black--text'" class="mt-n2 caption">Crédito Parcelado</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-item>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-item v-slot="{active,toggle}">
+                        <v-card color="#f6efee" :class="active ? 'borderme' : ''" class="d-flex align-center rouded-lg" dark height="70" @click="toggle" flat>
+                            <v-row>
+                                <v-col cols="12" md="12">
+                                    <v-list-item three-line class="text-center mt-1">
+                                        <v-list-item-content>
+                                            <div>
+                                                <v-icon :color="active ? '#d40279' : 'black'"> fas fa-credit-card</v-icon>
+                                            </div>
+                                            <v-list-item-subtitle :class="'black--text'" class="mt-n2 caption">Crédito à vista</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-item>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-item v-slot="{active,toggle}">
+                        <v-card color="#f6efee" :class="active ? 'borderme' : ''" class="d-flex align-center rouded-lg" dark height="70" @click="toggle" flat>
+                            <v-row>
+                                <v-col cols="12" md="12">
+                                    <v-list-item three-line class="text-center mt-1">
+                                        <v-list-item-content>
+                                            <div>
+                                                <v-icon :color="active ? '#d40279' : 'black'"> fa-regular fa-credit-card</v-icon>
+                                            </div>
+                                            <v-list-item-subtitle :class="'black--text'" class="mt-n2 caption">Débito</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-item>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-item v-slot="{active,toggle}">
+                        <v-card color="#f6efee" :class="active ? 'borderme' : ''" class="d-flex align-center rouded-lg" dark height="70" @click="toggle" flat>
+                            <v-row>
+                                <v-col cols="12" md="12">
+                                    <v-list-item three-line class="text-center mt-1">
+                                        <v-list-item-content>
+                                            <div>
+                                                <v-icon :color="active ? '#d40279' : 'black'"> fa-brands fa-pix</v-icon>
+                                            </div>
+                                            <v-list-item-subtitle :class="'black--text'" class="mt-n2 caption">Pix</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-item>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-item-group>
+    <div class="mx-3 mt-2">
+        <v-btn color="#d40279" block dark class="widthoutupercase">Finalizar</v-btn>
+    </div>
   </v-navigation-drawer>
 </template>
 
@@ -84,6 +192,14 @@ export default {
             quantidade:2,
             img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
            },
+           {
+            id:'2314',
+            descricao:'pó facial ruby rose',
+            valor:5.12,
+            quantidade:2,
+            img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
+           },
+           
         ],
         subtotal:14.00,
         desconto:0,

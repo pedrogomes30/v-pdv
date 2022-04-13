@@ -7,8 +7,8 @@
         <v-list flat class="mt-4">
             <v-list-item-group v-model="selectedItem">
                 <v-list-item v-for="(item,i) in items" :key="i" active-class="border" :ripple="false">
-                    <v-list-item-content v-bind:title="item.text">
-                        <v-icon v-text="item.icon" ></v-icon>
+                    <v-list-item-content v-bind:title="item.text" size="20">
+                        <v-icon  v-text="item.icon" ></v-icon>
                         <v-list-item-subtitle align="center" v-text="item.text" class="mt-3 caption"></v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
