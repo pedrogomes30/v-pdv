@@ -9,6 +9,7 @@
             prepend-inner-icon="mdi-store"
         />
         <v-combobox
+            persistent-hint="selecione o caixa que irá trabalhar"
             v-model="pos"
             :rules="posRules"
             type="text"
@@ -26,14 +27,11 @@ export default {
     name:'LoginFormStore',
     data:()=>({
         snackbar:false,
-        stores:[
-            'LojaA',
-            'LojaB'
-        ],
+        stores:'storeExample', //retorno da loja do usuario
         storeRules:[
             v=>!!v || 'a loja é obrigatória!',
         ],
-        pos:'',
+        pos:['caixa1','caixa2','caixa3'],
         posRules:[
             v=>!!v || 'o caixa é obrigatório!',
         ],

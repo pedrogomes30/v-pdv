@@ -9,10 +9,14 @@
 
 <script>
 import ResumoVenda from '../components/ResumoVenda'
+import {collapsed, toggleSidebar } from '../components/sidebar/state'
 export default {
     components: {
         
         ResumoVenda
+    },
+    setup(){
+      return {collapsed, toggleSidebar}
     },
     
 }

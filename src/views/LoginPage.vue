@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import router from '@/router';
 import LoginFormCredencial from '../components/loginForm/LoginFormCredencial.vue';
 import LoginFormStore from '../components/loginForm/LoginFormStore.vue';
 export default {
@@ -46,15 +47,18 @@ export default {
     methods:{
         submitHandler(){
             if(this.$refs.form.validate()){ 
-                this.loading = true
-                this.btCall = "Login"
-                // momento onde é chamado a api de login do gerenciador
-                setTimeout(()=>{
-                    this.isLogin = true
-                    this.loading = false
-                    this.snackbar = true
-                },3000)
-                
+                if(!this.isLogin){
+                    this.loading = true
+                    this.btCall = "Login"
+                    // momento onde é chamado a api de login do gerenciador
+                    setTimeout(()=>{
+                        this.isLogin = true
+                        this.loading = false
+                        this.snackbar = true
+                    },3000);
+                }else{
+                    router.push('/novidades');
+                }
             }
         },
     },

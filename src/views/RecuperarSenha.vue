@@ -1,6 +1,6 @@
 <template>
     <span>
-        PEDINA NÃO DISPONIVEL
+        PÁGINA NÃO DISPONIVEL
     </span> 
 </template>
 

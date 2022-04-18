@@ -1,14 +1,15 @@
 <template>
   <div>
       <SideMenu />
-      <div :style="noIsLoginPage?{'margin-left': '100px'}:''">
+      <div :style="noIsLoginPage?{'margin-left': sidebarWidth}:''">
         <router-view/>
       </div>
   </div>
 </template>
 
 <script>
-  
+  import SideBar from './components/sidebar/SideMenu.vue';
+  import {sidebarWidth} from './components/sidebar/state'
 
 export default {
   name: 'App',
@@ -18,8 +19,11 @@ export default {
     }
   },
   component:{
+    SideBar,
     }, 
-  
+  setup(){
+    return {sidebarWidth}
+  },
   
   data: () => ({
     //

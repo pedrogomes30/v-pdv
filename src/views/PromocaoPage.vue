@@ -1,6 +1,5 @@
 <template>
 <v-app :style="{background: $vuetify.theme.themes.dark.background}">
-  <SideMenu />
   <n-main>
    
   </n-main>
@@ -8,14 +7,12 @@
 </template>
 
 <script>
-  import SideMenu from '../components/sidebar/SideMenu'
   
 
   export default {
     name: 'PromocaoPage',
 
     components: {
-      SideMenu,
     },
   }
 </script>
