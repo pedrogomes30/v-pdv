@@ -12,7 +12,7 @@ export default new Vuetify({
     theme:{
         themes:{
             dark:{
-                background:'#EEEEEE'
+                background:'#301228'
             }
         }
     }
