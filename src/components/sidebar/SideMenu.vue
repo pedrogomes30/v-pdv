@@ -1,76 +1,92 @@
 <template>
-  <div class="sidebar" :style="{width: sidebarWisth}">
-        <div v-if="collapsed">
-            <v-avatar class="d-block text-center mx-auto mt-4" size="36">
-                <v-img src="../../assets/defaultUser.jpg" />
-            </v-avatar>
-        </div>
-        <div v-else>
-            <v-avatar class="d-block text-center mx-auto mt-4" size="56">
-                <v-img src="../../assets/defaultUser.jpg" />
-            </v-avatar>
-        </div>
-        <SidebarMenuLink to="/novidades" icon="fas fa-newspaper">Novidades</SidebarMenuLink>
-        <SidebarMenuLink to="/caixa" icon="fas fa-cart-plus">Novidades</SidebarMenuLink>
-        <SidebarMenuLink to="/historico" icon="fas fa-history">Novidades</SidebarMenuLink>
-        <SidebarMenuLink to="/fechamentoCaixa" icon="mdi-cart-check">Novidades</SidebarMenuLink>
-        <SidebarMenuLink to="/clientes" icon="fas fa-users">Novidades</SidebarMenuLink>
-        <SidebarMenuLink to="/promocao" icon="fas fa-percent">Novidades</SidebarMenuLink>
-        <SidebarMenuLink to="/configuracao" icon="fas fa-cog">Novidades</SidebarMenuLink>
-        <span class="collapse-icon" :class="{'rotate-180':collapsed}" @click="toggleSidebar">
-            <i class="fas da-angle-double-left"></i>
-        </span>
+     <v-card>
+    <v-navigation-drawer
+      v-model="drawer"
+      :mini-variant.sync="mini"
+      permanent
+      app
+    >
+      <v-list-item class="px-2">
+        <v-list-item-avatar>
+          <v-img src="../../assets/defaultUser.jpg"></v-img>
+        </v-list-item-avatar>
 
-  </div>
+        <v-list-item-title>{{user}}</v-list-item-title>
+
+        <v-btn
+          icon
+          @click.stop="mini = !mini"
+        >
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link
+          :to="item.link"
+          color="#ED0280"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    <div class="logout">
+        <v-list dense>
+            <v-list-item to="/">
+                <v-list-item-icon>
+                    <v-icon title="Deslogar">fas fa-sign-out-alt</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                    <v-list-item-title>Deslogar</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
+    </div>
+    </v-navigation-drawer>
+  </v-card>
 </template>
 
 <script>
-import {collapsed, toggleSidebar, sidebarWidth} from './state'
-import {SideMenuLink} from './SideMenuLink.vue'
 export default {
-    props:{
-        components: {SideMenuLink},
-    },
+    name:"SideMenu",
+    props:{},
     setup(){
-        return {collapsed,toggleSidebar,sidebarWidth}
-    },
+        
+        },
+    data:()=>({
+        selectedItem: 0,
+        drawer: true,
+        mini: true,
+        user: 'Admin',
+        userImg: '../../assets/defaultUser.jpg',
+        items: [
+            {icon:'fas fa-newspaper',title:'Novidades',link:'novidades'},
+            {icon:'fas fa-cart-plus',title:'Caixa',link:'caixa'},
+            {icon:'fas fa-history',title:'Histórico',link:'historico'},
+            {icon:'mdi-cart-check',title:'Fechamento',link:'fechamentoCaixa'},
+            {icon:'fas fa-users',title:'Clientes',link:'clientes'},
+            {icon:'fas fa-percent',title:'Promoções', link:'promocao'},
+            {icon:'fas fa-cog',title:'Configurações',link:'configuracao'},
+        ],
+    })
 }
 </script>
 
 <style>
-:root{
-    --sidebar-bg-color: #4A1C35;
-    --sidebar-item-hover: #ED0280;
-    --sidebar-item-active: #FF4FAD;
-}
-</style>
-<style scoped>
-.sidebar{
-    color:white;
-    background-color: var(--sidebar-bg-color);
 
-    float:left;
-    position:fixed;
-    z-index:1;
-    top:0;
-    left:0;
-    bottom:0;
-    padding:0.5em;
-
-    transition: 0.3s ease;
-
-    display:flex;
-    flex-direction: column;
-}
-;collapsed-icon{
-    position:absolute;
-    bottom:0;
-    padding:0.75em;
-    color:white;
-    transition:0.2s linear;
-}
-.rotate-180{
-    transform: rotate(180deg);
-    transition: 0.2s linear;
+.logout{
+    position: absolute;
+    bottom:20px; 
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

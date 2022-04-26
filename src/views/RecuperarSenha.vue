@@ -1,15 +1,16 @@
 <template>
-    <span>
-        PÁGINA NÃO DISPONIVEL
-    </span> 
+<v-app :style="{background: $vuetify.theme.themes.dark.background}">
+  <h1>PAGINA NÃO DISPONIVEL</h1>
+</v-app>
 </template>
 
 <script>
-export default {
+  
 
-}
+  export default {
+    name: 'NewsPage',
+
+    components: {
+    },
+  }
 </script>
-
-<style>
-
-</style>

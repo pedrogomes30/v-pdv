@@ -1,11 +1,11 @@
 <template>
-  <v-navigation-drawer app color="white" right width="500">
+  <v-navigation-drawer app color="white" right width="25%">
       <strong class="ml-3">Resumo da venda</strong>
       <v-list subheader two-line class="mt-1">
           <!-- componentes de vendedor e cliente -->
           <v-list-item>
               <v-list-item-avatar rouded>
-                  <v-img src="../assets/defaultUser.jpg" />  
+                  <v-img src="../../assets/defaultUser.jpg" />  
               </v-list-item-avatar>
               <v-list-item-content>
                   <v-list-item-subtitle>{{cliente.tipo}}
@@ -18,7 +18,7 @@
           </v-list-item>
           <v-list-item>
               <v-list-item-avatar rouded>
-                  <v-img src="../assets/defaultUser.jpg" /> 
+                  <v-img src="../../assets/defaultUser.jpg" /> 
               </v-list-item-avatar>
               <v-list-item-content>
                   <v-list-item-subtitle>{{vendedor.tipo}}</v-list-item-subtitle>
@@ -33,7 +33,7 @@
         <!-- componente de produtos selecionados -->
       <strong class="ml-3">Produtos selecionados</strong>
       <v-list subheader two-line overflow:auto  class="mt-1">
-       <v-virtual-scroll :bench="benched" :items="items" height="300" item-height="64" >
+       <v-virtual-scroll :bench="benched" :items="produtos" height="300" item-height="64" >
             <template v-slot:default="{produto}">
                     <v-list-item :key="produto">
                     <v-list-item-avatar rounded color="grey lighten-4">
@@ -67,7 +67,7 @@
         <strong>Total</strong><v-spacer></v-spacer><strong>R$ {{subtotal - desconto}}</strong>
     </v-toolbar>
     <strong class="ml-5">Pagamentos</strong>
-    <input v-model="valorPagamento" placeholder="valor pagamento">
+    <input  placeholder="valor pagamento">
     <v-item-group mandatory class="mt-n1">
         <v-container>
             <v-row justify="center">
@@ -203,10 +203,52 @@ export default {
             quantidade:2,
             img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
            },
-           
+           {
+            id:'2314',
+            descricao:'pó facial ruby rose',
+            valor:5.12,
+            quantidade:2,
+            img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
+           },
+           {
+            id:'2314',
+            descricao:'pó facial ruby rose',
+            valor:5.12,
+            quantidade:2,
+            img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
+           },
+           {
+            id:'2314',
+            descricao:'pó facial ruby rose',
+            valor:5.12,
+            quantidade:2,
+            img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
+           },
+           {
+            id:'2314',
+            descricao:'pó facial ruby rose',
+            valor:5.12,
+            quantidade:2,
+            img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
+           },
+           {
+            id:'2314',
+            descricao:'pó facial ruby rose',
+            valor:5.12,
+            quantidade:2,
+            img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
+           },
+           {
+            id:'2314',
+            descricao:'pó facial ruby rose',
+            valor:5.12,
+            quantidade:2,
+            img:'https://fashionbiju.vteximg.com.br/arquivos/ids/163772-800-800/IMG_8185-Editar.jpg?v=637285161415870000'
+           },
         ],
         subtotal:14.00,
         desconto:0,
+        benched:1,
         pagamentos:[{
             dinheiro:14.00,
             cartaoCredito:10.00,

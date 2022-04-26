@@ -1,8 +1,8 @@
 <template>
 <v-app :style="{background: $vuetify.theme.themes.dark.background}">
-  <n-main>
-   
-  </n-main>
+  <v-main>
+    <h1>PROMOCAO PAGINA</h1>
+  </v-main>
 </v-app>
 </template>
 

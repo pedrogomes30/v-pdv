@@ -1,37 +1,50 @@
 <template>
-  <div>
-      <SideMenu />
-      <div :style="noIsLoginPage?{'margin-left': sidebarWidth}:''">
+  <v-app>
+    <v-main v-if="noIsLoginPage">
+        <SideMenu />
         <router-view/>
-      </div>
-  </div>
+    </v-main>
+    <v-main v-else>
+      <LoginPage />
+    </v-main>
+
+  </v-app>
 </template>
 
 <script>
-  import SideBar from './components/sidebar/SideMenu.vue';
-  import {sidebarWidth} from './components/sidebar/state'
-
+  import SideMenu from './components/sidebar/SideMenu.vue';
+  import LoginPage from './views/LoginPage.vue'
 export default {
-  name: 'App',
+  name: "App",
   computed:{
     noIsLoginPage(){
       return this.$route.name !== "login"
     }
   },
-  component:{
-    SideBar,
+  components:{
+    SideMenu,
+    LoginPage,
     }, 
   setup(){
-    return {sidebarWidth}
+    
   },
   
   data: () => ({
-    //
+    
   }),
 };
 </script>
 <style >
 a { text-decoration: none; }
-
+:root{
+    --primary:#ED0280;
+    --secondary: #FF4FAD;
+    --accent:#4A1C35;
+    --backgroundLight: #ffc9fd;
+    
+}
+.v-main{
+  width: 100%;
+}
 
 </style>

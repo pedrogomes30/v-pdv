@@ -1,21 +1,28 @@
-// import axios from 'axios';
-// const state = {
-//     user: null,
-//     posts: null,
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-// };
-// const getters = {
+Vue.use(Vuex)
 
-// };
-// const actions = {
+const state = {
+    userName: '',
+    loginUser:'',
+    register:'',
+    store: '',
+    tokenSession:'',
+    tokenEnd:'',
+};
+const getters = {
 
-// };
-// const mutations = {
+};
+const actions = {
 
-// };
-// export default {
-//   state,
-//   getters,
-//   actions,
-//   mutations
-// };
+};
+const mutations = {
+
+};
+export default {
+  state,
+  getters,
+  actions,
+  mutations
+};

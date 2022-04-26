@@ -18,8 +18,7 @@
             :append-icon="passwordShow?'mdi-eye':'mdi-eye-off'"
             @click:append="passwordShow=!passwordShow"
         />
-        <v-row align="center">
-            <v-switch label="Lembrar-me" color="#d40279" ></v-switch>
+        <v-row align="center">            
             <a href="/passRecover" class="pa-4"> Recuperar senha</a>
         </v-row>
     </v-card-text>

@@ -9,7 +9,6 @@
                         </v-avatar>
                         <h2>V-PDV LOGIN</h2>
                     </div>
-
                     <v-form @submit.prevent="submitHandler" ref="form" >
                         <div v-if="isLogin">
                             <LoginFormStore/>

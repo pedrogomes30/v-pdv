@@ -1,9 +1,9 @@
 <template>
 <v-app :style="{background: $vuetify.theme.themes.dark.background}">
   
-  <n-main>
+  <v-main>
    
-  </n-main>
+  </v-main>
 </v-app>
 </template>
 

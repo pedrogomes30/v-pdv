@@ -6,10 +6,14 @@ import vuetify from './plugins/vuetify'
 import axios from 'axios'
 
 
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.GERENCIADOR_URL;
 
 Vue.config.productionTip = false
+
+
+
 
 new Vue({
   router,
