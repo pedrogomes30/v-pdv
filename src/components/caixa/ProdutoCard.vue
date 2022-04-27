@@ -1,6 +1,6 @@
 <template>
     <!-- PRODUTOS -->
-    <v-card elevation="0" id="productCard" permanent min-height="700">
+    <v-card elevation="0" id="productCard" permanent min-height="100%">
     <v-card-title>Produtos<v-spacer></v-spacer>
         <v-text-field
         v-model="search"
@@ -16,8 +16,7 @@
     <v-data-table
         :headers="header"
         :items="produtos"
-        :search="search"
-        calculate-widths
+        :search="search"        
         dense
         :items-per-page="20"
         @click:row="productSelect">
@@ -27,9 +26,9 @@
                 <v-icon right color="pink" size="15">fa fa-box</v-icon>
             </td>
             <td>{{row.item.SKU}}</td>
-            <td>{{row.item.descricao}}</td>
+            <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
             <td>{{row.item.categoria_produto}}</td>
-            <td>{{row.item.total}}</td>
+            <td >{{noPrice(row.item.preco)}}</td>
             </tr>
         </template>
     </v-data-table>
@@ -53,7 +52,6 @@ export default {
         return {
            search: '',
            header:[
-               {},
                {
                  text: 'Sku',
                  align: 'start',
@@ -75,6 +73,9 @@ export default {
             search = this.produtos[exists]
             this.$store.dispatch('includeItensSelecionados',search)   
             this.search = ''
+        },
+        noPrice(price){
+            return typeof price !== 'undefined' ? price:1
         }
     }
 }

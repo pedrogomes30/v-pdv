@@ -27,18 +27,12 @@ const actions = {
             resolve(produto)
         })
     },
-    removeItensSelecionados({commit},produto){
+    qtdItensSelecionados({commit},produto){
         return new Promise(resolve =>{
-            commit('removeItensSelecionados',produto)
+            commit('qtdItensSelecionados',produto)
             resolve(produto)
         })
-    },
-    addItensSelecionados({commit},produto){
-        return new Promise(resolve =>{
-            commit('addItensSelecionados',produto)
-            resolve(produto)
-        })
-    },
+    },    
     quicksearch({commit},search){
         return new Promise(resolve =>{
             commit('quicksearch',search)
@@ -59,28 +53,15 @@ const mutations = {
             state.qtdItens ++
         }
     },
-    removeItensSelecionados(state, produto){
+    qtdItensSelecionados(state, produto){
         let exists = state.itensSelecionados.findIndex(x => x.SKU === produto.SKU);
-        console.log('qtdProdutos -> ',state.qtdItens)
-        if(state.itensSelecionados-- === 0 ){
-            //state.itensSelecionados.delete(exists)
-            state.qtdItens --
+        if(produto.quantidade <= 0 ){
+            state.itensSelecionados.pop(exists)
+            state.qtdItens--
         }else{
-            state.itensSelecionados[exists].quantidade--
+            state.itensSelecionados[exists].quantidade = produto.quantidade
         }
-    },
-    addItensSelecionados(state, produto){
-        let exists = state.itensSelecionados.findIndex(x => x.SKU === produto.SKU);
-        console.log('qtdProdutos -> ',state.qtdItens)
-        if(state.itensSelecionados-- === 0 ){
-            //state.itensSelecionados.delete(exists)
-            state.qtdItens --
-        }else{
-            state.itensSelecionados[exists].quantidade--
-        }
-    },
-    
-    
+    },    
 };
 const getters = {
 

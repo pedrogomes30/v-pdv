@@ -4,13 +4,16 @@
       <v-col cols='12' no-gutters>
 
       <v-row no-gutters >
-        <v-col cols='8' >
+        <v-col cols='6' >
           <ProdutosCard />
         </v-col>
         <!-- CLIENTE E VENDEDOR -->
-        <v-col cols='4'>
+        <v-col cols='6'>
           <ClienteVendedorCard />
+          
+        <div id='produtosSelecionados' >
           <ProdutoSelecionadoCard  />
+        </div>
           <!-- Pagamentos -->
           <div id='pagamentoRealizado'>
             <v-card min-height="100">
@@ -131,8 +134,7 @@ export default {
 }
 </script>
 
-<style >
-
+<style>
 #caixaBasePage{
   min-height:70%;
   min-width: 98%;
@@ -158,5 +160,10 @@ export default {
 #totalizador{
   margin-left: 1%;
   margin-top: 1%;
+}
+#produtosSelecionados{
+  margin-left: 1%;
+  margin-top: 1%;
+  max-height: 100%;
 }
 </style>

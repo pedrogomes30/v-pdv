@@ -1,13 +1,12 @@
 <template>
     <!-- PRODUTOS DA SELECIONADOS DA VENDA -->
-    <div id='produtosSelecionados' >
-        <v-card min-height="600">
+        <v-card min-height="100%" max-height="100%">
         <v-card-subtitle>Produtos da Venda</v-card-subtitle>
         <v-data-table
         :headers="header"
         :items="itensSelecionados"
         disable-filtering
-        calculate-widths
+        
         :hiddenheader="(qtdItens<=10)?'hide-default-header':''"
         :hiddenfooter="(qtdItens<=10)?'hide-default-footer':''"
         
@@ -16,29 +15,30 @@
         >
         <template v-slot:item="row">
             <tr>
-            <td>{{row.item.sku}}</td>
-            <td>{{row.item.descricao}}</td>
+            <td>
+                <v-icon size="10" color="red" @click="qtdSub(row,false)" >fa fa-xmark</v-icon>
+            </td>
+            <td>
+                {{row.item.SKU}}
+            </td>
+            <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
+            <td>
+                <v-card id="microButtons">
+                    <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
+                    {{row.item.quantidade}}
+                    <v-icon size="10" color="red" @click="qtdSub(row,true)" >fa fa-minus</v-icon>
+                </v-card>
+            </td>
             <td>{{row.item.valor}}</td>
-            <td>  
-                <v-icon size="10" color="red" @click="qtdSub(row)" >fa fa-minus</v-icon>
-            </td>
-            <td>{{row.item.quantidade}}</td>
-            <td>  
-                <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
-            </td>
             <td>{{row.item.total}}</td>
             </tr>
         </template>
         </v-data-table>          
         </v-card>
-    </div>
 </template>
 <script>
 export default {
     name: 'ProdutoSelecionadoCard',
-    props:{
-        
-    },
     computed:{
       itensSelecionados(){
           return this.$store.state.caixa.itensSelecionados
@@ -50,6 +50,7 @@ export default {
     data:()=>{
         return{
             header:[
+                {},
                 {
                     text: 'ID',
                     align: 'start',
@@ -57,21 +58,21 @@ export default {
                     value: 'id',
                 },
                 { text: 'Descricao', value: 'descricao' },
-                { text: 'variacao', value: 'desc_variacao' },
-                { text: 'referencia', value: 'referencia' },
-                { text: 'cod. barras', value: 'cod_barras' },
+                { text: 'quantidade', value: 'quantidade' },
+                { text: 'valor(R$)', value: 'valor' },
+                { text: 'total', value: 'Total' },
             ],
 
         }
     },
     methods:{
         qtdAdd(produto){
-            console.log("ADICIONAR",produto.item)
-            this.$store.dispatch('addItensSelecionados',produto.item)
+            produto.item.quantidade++
+            this.$store.dispatch('qtdItensSelecionados',produto.item)
         },
-        qtdSub(produto){
-            console.log("MENOS",produto.item)
-            this.$store.dispatch('removeItensSelecionados',produto.item)
+        qtdSub(produto,removes){
+            produto.item.quantidade = removes ? produto.item.quantidade -1 : 0
+            this.$store.dispatch('qtdItensSelecionados',produto.item)
         }
     }
 }
@@ -80,5 +81,13 @@ export default {
 #produtosSelecionados{
   margin-left: 1%;
   margin-top: 1%;
+}
+#microButtons{
+  display: flex;
+  align-content:space-between ;
+  justify-content: center;
+}
+#microButtons .v-icon{
+  padding:5px;
 }
 </style>
