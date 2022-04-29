@@ -1,5 +1,4 @@
 <template>
-     <v-card>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant.sync="mini"
@@ -52,7 +51,6 @@
         </v-list>
     </div>
     </v-navigation-drawer>
-  </v-card>
 </template>
 
 <script>
@@ -77,7 +75,9 @@ export default {
             {icon:'fas fa-percent',title:'Promoções', link:'promocao'},
             {icon:'fas fa-cog',title:'Configurações',link:'configuracao'},
         ],
-    })
+    }),
+    methods:
+    
 }
 </script>
 
