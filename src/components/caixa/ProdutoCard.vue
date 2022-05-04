@@ -1,37 +1,44 @@
 <template>
     <!-- PRODUTOS -->
-    <v-card elevation="0" id="productCard" permanent min-height="100%">
-    <v-card-title>Produtos<v-spacer></v-spacer>
-        <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="procurar..."
-        single-line
-        hide-details
-        dense
-        autofocus
-        @keyup.enter="searchProduct(search)">
-        ></v-text-field>
-    </v-card-title>
-    <v-data-table
-        :headers="header"
-        :items="produtos"
-        :search="search"        
-        dense
-        :items-per-page="20"
-        @click:row="productSelect">
-        <template v-slot:items="row">
-            <tr>
-            <td>
-                <v-icon right color="pink" size="15">fa fa-box</v-icon>
-            </td>
-            <td>{{row.item.SKU}}</td>
-            <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
-            <td>{{row.item.categoria_produto}}</td>
-            <td >{{noPrice(row.item.preco)}}</td>
-            </tr>
-        </template>
-    </v-data-table>
+    <v-card elevation="0" id="productCard"  >
+        <v-card-title>
+            <v-list-item-avatar rouded color="var(--primary">
+                <v-icon color="white"> fa fa-boxes</v-icon>
+            </v-list-item-avatar>
+            Produtos
+            <v-spacer></v-spacer>
+            <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="procurar..."
+            single-line
+            dense
+            autofocus
+            @keyup.enter="searchProduct(search)">
+            ></v-text-field>
+        </v-card-title>
+        <v-data-table   
+            :headers="header"
+            :items="produtos"
+            :search="search" 
+            fixed-header
+            calculate-widths    
+            dense
+            :items-per-page="50"
+            @click:row="productSelect"
+            id="scroll-produtos"
+            style="max-height: 65vh;min-height: 65vh; "
+            class="overflow-y-auto"
+            >
+            <template  v-slot:items="row" >
+                <tr>
+                    <td><h6>{{row.item.SKU}}</h6></td>
+                    <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
+                    <td>{{row.item.categoria_produto}}</td>
+                    <td >{{noPrice(row.item.preco)}}</td>
+                </tr>
+            </template>
+        </v-data-table>
     </v-card>
 </template>
 
@@ -52,12 +59,7 @@ export default {
         return {
            search: '',
            header:[
-               {
-                 text: 'Sku',
-                 align: 'start',
-                 sortable: false,
-                 value: 'SKU',
-               },
+               { text: 'Sku',align: 'start',sortable: false,value: 'SKU'},
                { text: 'Descricao', value: 'descricao' },
                { text: 'Categoria', value: 'categoria_produto' },
                { text: 'Preco(R$)', value: 'preco' },
@@ -84,9 +86,5 @@ export default {
 
 <style>
 #productCard{
-  padding: 0.5%;
-  min-height:100% important;
-  min-width:100% important;
-  background-color: white;
 }
 </style>

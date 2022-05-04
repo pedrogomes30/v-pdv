@@ -9,7 +9,7 @@ const state = {
     register:'',
     store: '',
     tokenSession:'',
-    tokenEnd:'',
+    tokenEnd:'',//datetimeends
 };
 const getters = {
 

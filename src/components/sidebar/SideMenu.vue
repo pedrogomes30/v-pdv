@@ -1,9 +1,13 @@
 <template>
     <v-navigation-drawer
+      id=''
+      style="border-radius:5px;margin:0.3%; max-height:98vh"
       v-model="drawer"
       :mini-variant.sync="mini"
       permanent
       app
+      floating
+      color=0
     >
       <v-list-item class="px-2">
         <v-list-item-avatar>
@@ -29,6 +33,7 @@
           link
           :to="item.link"
           color="#ED0280"
+          @click='onCloseMenu'
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -65,6 +70,8 @@ export default {
         drawer: true,
         mini: true,
         user: 'Admin',
+        closeMenu: false,
+        time:0,
         userImg: '../../assets/defaultUser.jpg',
         items: [
             {icon:'fas fa-newspaper',title:'Novidades',link:'novidades'},
@@ -77,10 +84,20 @@ export default {
         ],
     }),
     methods:{
-      onCloseMenu(){
-        async=
+      async  onCloseMenu() {
+        this.time = 3000
+        if(!this.closeMenu){
+          this.closeMenu = true
+          await setTimeout(() => {
+            this.mini = true
+            this.closeMenu = false
+          }, this.time);
+        }
+        console.log(this.time)
       }
-    }
+
+    },
+    
     
 }
 </script>
@@ -89,8 +106,13 @@ export default {
 
 .logout{
     position: absolute;
-    bottom:20px; 
+    bottom:2vh; 
     margin-left: auto;
     margin-right: auto;
+}
+#menu{
+  border-radius: 5px;
+  margin: 0.30%;
+  max-height: 98vh;
 }
 </style>

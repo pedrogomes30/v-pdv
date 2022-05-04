@@ -1,39 +1,62 @@
 <template>
     <!-- PRODUTOS DA SELECIONADOS DA VENDA -->
-        <v-card min-height="100%" max-height="100%">
-        <v-card-subtitle>Produtos da Venda</v-card-subtitle>
-        <v-data-table
-        :headers="header"
-        :items="itensSelecionados"
-        disable-filtering
-        
-        :hiddenheader="(qtdItens<=10)?'hide-default-header':''"
-        :hiddenfooter="(qtdItens<=10)?'hide-default-footer':''"
-        
-        dense
-        :items-per-page="10"
-        >
-        <template v-slot:item="row">
-            <tr>
-            <td>
-                <v-icon size="10" color="red" @click="qtdSub(row,false)" >fa fa-xmark</v-icon>
-            </td>
-            <td>
-                {{row.item.SKU}}
-            </td>
-            <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
-            <td>
-                <v-card id="microButtons">
-                    <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
-                    {{row.item.quantidade}}
-                    <v-icon size="10" color="red" @click="qtdSub(row,true)" >fa fa-minus</v-icon>
-                </v-card>
-            </td>
-            <td>{{row.item.valor}}</td>
-            <td>{{row.item.total}}</td>
-            </tr>
-        </template>
-        </v-data-table>          
+        <v-card >
+            <v-card-title>
+                <v-list-item-avatar rouded color="var(--primary">
+                    <v-icon color="white"> fa fa-cart-shopping</v-icon>
+                </v-list-item-avatar>
+                Carrinho
+                <v-spacer></v-spacer>
+            </v-card-title>
+            <v-card-subtitle>
+                <v-row no-gutters>
+                    <v-icon size='20'  color="var(--primary)"> fa fa-equals</v-icon>
+                    Total {{valueFormat(valorProdutos)}}
+                    <v-spacer></v-spacer>
+                    <v-icon  
+                        color="red" 
+                        title="esvaziar carrinho"
+                        @click="cleanCart">fa fa-xmark</v-icon>
+                </v-row>
+            </v-card-subtitle>
+            <div>
+                <v-data-table
+                
+                :items="itensSelecionados"
+                disable-filtering
+                fixed-header
+                calculate-widths
+                dense
+                hide-default-footer
+                :items-per-page="-1"
+                id="scroll-cart"
+                style="height: 52vh;padding-left:3px;padding-right:3px "
+                class="overflow-y-auto"
+                >
+                <template v-slot:item="row">
+                    <tr >
+                        <td >
+                            <v-icon size="15" color="red" @click="removeItem(row)" >fa fa-xmark </v-icon>
+                        </td>
+                        <td class='pa-0'> 
+                            {{row.item.SKU}}   
+                        </td>
+                        <td>{{row.item.descricao}}</td>
+                        <td>
+                            <v-container class='pa-0' id="microButtons">
+                                <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
+                                {{row.item.quantidade}} 
+                                <v-icon size="10" color="red" @click="qtdSub(row)" >fa fa-minus</v-icon>
+                            </v-container>
+                        </td>
+                        <td>
+                            {{valueFormat(row.item.valor)}}
+                            <b>{{valueFormat(row.item.total)}}</b>
+                        </td>                    
+                    </tr>
+                </template>
+                </v-data-table>  
+            </div>
         </v-card>
 </template>
 <script>
@@ -43,25 +66,14 @@ export default {
       itensSelecionados(){
           return this.$store.state.caixa.itensSelecionados
       },
-      qtdItens(){
-          return this.$store.state.caixa.qtdItens
+      valorProdutos(){
+          return this.$store.state.caixa.valorProdutos
       },
+     
     },
     data:()=>{
         return{
-            header:[
-                {},
-                {
-                    text: 'ID',
-                    align: 'start',
-                    sortable: false,
-                    value: 'id',
-                },
-                { text: 'Descricao', value: 'descricao' },
-                { text: 'quantidade', value: 'quantidade' },
-                { text: 'valor(R$)', value: 'valor' },
-                { text: 'total', value: 'Total' },
-            ],
+            
 
         }
     },
@@ -70,18 +82,28 @@ export default {
             produto.item.quantidade++
             this.$store.dispatch('qtdItensSelecionados',produto.item)
         },
-        qtdSub(produto,removes){
-            produto.item.quantidade = removes ? produto.item.quantidade -1 : 0
-            this.$store.dispatch('qtdItensSelecionados',produto.item)
-        }
+        qtdSub(produto){
+            produto.item.quantidade--
+            if((produto.item.quantidade) <= 0){
+                this.$store.dispatch('removeItensSelecionados',produto.item)
+            }else{
+                this.$store.dispatch('qtdItensSelecionados',produto.item)
+            }
+        },
+        removeItem(produto){
+            this.$store.dispatch('removeItensSelecionados',produto.item)
+        },
+        cleanCart(){    
+            this.$store.dispatch('cleanCart')
+        },
+        valueFormat(value){
+            return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        },
     }
 }
 </script>
 <style>
-#produtosSelecionados{
-  margin-left: 1%;
-  margin-top: 1%;
-}
+
 #microButtons{
   display: flex;
   align-content:space-between ;

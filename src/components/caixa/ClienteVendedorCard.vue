@@ -1,59 +1,42 @@
 <template>
-    <div id='clienteVendedor'>
-            <v-card>
-              <v-list-item>
-                <v-list-item-avatar rouded>
-                    <v-img src="../../assets/defaultUser.jpg" />  
-                </v-list-item-avatar>
-                <v-list-item-content>
-                    <v-list-item-subtitle>{{}}
-                        <v-btn plain small icon>
-                          <v-icon right>mdi-pencil</v-icon>
-                        </v-btn>
-                      </v-list-item-subtitle>
-                    <v-list-item-title>{{}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                  <v-list-item-avatar rouded>
-                      <v-img src="../../assets/defaultUser.jpg" />  
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                      <v-list-item-subtitle>{{}}
-                          <v-btn plain small icon>
-                            <v-icon right>mdi-pencil</v-icon>
-                          </v-btn>
-                        </v-list-item-subtitle>
-                      <v-list-item-title>{{}}</v-list-item-title>
-                  </v-list-item-content>
-              </v-list-item>
-            </v-card>
-          </div>
+    
+      <v-list-item>
+        <v-list-item-avatar rouded color="white">
+            <v-img src="../../assets/defaultUser.jpg" />  
+        </v-list-item-avatar>
+        <v-list-item-content>
+            <v-list-item-subtitle class="white--text">{{cliente.tipo}}
+                <v-btn plain small icon>
+                  <v-icon color="white" right>mdi-pencil</v-icon>
+                </v-btn>
+              </v-list-item-subtitle>
+            <v-list-item-title class="white--text" >{{cliente.nome}}</v-list-item-title>
+        </v-list-item-content>
+        
+        <v-list-item-avatar color="white" rouded>
+              <v-img src="../../assets/defaultUser.jpg" />  
+          </v-list-item-avatar>
+          <v-list-item-content>
+              <v-list-item-subtitle class="white--text">{{vendedor.tipo}}
+                  <v-btn plain small icon>
+                    <v-icon right color="white">mdi-pencil</v-icon>
+                  </v-btn>
+                </v-list-item-subtitle>
+              <v-list-item-title class="white--text">{{vendedor.nome}}</v-list-item-title>
+          </v-list-item-content>
+      </v-list-item>      
 </template>
 <script>
 export default {
     name:'ClienteVendedorCard',
-    props:{
-        
-    },
-      computed:{
-         cliente:{
-          set(){
-            
-          },
-          get(){
-            return '';
-          }
-        },
-        vendedor:{
-          set(){
-  
-          },
-          get(){
-            return '';
-          }
-        }
+    computed:{
+      cliente(){
+        return this.$store.state.pessoa.cliente
       },
+      vendedor(){
+        return this.$store.state.pessoa.vendedor
+      },
+    },
     data: ()=>({
         
     }),
