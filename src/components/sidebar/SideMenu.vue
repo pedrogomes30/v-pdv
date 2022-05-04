@@ -76,7 +76,11 @@ export default {
             {icon:'fas fa-cog',title:'Configurações',link:'configuracao'},
         ],
     }),
-    methods:
+    methods:{
+      onCloseMenu(){
+        async=
+      }
+    }
     
 }
 </script>
