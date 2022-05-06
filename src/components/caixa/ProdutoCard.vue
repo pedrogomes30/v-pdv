@@ -1,6 +1,6 @@
 <template>
     <!-- PRODUTOS -->
-    <v-card elevation="0" id="productCard"  >
+    <v-card elevation="0" id="productCard" >
         <v-card-title>
             <v-list-item-avatar rouded color="var(--primary">
                 <v-icon color="white"> fa fa-boxes</v-icon>
@@ -21,19 +21,20 @@
             :headers="header"
             :items="produtos"
             :search="search" 
-            fixed-header
-            calculate-widths    
             dense
             :items-per-page="50"
             @click:row="productSelect"
-            id="scroll-produtos"
-            style="max-height: 65vh;min-height: 65vh; "
+            style="height: 71vh;padding-left:3px;padding-right:3px "
             class="overflow-y-auto"
             >
             <template  v-slot:items="row" >
                 <tr>
+                    <td>
+                        <v-icon size="15" color="red" @click="removeItem(row)" >fa fa-xmark </v-icon>
+                    </td>
                     <td><h6>{{row.item.SKU}}</h6></td>
                     <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
+                    <td>{{row.item.marca}} {{row.item.fornecedor}}</td>
                     <td>{{row.item.categoria_produto}}</td>
                     <td >{{noPrice(row.item.preco)}}</td>
                 </tr>
@@ -61,6 +62,7 @@ export default {
            header:[
                { text: 'Sku',align: 'start',sortable: false,value: 'SKU'},
                { text: 'Descricao', value: 'descricao' },
+               { text: 'marca / fornecedor', value: 'marca' },
                { text: 'Categoria', value: 'categoria_produto' },
                { text: 'Preco(R$)', value: 'preco' },
            ],

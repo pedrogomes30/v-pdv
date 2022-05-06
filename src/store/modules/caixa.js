@@ -1,5 +1,4 @@
 
-
 const state = {//ou venda
     loja:'this.store',
     caixa:'this.caixa',
@@ -21,10 +20,12 @@ const state = {//ou venda
     valorProdutos:0,
     valorPagamentos:0,
     valorDesconto:0,
-    qtdItens:0,
     valorVenda:0,
+    troco:0,
+    qtdItens:0,
     qtdPagamentos:0,
     vendaFuncionario:false,
+    formaPagamento:'',
     status:'sem venda', //(sem venda, seleção de produto,em pagamento = sincronizada, em sincronização, erro)
 };
 
@@ -80,6 +81,12 @@ const actions = {
             resolve(desconto)
         })
     },
+    removeDescontos({commit},desconto){
+        return new Promise(resolve =>{
+            commit('removeDescontos',desconto)
+            resolve(desconto)
+        })
+    },
 
 };
 const mutations = {
@@ -88,17 +95,15 @@ const mutations = {
         state.status = 'seleção de produtos'
         let exists = state.itensSelecionados.findIndex(x => x.SKU === produto.SKU);
         if(exists !== -1){
-            state.itensSelecionados[exists].quantidade++  
-            service.ajustarTotalItem(state,exists);
-            service.total(state);
+            state.itensSelecionados[exists].quantidade++
         }else{
             produto.quantidade = 1
+            produto.descontos=[]
             produto.valor = typeof produto.valor === 'undefined' ?1.99 : produto.valor
             state.itensSelecionados.push(produto)
             state.qtdItens = state.qtdItens +1
-            service.ajustarTotalItem(state,exists===-1? 0:exists);
-            service.total(state);
         }
+        service.ajustarTotalItem(state);
     },
     removeItensSelecionados(state,produto){
         state.status = 'seleção de produtos'
@@ -106,18 +111,16 @@ const mutations = {
         if(exists !== -1){
             state.itensSelecionados.splice(exists,1)
             state.qtdItens = state.qtdItens -1
-            service.total(state);
         }else{
             console.log('produto não pode ser removido')
         }
-        
+        service.ajustarTotalItem(state);
     },
     qtdItensSelecionados(state, produto){
         state.status = 'seleção de produtos'
         let exists = state.itensSelecionados.findIndex(x => x.SKU === produto.SKU);
         state.itensSelecionados[exists].quantidade = produto.quantidade
         service.ajustarTotalItem(state,exists);
-        service.total(state);
     },   
     cleanCart(state){
         state.status = 'sem venda'
@@ -130,47 +133,43 @@ const mutations = {
         let exists = state.pagamentos.findIndex(x => x.id === pagamento.id);
         if(exists !== -1){
             state.pagamentos[exists] = pagamento
-            service.totalPagamentos(state);
         }else{
             pagamento.id = state.pagamentos.length
             state.pagamentos.push(pagamento);
-            service.totalPagamentos(state);
         }
+        service.totalPagamentos(state);
     },
     removePayment(state, pagamento){
         state.status = 'em pagamento'
         let exists = state.pagamentos.findIndex(x => x.id === pagamento.id);
         if(exists !== -1){
             state.pagamentos.splice(exists,1)
-            service.totalPagamentos(state);
         }else{
             console.log('impossivel remover o pagamento')
         }
+        service.totalPagamentos(state);
     },
     //DESCONTOS ...
     addDescontos(state, desconto){
-        state.status = 'em pagamento'
-        let exists = state.pagamentos.findIndex(x => x.id === desconto.id);
+        state.status = 'em descontos'
+        let exists = state.descontos.findIndex(x => x.id === desconto.id);
         if(exists !== -1){
-            state.pagamentos[exists] = desconto
-            service.totalPagamentos(state);
+            state.descontos[exists] = desconto
         }else{
             desconto.id = state.descontos.length
             state.descontos.push(desconto);
-            service.totalPagamentos(state);
         }
-        console.log('stado-> ', state)
-        console.log('desconto-> ', desconto)
-        // state.status = 'em pagamento'
-        // let exists = state.descontos.findIndex(x => x.id === desconto.id);
-        // if(exists !== -1){
-        //     state.descontos[exists] = desconto
-        //     service.totalPagamentos(state);
-        // }else{
-        //     desconto.id = state.descontos.length
-        //     state.pagamentos.push(desconto);
-        //     service.totalPagamentos(state);
-        // }
+        service.addDescontoProdutos(state);
+    },
+    removeDescontos(state, desconto){
+        state.status = 'em descontos'
+        let exists = state.descontos.findIndex(x => x.id === desconto.id);
+        if(exists !== -1){
+            state.descontos.splice(exists,1)
+        }else{
+            console.log('impossivel remover o pagamento')
+        }
+        service.addDescontoProdutos(state)
     },
 
 };
@@ -179,20 +178,56 @@ const getters = {
 };
 const service ={
     ajustarTotalItem(state,indice){
+        if(indice !== undefined){
         if(typeof state.itensSelecionados[indice].valor === 'undefined'){
             state.itensSelecionados[indice].valor = 1.00;
         }
         state.itensSelecionados[indice].total = (state.itensSelecionados[indice].quantidade * state.itensSelecionados[indice].valor)
-       
+        }else{
+            state.itensSelecionados.forEach((produto)=>{
+                if(typeof produto.valor === 'undefined'){
+                    produto.valor = 1.00;
+                }
+                produto.total = (produto.quantidade * produto.valor)
+            })
+        }
+    this.addDescontoProdutos(state)
+    this.total(state)
     },
     total(state){
-        state.valorProdutos = 0
+        state.valorProdutos=0
+        state.subtotal=0
+        state.valorProdutos=0
+        state.valorPagamentos=0
+        state.valorDesconto=0
+        state.valorVenda=0
+        state.troco=0
+        state.qtdItens=0
+        state.qtdPagamentos=0
+        //produtos -- descontos
         state.itensSelecionados.forEach(produto => {
-            if(typeof produto.total === 'undefined'){
-                produto.total = Math.round(produto.quantidade * produto.valor,2);
+            var descontoTemp = 0
+            
+            if(produto.descontos.lenght !== 0){
+                produto.descontos.forEach(desconto => {
+                    descontoTemp += desconto.valor
+                    state.valorDesconto += descontoTemp
+                })
             }
-            state.valorProdutos += produto.total
-        });
+            state.valorProdutos +=  produto.total
+            state.valorVenda += produto.total + descontoTemp
+            state.qtdItens++
+        })
+        //pagamento -- troco
+        if(state.pagamentos.lenght >0){
+            state.pagamentos.forEach(pagamento=>{
+                state.valorPagamentos += pagamento.valor
+                state.qtdPagamentos++ 
+            })
+            state.formaPagamento = state.qtdPagamentos >= 2 ? 'pagamento misto' : state.pagamentos[0].method
+            state.troco = state.valorPagamentos - state.valorVenda
+        }
+        // console.log('VENDA ____>>>',state)
     },
     // PAGAMENTOS ...
     totalPagamentos(state){
@@ -200,6 +235,82 @@ const service ={
         state.pagamentos.forEach(pagamento => {
             state.valorPagamentos += pagamento.valor
         });
+        this.total(state)
+    },
+    // DESCONTOS ...
+    addDescontoProdutos(state){
+        state.status = 'em descontos'
+        state.valorDesconto = 0 
+        if(typeof state.descontos !== 'undefined'){
+            //loop produtos
+            state.itensSelecionados.forEach((produto)=>{
+                produto.descontos = []
+                //loop descontos
+                state.descontos.forEach((desconto)=>{
+                    //desconto em todos os itens
+                    if(desconto.todosProdutos){
+                        let totalProduto = produto.total
+                        //em %
+                        if(desconto.porcentagem){
+                            let valorDesconto   = (desconto.valor / 100) * totalProduto;
+                            produto.descontos.push({
+                                codigo:desconto.codigo,
+                                valor:valorDesconto,
+                                descricao: desconto.descricao,
+                                valorPercent:desconto.valor,
+                                porcentagem:desconto.porcentagem
+                            })
+                            state.valorDesconto += valorDesconto
+                            this.total(state)
+                        }
+                        //em R$
+                        else{
+                            produto.descontos.push({
+                                codigo:desconto.codigo,
+                                valor:desconto.valor,
+                                descricao: desconto.descricao,
+                                valorPercent:'',
+                                porcentagem:desconto.porcentagem
+                            })
+                            state.valorDesconto += desconto.valor
+                            this.total(state)
+                        }
+                        //desconto em um SKU especifico
+                    }else{
+                        if(desconto.SKU === produto.SKU){
+                            let totalProduto = produto.total
+                            //em %
+                            if(desconto.porcentagem){
+                                let valorDesconto   = (desconto.valor / 100) * totalProduto ;
+                                produto.descontos.push({
+                                    codigo:desconto.codigo,
+                                    valor:valorDesconto,
+                                    descricao: desconto.descricao,
+                                    valorPercent:desconto.valor,
+                                    porcentagem:desconto.porcentagem
+                                })
+                                state.valorDesconto += valorDesconto
+                                this.total(state)
+                            }
+                            //em R$
+                            else{
+                                produto.descontos.push({
+                                    codigo:desconto.codigo,
+                                    valor:desconto.valor,
+                                    descricao: desconto.descricao,
+                                    valorPercent:'',
+                                    porcentagem:desconto.porcentagem
+                                })
+                                state.valorDesconto += desconto.valor
+                                this.total(state)
+                            }
+                        }
+                    }
+                    
+                })
+            })
+            this.total(state)
+        }
     }
     
 }

@@ -1,21 +1,18 @@
 <template>
   <v-app>
-    <v-main v-if="noIsLoginPage">
-        <SideMenu />
-        <div id="basePage">
-          <router-view/>
-        </div>
+      <div app v-if="noIsLoginPage">
+          <SideMenu />
+      </div>
+    <v-main>
+      <div id='basePage'>
+        <router-view/>
+      </div>
     </v-main>
-    <v-main v-else>
-      <LoginPage />
-    </v-main>
-
   </v-app>
 </template>
 
 <script>
   import SideMenu from './components/sidebar/SideMenu.vue';
-  import LoginPage from './views/LoginPage.vue'
 export default {
   name: "App",
   computed:{
@@ -25,7 +22,6 @@ export default {
   },
   components:{
     SideMenu,
-    LoginPage,
     }, 
   setup(){
     
@@ -50,15 +46,11 @@ a { text-decoration: none; }
 
 }
 .v-main{
-  width: 100%;
   background: var(--accent); 
-  padding: 1%;
 }
 #basePage{
-  height: 100vh;
-  width: 95vw;
-  position: absolute;
-  top: 0;
-  left: 0;
+  height: 100%;
+  width: 98%;
+  margin-left:1%
 }
 </style>

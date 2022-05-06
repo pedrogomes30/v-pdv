@@ -1,6 +1,5 @@
 <template>
-  <div>
-  <v-card height="100%" id="tabMenu" >
+  <v-card >
       <v-tabs
         v-model="tabs"
         centered
@@ -21,14 +20,11 @@
             <v-spacer></v-spacer>
             Pagamentos
         </v-tab>
-       
       </v-tabs>
         <v-divider></v-divider>
-    <v-tabs-items 
-      v-model="tabs" 
-      class='height:100%; widht:100%;'>
+      <v-tabs-items v-model="tabs" >
       <v-tab-item>
-        <ProdutoSelecionadoCard />''
+        <ProdutoSelecionadoCard />
       </v-tab-item>
       <v-tab-item>
         <CupomDescontoCard />
@@ -36,11 +32,8 @@
       <v-tab-item>
         <PagamentoCard />
       </v-tab-item>
-     
-    
     </v-tabs-items>
   </v-card>
-  </div>
 </template>
 
 <script>
@@ -69,5 +62,8 @@
 <style>
 #tabNavMenu{
   border-radius: 3px;
+  max-height: 15%;
 }
+
+
 </style>

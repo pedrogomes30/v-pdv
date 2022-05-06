@@ -1,7 +1,7 @@
 <template>
     <v-navigation-drawer
       id=''
-      style="border-radius:5px;margin:0.3%; max-height:98vh"
+      style="border-radius:5px;margin:0.3%; max-height:98%"
       v-model="drawer"
       :mini-variant.sync="mini"
       permanent
@@ -106,13 +106,8 @@ export default {
 
 .logout{
     position: absolute;
-    bottom:2vh; 
+    bottom:2%; 
     margin-left: auto;
     margin-right: auto;
-}
-#menu{
-  border-radius: 5px;
-  margin: 0.30%;
-  max-height: 98vh;
 }
 </style>

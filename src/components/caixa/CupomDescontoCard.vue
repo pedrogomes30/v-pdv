@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100%">
+  <v-card >
         <v-card-title>
             <v-list-item-avatar rouded color="var(--primary">
                 <v-icon color="white"> fa fa-tags</v-icon>
@@ -94,10 +94,7 @@
     </v-menu>
         <!-- subtitle -->
         </v-card-title>
-        <v-card-subtitle>
-            <v-icon size='20' class='pa-1' color="var(--primary)">fa fa-equals</v-icon>
-            Total R${{valorProdutos}}
-        </v-card-subtitle>
+        
         <v-data-table 
         :headers="header" 
         :items="descontos"
@@ -105,16 +102,16 @@
         hide-default-header
         calculate-widths
         id="scroll-discont"
-        style="max-height: 55vh;min-height: 55vh; "
+        style="height: 25vh;padding-left:3px;padding-right:3px"
         class="overflow-y-auto"
         >
         <template v-slot:item="row">
             <tr>
             <td>{{row.item.codigo}}</td>
-            <td>{{row.item.SKU}}</td>
+            <td>{{skuFormat(row.item)}}</td>
             <td>{{row.item.porcentagem ? row.item.valor+'%' : 'R$'+valueFormat(row.item.valor)}}</td>
             <td>  
-                <v-icon size="10" color="red" @click="itensSelecionados(row.item)" >fa fa-xmark</v-icon>
+                <v-icon size="10" color="red" @click="removeCupom(row.item)" >fa fa-xmark</v-icon>
             </td>
             </tr>
         </template>
@@ -132,11 +129,14 @@ export default {
         valorProdutos(){
           return this.$store.state.caixa.valorProdutos
         },
+        itensSelecionados(){
+            return this.$store.state.caixa.itensSelecionados
+        },
+        valorDesconto(){
+            return this.$store.state.caixa.valorDesconto
+        },
         cuponsPreDefinidos(){
           return this.$store.state.descontos.cuponsPreDefinidos
-        },
-        itensSelecionados(){
-          return this.$store.state.caixa.itensSelecionados
         },
     },
     data:()=>{
@@ -181,13 +181,39 @@ export default {
             }
         },
         addCupom(){
-            this.$store.dispatch('addDescontos',this.cupom)
-
+            if(this.cupom.acumulativo){
+                let noRepeat = this.descontos.findIndex(x => x.SKU === this.cupom.SKU);  
+                if(noRepeat !== -1){
+                    this.rules.validCodigo = ['Cupom já incluso neste item!']
+                    return false
+                }
+                this.$store.dispatch('addDescontos',this.cupom)
+            }else{
+                let noRepeat = this.descontos.findIndex(x => x.codigo === this.cupom.codigo);  
+                if(noRepeat !== -1){
+                    this.rules.validCodigo = ['cupom já incluido!']
+                    return false
+                }
+                noRepeat = this.descontos.findIndex(x => x.acumulativo === false)  
+                if(noRepeat !== -1){
+                    this.rules.validCodigo = ['já possui outro cupom não acumulativo']
+                    return false
+                }
+                this.$store.dispatch('addDescontos',this.cupom)
+            }
+            this.clearCupom()
+            this.menu = false
+        },
+        removeCupom(cupom){
+            this.$store.dispatch('removeDescontos',cupom)
         },
         onFocusCodigo(){
             this.rules.validCodigo = [true]
+            this.clearCupom();
+        },
+        clearCupom(){
             this.cupom={
-                    id:0,
+                    id:'',
                     SKU: '', 
                     descricao:'#',
                     todosProdutos:false,
@@ -203,6 +229,13 @@ export default {
         valueFormat(value){
             return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         },
+        skuFormat(desconto){
+            if(desconto.SKU === ''){
+                return 'todos os produtos'
+            }else{
+                return desconto.SKU
+            }
+        }
     }
 }
 </script>

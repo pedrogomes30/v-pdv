@@ -1,24 +1,18 @@
 <template>
     <!-- PRODUTOS DA SELECIONADOS DA VENDA -->
-        <v-card >
+        <v-card>
             <v-card-title>
                 <v-list-item-avatar rouded color="var(--primary">
                     <v-icon color="white"> fa fa-cart-shopping</v-icon>
                 </v-list-item-avatar>
                 Carrinho
                 <v-spacer></v-spacer>
+                 <v-icon  
+                    color="red" 
+                    title="esvaziar carrinho"
+                    @click="cleanCart">fa fa-xmark
+                </v-icon>
             </v-card-title>
-            <v-card-subtitle>
-                <v-row no-gutters>
-                    <v-icon size='20'  color="var(--primary)"> fa fa-equals</v-icon>
-                    Total {{valueFormat(valorProdutos)}}
-                    <v-spacer></v-spacer>
-                    <v-icon  
-                        color="red" 
-                        title="esvaziar carrinho"
-                        @click="cleanCart">fa fa-xmark</v-icon>
-                </v-row>
-            </v-card-subtitle>
             <div>
                 <v-data-table
                 
@@ -30,7 +24,7 @@
                 hide-default-footer
                 :items-per-page="-1"
                 id="scroll-cart"
-                style="height: 52vh;padding-left:3px;padding-right:3px "
+                style="height: 25vh;padding-left:3px;padding-right:3px "
                 class="overflow-y-auto"
                 >
                 <template v-slot:item="row">
@@ -50,8 +44,19 @@
                             </v-container>
                         </td>
                         <td>
-                            {{valueFormat(row.item.valor)}}
-                            <b>{{valueFormat(row.item.total)}}</b>
+                            <div>
+                                <h6>
+                                    {{valueFormat(row.item.valor)}}
+                                </h6>
+                                <div v-if='row.item.descontos !== undefined '>
+                                    <div v-for="desconto in row.item.descontos" :key="desconto.codigo">
+                                        <h6 style="color:red;" :title="getDescTitle(desconto)">-{{valueFormat(desconto.valor)}} </h6>
+                                    </div>
+                                </div>
+                                <h5>
+                                    <b>{{calculoDesconto(row.item)}}</b>
+                                </h5>
+                            </div>
                         </td>                    
                     </tr>
                 </template>
@@ -66,8 +71,8 @@ export default {
       itensSelecionados(){
           return this.$store.state.caixa.itensSelecionados
       },
-      valorProdutos(){
-          return this.$store.state.caixa.valorProdutos
+      valorVenda(){
+          return this.$store.state.caixa.valorVenda
       },
      
     },
@@ -97,8 +102,28 @@ export default {
             this.$store.dispatch('cleanCart')
         },
         valueFormat(value){
-            return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+            try{
+                return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+            }catch(exception){
+                console.log(exception)
+                return ''
+            }
         },
+        getDescTitle(desconto){
+            return desconto.codigo+': '+desconto.descricao
+        },
+        calculoDesconto(produto){
+            if(produto.descontos.lenght != 0 ){
+                var tempDesconto = 0
+                produto.descontos.forEach(desconto=>{
+                    tempDesconto += desconto.valor
+                })
+                return this.valueFormat(produto.total - tempDesconto)
+            }else{
+                return this.valueFormat(produto.total)
+            }
+        }
+
     }
 }
 </script>

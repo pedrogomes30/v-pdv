@@ -49,8 +49,7 @@
                 label="Valor(R$)"   
                 v-model="payment.valor"
                 v-bind="money"
-                :rules="rules.forma"
-                class='pa-2'>
+                class='pl-2 pr-2'>
             </money>
             </v-list>
             <v-card-actions>
@@ -79,7 +78,9 @@
             hide-default-footer
             hide-default-header
             @click:row="editPay"
-            style="max-height: 49vh;min-height: 49vh; "
+            id="scroll-payment"
+            style="height: 25vh;padding-left:3px;padding-right:3px "
+            class="overflow-y-auto"
         >
             <template v-slot:item="row">
                 <tr>
@@ -91,19 +92,7 @@
                 </tr>
             </template>
         </v-data-table>
-        <v-row no-gutters dense>
-                <v-card-subtitle >
-                    <v-icon size='15' class='pa-1' color="var(--primary)">fa fa-equals</v-icon>
-                    Total Produtos 
-                    <br>{{valueFormat(valorProdutos)}}
-                </v-card-subtitle>
-                <v-spacer></v-spacer>
-                <v-card-subtitle>
-                    <v-icon size='15' class='pa-1' color="var(--primary)">fa fa-equals</v-icon>
-                    Total Pagamentos 
-                    <br>{{valueFormat(valorPagamentos)}}
-                </v-card-subtitle>                
-            </v-row>
+        
     </v-card>
 </template>
 
@@ -116,15 +105,7 @@ export default {
         pagamentos(){
             return this.$store.state.caixa.pagamentos
         },
-        valorProdutos(){
-          return this.$store.state.caixa.valorProdutos
-        },
-        valorPagamentos(){
-            return this.$store.state.caixa.valorPagamentos
-        },
-        valorDesconto(){
-            return this.$store.state.caixa.valorDesconto
-        },
+        
     },
     data:()=>{
         return{
@@ -138,10 +119,9 @@ export default {
                 { text: 'forma pgto.', value: 'method' },
                 { text: 'valor(R$)', value: 'valor' },
             ],
-
             rules: {
                 value: [
-                    val => (val || '').length > 0 || 'necessário informar o methodo!'
+                    val => (val || '').length > 0 || 'necessário informar o valor!!'
                 ],
                 method: [
                     val => (val || '').length > 0 || 'necessário informar o methodo!'
@@ -162,19 +142,29 @@ export default {
                 prefix: 'R$ ',
                 precision: 2,
                 masked: false
-            }
+            },
         }
     },
     methods:{
         newPayment(payment){
-            payment.datePay = new Date().toLocaleDateString()
-            this.$store.dispatch('addPayment',payment)
-            this.payment = {
-                method:'',
-                valor:0.00,
-                icon:''
+            if(payment.valor > 0 && payment.valor <= 10000){
+                payment.datePay = new Date().toLocaleDateString()
+                this.$store.dispatch('addPayment',payment)
+                this.payment = {
+                    method:'',
+                    valor:0.00,
+                    icon:''
+                }
+                this.menu = false;
+            }else{
+                this.menu=false
+                alert('Pagamento inválido!')
+                this.payment = {
+                    method:'',
+                    valor:0.00,
+                    icon:''
+                }
             }
-            this.menu = false;
         },
         changeIcon(method){
             const icons= [
