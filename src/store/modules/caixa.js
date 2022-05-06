@@ -1,8 +1,9 @@
 
 const state = {//ou venda
-    loja:'this.store',
-    caixa:'this.caixa',
-    func_caixa:'this.user',    
+    loja:'',
+    caixa:'',
+    func_caixa:'',    
+    dtVenda:'',
     obs:'',
     cliente:{
         tipo: 'cliente', 
@@ -26,6 +27,7 @@ const state = {//ou venda
     qtdPagamentos:0,
     vendaFuncionario:false,
     formaPagamento:'',
+    vendaValida:false,
     status:'sem venda', //(sem venda, seleção de produto,em pagamento = sincronizada, em sincronização, erro)
 };
 
@@ -87,6 +89,19 @@ const actions = {
             resolve(desconto)
         })
     },
+    // OBSERVACAO
+    observacao({commit},observacao){
+        return new Promise(resolve =>{
+            commit('observacao',observacao)
+            resolve(observacao)
+        })
+    },
+    limparVenda({commit}){
+        return new Promise(resolve =>{
+            commit('limparVenda',state)
+            resolve()
+        })
+    },
 
 };
 const mutations = {
@@ -137,7 +152,7 @@ const mutations = {
             pagamento.id = state.pagamentos.length
             state.pagamentos.push(pagamento);
         }
-        service.totalPagamentos(state);
+        service.total(state);
     },
     removePayment(state, pagamento){
         state.status = 'em pagamento'
@@ -147,7 +162,7 @@ const mutations = {
         }else{
             console.log('impossivel remover o pagamento')
         }
-        service.totalPagamentos(state);
+        service.total(state);
     },
     //DESCONTOS ...
     addDescontos(state, desconto){
@@ -170,6 +185,38 @@ const mutations = {
             console.log('impossivel remover o pagamento')
         }
         service.addDescontoProdutos(state)
+    },
+    //  OBSERVAÇÃO
+    observacao(state, observacao){
+        state.obs = observacao
+    },
+    // LIMPAR A VENDA
+    limparVenda(state){
+        state.cliente= {
+                tipo: 'cliente', 
+                nome: 'cliente não identificado',
+                cpf:'000000000',
+            }
+        state.vendedor={
+                tipo: 'vendedor',
+                nome: 'vendedor não identificado',
+                cpf:'000000000',
+            }
+        state.pagamentos=[]
+        state.itensSelecionados=[]
+        state.descontos=[]
+        state.valorProdutos=0
+        state.valorPagamentos=0
+        state.valorDesconto=0
+        state.valorVenda=0
+        state.troco=0
+        state.qtdItens=0
+        state.qtdPagamentos=0
+        state.vendaFuncionario=false
+        state.formaPagamento=''
+        state.vendaValida=false
+        state.status='sem venda'
+        state.dtVenda=''
     },
 
 };
@@ -214,28 +261,21 @@ const service ={
                     state.valorDesconto += descontoTemp
                 })
             }
-            state.valorProdutos +=  produto.total
-            state.valorVenda += produto.total + descontoTemp
+            state.valorVenda += produto.total 
+            state.valorProdutos +=  produto.total + descontoTemp
             state.qtdItens++
         })
         //pagamento -- troco
-        if(state.pagamentos.lenght >0){
+        if(state.pagamentos.length > 0){
             state.pagamentos.forEach(pagamento=>{
                 state.valorPagamentos += pagamento.valor
                 state.qtdPagamentos++ 
             })
             state.formaPagamento = state.qtdPagamentos >= 2 ? 'pagamento misto' : state.pagamentos[0].method
-            state.troco = state.valorPagamentos - state.valorVenda
         }
-        // console.log('VENDA ____>>>',state)
-    },
-    // PAGAMENTOS ...
-    totalPagamentos(state){
-        state.valorPagamentos = 0
-        state.pagamentos.forEach(pagamento => {
-            state.valorPagamentos += pagamento.valor
-        });
-        this.total(state)
+        state.troco = state.valorPagamentos - state.valorVenda
+        state.vendaValida = state.troco >=0? true:false
+        console.log('VENDA ____>>>',state)
     },
     // DESCONTOS ...
     addDescontoProdutos(state){
@@ -309,8 +349,8 @@ const service ={
                     
                 })
             })
-            this.total(state)
         }
+        this.total(state)
     }
     
 }

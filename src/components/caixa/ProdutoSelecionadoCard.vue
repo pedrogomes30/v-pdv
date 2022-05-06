@@ -41,16 +41,17 @@
                                 <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
                                 {{row.item.quantidade}} 
                                 <v-icon size="10" color="red" @click="qtdSub(row)" >fa fa-minus</v-icon>
+                                <h6>x{{valueFormat(row.item.valor)}}</h6>
                             </v-container>
                         </td>
                         <td>
                             <div>
                                 <h6>
-                                    {{valueFormat(row.item.valor)}}
+                                    {{valueFormat(row.item.total)}}
                                 </h6>
                                 <div v-if='row.item.descontos !== undefined '>
                                     <div v-for="desconto in row.item.descontos" :key="desconto.codigo">
-                                        <h6 style="color:red;" :title="getDescTitle(desconto)">-{{valueFormat(desconto.valor)}} </h6>
+                                        <h6 style="color:red;" :title="getDescTitle(desconto)">{{valueFormat(desconto.valor)}}-</h6>
                                     </div>
                                 </div>
                                 <h5>

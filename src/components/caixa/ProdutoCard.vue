@@ -24,13 +24,15 @@
             dense
             :items-per-page="50"
             @click:row="productSelect"
-            style="height: 71vh;padding-left:3px;padding-right:3px "
+            style="height: 71vh;padding-left:3px;padding-right:3px;font-size:0.2em;"
             class="overflow-y-auto"
+            
             >
             <template  v-slot:items="row" >
-                <tr>
-                    <td>
-                        <v-icon size="15" color="red" @click="removeItem(row)" >fa fa-xmark </v-icon>
+                <tr >
+                    <td >
+                        <h6>ICON</h6>
+                        <v-icon size="15" color="red"  >fa fa-xmark </v-icon>
                     </td>
                     <td><h6>{{row.item.SKU}}</h6></td>
                     <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
