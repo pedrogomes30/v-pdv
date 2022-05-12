@@ -64,9 +64,10 @@
                 <v-divider></v-divider>
                 <v-list>
                 <v-textarea
-                    label="código do cupom"
+                    label="Observação"
                     hide-details="auto"
                     v-model="observacao"
+                    color="var(--primary)"
                     class='pa-2'
                     counter="200"
                     prepend-icon='fa fa-list'>                
@@ -112,14 +113,24 @@
                 </v-list>
                 <v-divider></v-divider>
                 <v-list>
+                  <v-switch
+                    v-model="trocaPorSku"
+                    label="troca SEM sku do produto"
+                    color="var(--primary)"
+                    class='pa-2'
+                  ></v-switch>
                   <v-text-field
                       label="SKU do produto"
                       hide-details="auto"
+                      color="var(--primary)"
                       v-model="produtoTroca.SKU"
                       hide-spin-buttons
                       class='pa-2'
                       type='number'
                       counter="13"
+                      :disabled="trocaPorSku === true"
+                      :rules="trocaPorSku !== true ? rules.SKU : [true]"
+                      @change="procurarSkuTroca()"
                       prepend-icon='fa fa-box'
                       autofocus>                
                   </v-text-field>
@@ -127,39 +138,37 @@
                       label="Quantidade"
                       hide-details="auto"
                       type='number'
+                      color="var(--primary)"
                       v-model="produtoTroca.quantidade"
                       class='pa-2'
                       prepend-icon='fa fa-boxes'>                
                   </v-text-field>
-                  <v-text-field
-                      label="Valor"
-                      hide-details="auto"
-                      type='number'
-                      disabled
-                      :value="produtoTroca.valor"
+                  <h5 class='pl-3'>
+                  <v-icon  size='20'> fa fa-dollar-sign</v-icon> 
+                  Valor: 
+                  <Money
+                      v-bind="money"
+                      :disabled="trocaPorSku === false"
+                      v-model="produtoTroca.valor"
                       class='pa-2'
                       prepend-icon='fa fa-money-bill'>                
-                  </v-text-field>
+                  </Money>
+                  </h5>
                   <v-select
                     v-model="produtoTroca.motivo"
                     :items="motivoTroca"
-                    color="pink"
+                    :rules="rules.motivo"
+                    color="var(--primary)"
                     label="Motivo da troca"
                     class='pa-2'
                     required
                     prepend-icon='fa fa-question'
                   ></v-select>
-                  <v-switch
-                    v-model="trocaPorSku"
-                    label="não sei o SKU do produto da troca"
-                    color="var(--primary)"
-                    class='pa-2'
-                  ></v-switch>
                   </v-list>
                 <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click="menuTroca = false">Cancelar</v-btn>
-                <v-btn color="var(--primary)" text @click="salvarObs(observacao)">salvar</v-btn>
+                <v-btn color="var(--primary)" text @click="novaTroca()">salvar</v-btn>
                 </v-card-actions>
               </v-card>
             </v-menu>
@@ -169,8 +178,13 @@
               <v-icon color="white" size='20'> fa fa-ban</v-icon>
             </v-btn>
             <v-btn height="14.5vh" width="52%"  color='green' dark :disabled="!vendaValida" >
-              <v-icon color="white" size='15'> fa fa-check</v-icon>FINALIZAR
+              FINALIZADO
             </v-btn>
+        </v-row>
+        <v-row dense no-gutters class='pt-6' justify="center" v-if="status !== 'Finalizada'">
+          <v-spacer></v-spacer>
+          <h5  class="white--text ml-3 mr-3 "> {{status}}</h5>
+          <v-icon color='white'>fa fa-exclamation</v-icon>
         </v-row>
       </v-col>
     </v-row>   
@@ -183,6 +197,7 @@ import ProdutosCard from '../components/caixa/ProdutoCard.vue'
 import ClienteVendedorCard from '../components/caixa/ClienteVendedorCard.vue'
 import TabCaixaCard from '../components/caixa/TabCaixaCard.vue'
 import TotalizadorCard from '../components/caixa/TotalizadorCard.vue'
+import {Money} from 'v-money'
 
 export default {
   name: 'caixaPage',
@@ -196,27 +211,47 @@ export default {
     obs(){
         return this.$store.state.caixa.obs
     },    
+    produtos(){
+        return this.$store.state.produto.produtos
+    },  
+    status(){
+      return this.$store.state.caixa.status
+    },  
   },
   data:()=>({    
     menuObs:false,
     menuTroca:false,
     trocaPorSku:false,
     produtoTroca:{
-      SKU:'',
+      SKU: '', 
+      codigo: '#TROCA',
+      descricao:'',
+      todosProdutos:true,
+      comCliente :false,
+      porcentagem:false,
+      acumulativo:true,
+      valor:0,
       quantidade:1,
-      valor:1.99,
-      motivo:'',
     },
     motivoTroca:[
       'danificado',
       'fora da validade',
       'desistência do cliente',
     ],
+    money: {
+      decimal: ',',
+      thousands: '.',
+      prefix: 'R$ ',
+      precision: 2,
+      masked: false
+    },
     rules:{
       validCodigo:[true],
       validSKU:[true],
-      animal:[val => (val || '').length > 0 || 'motivo obrigatório!'],
-      value: [val => (val || '').length > 0 || 'necessário informar o produto!'],
+      motivo:[val => (val || '').length > 0 || 'motivo obrigatório!'],
+      value: [val => (val || '' || 0).length > 0 || 'necessário informar o valor do produto!'],
+      quantidade: [val => (val || '' || 0).length > 0 || 'quantidade obrigatoria!'],
+      SKU: [val => (val || '').length > 0 || 'necessário informar sku do produto!'],
     },
     observacao:'',
   }),
@@ -240,12 +275,42 @@ export default {
     aditObs(){
       this.observacao = this.obs
     },
+    procurarSkuTroca(){
+      let indice = this.produtos.findIndex(x => x.SKU === this.produtoTroca.SKU);
+      var produto = this.produtos[indice]
+      this.produtoTroca.valor = produto.valor
+      this.produtoTroca.descricao = 'troca referente ao SKU: '+produto.SKU
+    },
+    novaTroca(){
+      if(this.produtoTroca.valor>0 && this.produtoTroca.valor<=10000){this.produtoTroca.valor = this.produtoTroca.quantidade * this.produtoTroca.valor
+        console.log(this.produtoTroca.valor)
+        this.produtoTroca.descricao = this.produtoTroca.SKU ==='' ? 'referente ao produto não identificado' : 'referente ao produto '+this.produtoTroca.SKU
+        this.$store.dispatch('addDescontos',this.produtoTroca)
+        this.produtoTroca = 
+        {
+          SKU: '', 
+          codigo: '#TROCA',
+          descricao:'',
+          todosProdutos:true,
+          comCliente :false,
+          porcentagem:false,
+          acumulativo:true,
+          valor:0,
+          quantidade:1,
+        }
+        this.menuTroca = false
+        this.trocaPorSku=false
+      }else{
+        alert('valor de troca inválida')
+      }
+    }
   },
   components: {
       ProdutosCard,
       ClienteVendedorCard,
       TabCaixaCard,
-      TotalizadorCard
+      TotalizadorCard,
+      Money
   },
 }
 </script>

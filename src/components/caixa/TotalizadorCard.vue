@@ -21,21 +21,21 @@
             </v-card>
         </v-col>
         <v-col cols="3" class="pl-1 pt-1">
-            <v-card height="100%" width="100%" :color="troco >= 0? '#51bd5c': '#d94343'" dark>
+            <v-card height="100%" width="100%" :color="vendaValida? '#51bd5c': '#d94343'" :title="status" dark>
                 <v-card-text style="text-align:center">
                     <v-icon size='20' class='pa-1' color="white">fa fa-equals</v-icon>
                     <h4>
-                    TOTAL
+                    TOTAL VENDA
                     </h4> 
                     <v-spacer></v-spacer>
                     <h3>
                         <b>{{valueFormat(valorVenda)}}</b>
                     </h3>
                     <div v-if="troco < 0 ">
-                        <h4 >Faltam</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(troco)}}</b></h3>
+                        <h4 >FALTA</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(troco)}}</b></h3>
                     </div> 
                    <div v-else>                        
-                        <h4 >Troco</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(troco)}}</b></h3>
+                        <h4 >TROCO</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(troco)}}</b></h3>
                    </div>  
                 </v-card-text>
             </v-card>
@@ -61,6 +61,12 @@ export default {
         },
         troco(){
             return this.$store.state.caixa.troco
+        },
+        vendaValida(){
+            return this.$store.state.caixa.vendaValida
+        },
+        status(){
+            return this.$store.state.caixa.status
         },
     },
     data:()=>({    

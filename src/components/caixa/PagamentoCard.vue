@@ -41,16 +41,24 @@
                 hide-details="auto"
                 v-model='payment.method'
                 :items="paymentMethods"
+                color="var(--primary)"
                 @input="changeIcon(payment.method)"
                 :prepend-icon='payIcon'
                 class='pa-2'>
             </v-select>
-            <money
-                label="Valor(R$)"   
-                v-model="payment.valor"
-                v-bind="money"
-                class='pl-2 pr-2'>
-            </money>
+            <h5 class='pl-3'>
+                <v-icon  size='20'> fa fa-dollar-sign</v-icon>
+                Valor:
+                <Money
+                    label="Valor(R$)"   
+                    v-model="payment.valor"
+                    v-bind="money"
+                    :rules="rules.value"
+                    @focus="payment.valor = 0"
+                    color="var(--primary)"
+                    class='pl-2 pr-2'>
+                </Money>
+            </h5>
             </v-list>
             <v-card-actions>
             <v-spacer></v-spacer>
@@ -121,7 +129,7 @@ export default {
             ],
             rules: {
                 value: [
-                    val => (val || '').length > 0 || 'necessário informar o valor!!'
+                    val => (val || '' || val <= 0 ).length > 0 || 'necessário informar o valor!!'
                 ],
                 method: [
                     val => (val || '').length > 0 || 'necessário informar o methodo!'
@@ -147,6 +155,7 @@ export default {
     },
     methods:{
         newPayment(payment){
+            console.log(payment.valor)
             if(payment.valor > 0 && payment.valor <= 10000){
                 payment.datePay = new Date().toLocaleDateString()
                 this.$store.dispatch('addPayment',payment)
@@ -157,7 +166,6 @@ export default {
                 }
                 this.menu = false;
             }else{
-                this.menu=false
                 alert('Pagamento inválido!')
                 this.payment = {
                     method:'',

@@ -38,6 +38,7 @@
                     hide-details="auto"
                     v-model="cupom.codigo"
                     class='pa-2'
+                    color="var(--primary)"
                     @change="cuponValidate"
                     @focus="onFocusCodigo"
                     :rules="rules.validCodigo"
@@ -49,6 +50,7 @@
                         hide-details="auto"
                         item-text="SKU"
                         item-value="SKU"
+                        color="var(--primary)"
                         v-model='cupom.SKU'
                         :items="itensSelecionados"
                         :hint="`SKU: ${cupom.SKU}`"
@@ -62,7 +64,7 @@
                 </div>
                 <div class='menu'>
                     <h4 class='pa-2'>obs:<br> {{cupom.descricao}}</h4>
-                    <h4 class='pa-2'>valor: <br>{{cupom.porcentagem ? cupom.valor+'%' : 'R$'+valueFormat(cupom.valor)}}</h4>
+                    <h4 class='pa-2'>valor: <br>{{cupom.porcentagem ? cupom.valor+'%' : valueFormat(cupom.valor)}}</h4>
                 </div>
                 </v-list>
                 <v-card-actions>
@@ -90,7 +92,7 @@
             </td>
             <td>{{row.item.codigo}}</td>
             <td>{{skuFormat(row.item)}}</td>
-            <td>{{row.item.porcentagem ? row.item.valor+'%' : 'R$'+valueFormat(row.item.valor)}}</td>
+            <td>{{row.item.porcentagem ? row.item.valor+'%' : valueFormat(row.item.valor)}}</td>
             <td>  
                 <v-icon size="10" color="red" @click="removeCupom(row.item)" >fa fa-xmark</v-icon>
             </td>
@@ -118,6 +120,9 @@ export default {
         },
         cuponsPreDefinidos(){
           return this.$store.state.descontos.cuponsPreDefinidos
+        },
+        comCliente(){
+          return this.$store.state.caixa.comCliente
         },
     },
     data:()=>{
@@ -187,6 +192,9 @@ export default {
         },
         removeCupom(cupom){
             this.$store.dispatch('removeDescontos',cupom)
+            if(cupom.comCliente){
+            this.$store.dispatch('forceCliente',cupom.comCliente)
+            }
         },
         onFocusCodigo(){
             this.rules.validCodigo = [true]

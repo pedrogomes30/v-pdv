@@ -13,7 +13,7 @@
         <v-tab>
             <v-icon color="var(--primary)"> fa fa-tags</v-icon>            
             <v-spacer></v-spacer>
-            Cupons
+            Descontos
         </v-tab>
         <v-tab>
             <v-icon color="var(--primary)"> fa fa-sack-dollar</v-icon>

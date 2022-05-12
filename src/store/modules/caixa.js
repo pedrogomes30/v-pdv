@@ -6,14 +6,22 @@ const state = {//ou venda
     dtVenda:'',
     obs:'',
     cliente:{
-        tipo: 'cliente', 
-        nome: 'cliente não identificado',
-        cpf:'000000000',
+        documento:'',
+        nome:'não identificado',
+        email:'',
+        telefone:'',
+        empresaParc:'',
+        nomeEmpresaParc:'',
+        tipo:false,         
     },
     vendedor:{
-        tipo: 'vendedor',
-        nome: 'vendedor não identificado',
-        cpf:'000000000',
+        documento:'',
+        nome:'não identificado',
+        email:'',
+        telefone:'',
+        empresaParc:'',
+        nomeEmpresaParc:'',
+        tipo:false,         
     },
     pagamentos:[],
     itensSelecionados:[],
@@ -26,9 +34,10 @@ const state = {//ou venda
     qtdItens:0,
     qtdPagamentos:0,
     vendaFuncionario:false,
+    forcarCliente:false,
     formaPagamento:'',
     vendaValida:false,
-    status:'sem venda', //(sem venda, seleção de produto,em pagamento = sincronizada, em sincronização, erro)
+    status:'sem venda',
 };
 
 const actions = {
@@ -96,12 +105,45 @@ const actions = {
             resolve(observacao)
         })
     },
+    //LIMPAR VENDA
     limparVenda({commit}){
         return new Promise(resolve =>{
             commit('limparVenda',state)
             resolve()
         })
     },
+    //cliente vendedor
+    addCliente({commit},value){
+        return new Promise(resolve =>{
+            commit('addCliente',value)
+            resolve()
+        })
+    },
+    removerCliente({commit}){
+        return new Promise(resolve =>{
+            commit('removerCliente')
+            resolve()
+        })
+    },
+    addVendedor({commit},value){
+        return new Promise(resolve =>{
+            commit('addVendedor',value)
+            resolve()
+        })
+    },
+    removerVendedor({commit}){
+        return new Promise(resolve =>{
+            commit('removerVendedor')
+            resolve()
+        })
+    },
+    forcarCliente({commit},tipo){
+        return new Promise(resolve =>{
+            commit('forcarCliente',tipo)
+            resolve(tipo)
+        })
+    },
+    
 
 };
 const mutations = {
@@ -110,7 +152,7 @@ const mutations = {
         state.status = 'seleção de produtos'
         let exists = state.itensSelecionados.findIndex(x => x.SKU === produto.SKU);
         if(exists !== -1){
-            state.itensSelecionados[exists].quantidade++
+            state.itensSelecionados[exists].quantidade = state.itensSelecionados[exists].quantidade+1
         }else{
             produto.quantidade = 1
             produto.descontos=[]
@@ -174,6 +216,7 @@ const mutations = {
             desconto.id = state.descontos.length
             state.descontos.push(desconto);
         }
+        state.forcarCliente = desconto.comCliente
         service.addDescontoProdutos(state);
     },
     removeDescontos(state, desconto){
@@ -182,7 +225,7 @@ const mutations = {
         if(exists !== -1){
             state.descontos.splice(exists,1)
         }else{
-            console.log('impossivel remover o pagamento')
+            console.log('impossivel remover o desconto')
         }
         service.addDescontoProdutos(state)
     },
@@ -192,16 +235,24 @@ const mutations = {
     },
     // LIMPAR A VENDA
     limparVenda(state){
-        state.cliente= {
-                tipo: 'cliente', 
-                nome: 'cliente não identificado',
-                cpf:'000000000',
-            }
+        state.cliente={
+            documento:'',
+            nome:'não identificado',
+            email:'',
+            telefone:'',
+            empresaParc:'',
+            nomeEmpresaParc:'',
+            tipo:false,         
+        },
         state.vendedor={
-                tipo: 'vendedor',
-                nome: 'vendedor não identificado',
-                cpf:'000000000',
-            }
+            documento:'',
+            nome:'não identificado',
+            email:'',
+            telefone:'',
+            empresaParc:'',
+            nomeEmpresaParc:'',
+            tipo:false,         
+        },
         state.pagamentos=[]
         state.itensSelecionados=[]
         state.descontos=[]
@@ -213,12 +264,47 @@ const mutations = {
         state.qtdItens=0
         state.qtdPagamentos=0
         state.vendaFuncionario=false
+        state.vendaCliente=false
+        state.forcarCliente=false
         state.formaPagamento=''
         state.vendaValida=false
         state.status='sem venda'
         state.dtVenda=''
+        state.obs=''
     },
-
+    //CLIENTE
+    addCliente(state, cliente){
+        state.cliente = cliente
+        service.total(state)
+    },
+    removerCliente(state){
+        state.cliente = {
+            documento:'',
+            nome:'não identificado',
+            email:'',
+            telefone:'',
+            empresaParc:'',
+            nomeEmpresaParc:'',
+            tipo:false,         
+        }   
+        service.total(state)
+    },
+    addVendedor(state, vendedor){
+        state.vendedor = vendedor
+        service.total(state)
+    },
+    removerVendedor(state){
+        state.vendedor = {
+            documento:'',
+            nome:'não identificado',
+            email:'',
+            telefone:'',
+            empresaParc:'',
+            nomeEmpresaParc:'',
+            tipo:false,         
+        }   
+        service.total(state)
+    },
 };
 const getters = {
     
@@ -254,15 +340,14 @@ const service ={
         //produtos -- descontos
         state.itensSelecionados.forEach(produto => {
             var descontoTemp = 0
-            
             if(produto.descontos.lenght !== 0){
                 produto.descontos.forEach(desconto => {
+                    state.valorDesconto += desconto.valor
                     descontoTemp += desconto.valor
-                    state.valorDesconto += descontoTemp
                 })
             }
-            state.valorVenda += produto.total 
-            state.valorProdutos +=  produto.total + descontoTemp
+            state.valorVenda += produto.total - descontoTemp
+            state.valorProdutos +=  produto.total 
             state.qtdItens++
         })
         //pagamento -- troco
@@ -273,14 +358,29 @@ const service ={
             })
             state.formaPagamento = state.qtdPagamentos >= 2 ? 'pagamento misto' : state.pagamentos[0].method
         }
-        state.troco = state.valorPagamentos - state.valorVenda
-        state.vendaValida = state.troco >=0? true:false
-        console.log('VENDA ____>>>',state)
+        state.troco = (state.valorPagamentos - state.valorVenda)
+        state.troco= +(state.troco.toFixed(2))
+        //validar a venda
+        state.vendaValida = true
+        state.status = "Finalizada"
+        if(typeof state.itensSelecionados === 'undefined'){state.vendaValida = false; state.status=' Não há item nesta venda.'}
+        if(state.troco >= 0 && state.valorPagamentos === 0){state.vendaValida = false; state.status=' Não há pagamentos nesta venda.'}
+        if(state.valorVenda < 0 ){state.vendaValida = false; state.status=' venda com o total negativo.'}
+        if(state.valorProdutos <=0){state.vendaValida = false; state.status=' venda com o total de produtos zerado.'}
+        if(state.valorDesconto > state.valorProdutos){state.vendaValida = false; state.status=' valor de desconto maior que o valor total da venda.'}
+        if(state.troco <0){state.vendaValida = false; state.status=' valor de pagamento menor que o valor total da venda.'}
+        if(state.forcarCliente && state.cliente.tipo !== state.forcarCliente){state.vendaValida = false; state.status=`necessário informar um ${state.forcarCliente} nesta venda.`}
+    
+        console.log('VENDA ->',state)
     },
     // DESCONTOS ...
     addDescontoProdutos(state){
         state.status = 'em descontos'
         state.valorDesconto = 0 
+        var tempTotal = 0
+        state.itensSelecionados.forEach((produtoTotal)=>{
+            tempTotal += produtoTotal.total
+        })
         if(typeof state.descontos !== 'undefined'){
             //loop produtos
             state.itensSelecionados.forEach((produto)=>{
@@ -300,20 +400,19 @@ const service ={
                                 valorPercent:desconto.valor,
                                 porcentagem:desconto.porcentagem
                             })
-                            state.valorDesconto += valorDesconto
-                            this.total(state)
                         }
                         //em R$
                         else{
+                            //obter o total de produtos
+                            var porcenProduto = produto.total/ tempTotal;
+                            var descontoPercent = desconto.valor * porcenProduto
                             produto.descontos.push({
                                 codigo:desconto.codigo,
-                                valor:desconto.valor,
+                                valor:descontoPercent,
                                 descricao: desconto.descricao,
                                 valorPercent:'',
                                 porcentagem:desconto.porcentagem
                             })
-                            state.valorDesconto += desconto.valor
-                            this.total(state)
                         }
                         //desconto em um SKU especifico
                     }else{
@@ -329,8 +428,6 @@ const service ={
                                     valorPercent:desconto.valor,
                                     porcentagem:desconto.porcentagem
                                 })
-                                state.valorDesconto += valorDesconto
-                                this.total(state)
                             }
                             //em R$
                             else{
@@ -341,16 +438,14 @@ const service ={
                                     valorPercent:'',
                                     porcentagem:desconto.porcentagem
                                 })
-                                state.valorDesconto += desconto.valor
-                                this.total(state)
                             }
                         }
                     }
-                    
+                   state.forcarCliente = desconto.comCliente? desconto.comCliente:false
                 })
             })
+            this.total(state)
         }
-        this.total(state)
     }
     
 }
