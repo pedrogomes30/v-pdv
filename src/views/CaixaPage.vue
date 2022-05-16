@@ -1,5 +1,5 @@
 <template> 
-<div>
+<div class='basePage'> 
   <!-- cabeçalho -->
   <v-row no-gutters dense style='max-height:20%'>
     <v-col cols="auto" align-self="center" >
@@ -177,13 +177,13 @@
             <v-btn height="14.5vh" width="15%"  color='red' dark   title="cancelar a venda" @click="onCancelOrder()">
               <v-icon color="white" size='20'> fa fa-ban</v-icon>
             </v-btn>
-            <v-btn height="14.5vh" width="52%"  color='green' dark :disabled="!vendaValida" >
+            <v-btn height="14.5vh" width="52%"  color='green' dark :disabled="!venda.vendaValida" @click='finalizarVenda()'>
               FINALIZADO
             </v-btn>
         </v-row>
-        <v-row dense no-gutters class='pt-6' justify="center" v-if="status !== 'Finalizada'">
+        <v-row dense no-gutters class='pt-6' justify="center" v-if="venda.status !== 'Finalizada'">
           <v-spacer></v-spacer>
-          <h5  class="white--text ml-3 mr-3 "> {{status}}</h5>
+          <h5  class="white--text ml-3 mr-3 "> {{venda.status}}</h5>
           <v-icon color='white'>fa fa-exclamation</v-icon>
         </v-row>
       </v-col>
@@ -198,6 +198,7 @@ import ClienteVendedorCard from '../components/caixa/ClienteVendedorCard.vue'
 import TabCaixaCard from '../components/caixa/TabCaixaCard.vue'
 import TotalizadorCard from '../components/caixa/TotalizadorCard.vue'
 import {Money} from 'v-money'
+import { format } from 'date-fns'
 
 export default {
   name: 'caixaPage',
@@ -205,17 +206,14 @@ export default {
       
     },    
   computed:{
-    vendaValida(){
-      return this.$store.state.caixa.vendaValida
-    },
-    obs(){
-        return this.$store.state.caixa.obs
-    },    
+    venda(){
+      return this.$store.state.caixa
+    },   
     produtos(){
         return this.$store.state.produto.produtos
     },  
-    status(){
-      return this.$store.state.caixa.status
+    usuario(){
+        return this.$store.state.auth
     },  
   },
   data:()=>({    
@@ -273,7 +271,7 @@ export default {
       }
     },
     aditObs(){
-      this.observacao = this.obs
+      this.observacao = this.venda.obs
     },
     procurarSkuTroca(){
       let indice = this.produtos.findIndex(x => x.SKU === this.produtoTroca.SKU);
@@ -302,6 +300,26 @@ export default {
         this.trocaPorSku=false
       }else{
         alert('valor de troca inválida')
+      }
+    },
+    async finalizarVenda(){
+      try{
+        this.venda.status     = "processando...";
+        var newVenda          = Object.assign({}, this.venda) //create a obj clone, not reference
+        newVenda.dtVenda      = format(new Date(), "yyyy-MM-dd kk:mm")
+        newVenda.status       = "Finalizada";
+        newVenda.caixa        = this.usuario.caixaNome;
+        newVenda.loja         = this.usuario.loja;
+        newVenda.lojaAbr      = this.usuario.abreviacao;
+        newVenda.funcCaixa    = this.usuario.nomeUsuario;
+
+        this.$store.dispatch('newVenda',newVenda)
+        await setTimeout(() => {
+          this.$store.dispatch('limparVenda')
+          }, 500);
+          
+      }catch(e){
+        console.log('console.finalizando venda',e)
       }
     }
   },

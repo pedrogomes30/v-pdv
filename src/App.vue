@@ -4,7 +4,7 @@
           <SideMenu />
       </div>
     <v-main>
-      <div id='basePage'>
+      <div class='basePage'>
         <router-view/>
       </div>
     </v-main>
@@ -48,7 +48,7 @@ a { text-decoration: none; }
 .v-main{
   background: var(--accent); 
 }
-#basePage{
+.basePage{
   height: 100%;
   width: 98%;
   margin-left:1%;

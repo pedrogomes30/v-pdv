@@ -132,7 +132,7 @@
                       </v-list>
                     <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="green" text @click="limparCliente()">{{novoCliente?'pesquisar':'novo'}}</v-btn>
+                    <v-btn color="green" text @click="novoCliente = !novoCliente">{{novoCliente?'pesquisar':'novo'}}</v-btn>
                     <v-btn text @click="menuCliente = false">Cancelar</v-btn>
                     <v-btn color="var(--primary)" text @click="!novoCliente?adicionarCliente():cadastrarCliente()">{{!novoCliente?'salvar':'cadastrar'}}</v-btn>
                     </v-card-actions>

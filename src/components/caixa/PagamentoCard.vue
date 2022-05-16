@@ -93,7 +93,7 @@
             <template v-slot:item="row">
                 <tr>
                     <td><v-icon size="15" color="blue" @click="editPay(row.item)" >fa fa-pencil</v-icon></td>
-                    <td><v-icon>{{row.item.icon}}</v-icon></td>
+                    <td><v-icon :color='red'>{{row.item.icon}}</v-icon></td>
                     <td>{{row.item.method}}</td>
                     <td>{{valueFormat(row.item.valor)}}</td>
                     <td><v-icon size="15" color="red" @click="removePay(row.item)" >fa fa-xmark</v-icon></td>
@@ -112,6 +112,9 @@ export default {
     computed:{
         pagamentos(){
             return this.$store.state.caixa.pagamentos
+        },
+        formaPagamento(){
+            return this.$store.state.auth.formaPagamento
         },
         
     },

@@ -14,7 +14,7 @@
                         <div v-if="isLogin">
                             <v-text-field
                                 v-model="usuario.loja"
-                                :rules="storeRules"
+                                :rules="rules.store"
                                 disabled
                                 type="text"
                                 :label="`${usuario.loja} - ${usuario.abreviacao}`"

@@ -6,6 +6,7 @@ import caixa from './modules/caixa';
 import produto from './modules/produto';
 import pessoa from './modules/pessoa';
 import descontos from './modules/descontos';
+import vendas from './modules/vendas';
 
 
 Vue.use(Vuex)
@@ -17,6 +18,7 @@ export default new Vuex.Store({
    produto,
    pessoa,
    descontos,
+   vendas,
  },
  plugins:[createPersistedState()]
 })

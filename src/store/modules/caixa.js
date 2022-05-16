@@ -2,8 +2,9 @@
 const state = {//ou venda
     loja:'',
     caixa:'',
-    func_caixa:'',    
-    dtVenda:'',
+    funcCaixa:'',    
+    dtVenda:'',//ano-mes-dia hora:minuto
+    numero:'',
     obs:'',
     cliente:{
         documento:'',
@@ -38,6 +39,13 @@ const state = {//ou venda
     formaPagamento:'',
     vendaValida:false,
     status:'sem venda',
+    fiscal:false,
+        nfce:{
+            serie:'',
+            numero:'',
+            linkNfcePdf:'',
+            linkNfceXml:'',
+        }
 };
 
 const actions = {
@@ -143,6 +151,15 @@ const actions = {
             resolve(tipo)
         })
     },
+    // Finalizar venda
+    finalizarVenda({commit}){
+        return new Promise(resolve =>{
+            console.log('find newVEnda')
+            commit('newVenda',state)
+            resolve()
+            service.limparVenda()
+        })
+    },
     
 
 };
@@ -228,6 +245,7 @@ const mutations = {
             console.log('impossivel remover o desconto')
         }
         service.addDescontoProdutos(state)
+        service.total()
     },
     //  OBSERVAÇÃO
     observacao(state, observacao){
@@ -305,6 +323,8 @@ const mutations = {
         }   
         service.total(state)
     },
+    
+
 };
 const getters = {
     

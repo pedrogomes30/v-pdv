@@ -17,42 +17,45 @@
             @keyup.enter="searchProduct(search)">
             ></v-text-field>
         </v-card-title>
-        <v-data-table   
-            :headers="header"
-            :items="produtos"
-            :search="search" 
-            dense
-            :items-per-page="50"
-            @click:row="productSelect"
-            style="height: 71vh;padding-left:3px;padding-right:3px;font-size:0.2em;"
-            class="overflow-y-auto"
-            
-            >
-            <template  v-slot:items="row" >
-                <tr >
-                    <td >
-                        <h6>ICON</h6>
-                        <v-icon size="15" color="red"  >fa fa-xmark </v-icon>
-                    </td>
-                    <td><h6>{{row.item.SKU}}</h6></td>
-                    <td>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
-                    <td>{{row.item.marca}} {{row.item.fornecedor}}</td>
-                    <td>{{row.item.categoria_produto}}</td>
-                    <td >{{noPrice(row.item.preco)}}</td>
-                </tr>
-            </template>
-        </v-data-table>
+        <v-card-text>
+            <v-data-table   
+                :items="produtos"
+                :search="search" 
+                :headers="header"
+                fixed-header
+                calculate-widths
+                dense                
+                :items-per-page="50"
+                style="height: 71vh;"
+                class="overflow-y-auto"
+                >
+                <template  v-slot:item="row" >
+                    <tr @click='productSelect(row.item)'>
+                        <td><v-icon size="20" color="var(--primary)"   >fa fa-box </v-icon>
+                        </td>
+                        <td class='ma-0 pa-0 pr-1'>{{row.item.SKU}}</td>
+                        <td class='ma-0 pa-0'>{{row.item.descricao}} {{row.item.desc_variacao}}</td>
+                        <td class='ma-0 pa-0'><v-chip v-if="haveChips(row.item)" class='ma-1' color="var(--primary)" dark>{{row.item.marca}} {{row.item.fornecedor}}</v-chip></td>
+                        <td class='ma-0 pa-0'><v-chip class='ma-1' :color="changeColorCategory(row.item.categoria_produto)">{{row.item.categoria_produto}}</v-chip></td>
+                        <td class='ma-0 pa-0 justify-center'><b>{{noPrice(row.item.preco)}}</b></td>
+                    </tr>
+                </template>
+            </v-data-table>
+        </v-card-text>
     </v-card>
 </template>
 
 <script>
-
+ 
 export default {
     
     name : 'ProdutoCard',    
     computed:{
         produtos(){
             return this.$store.state.produto.produtos
+        },
+        categorias(){
+            return this.$store.state.produto.categorias
         },
         itensSelecionados(){
             return this.$store.state.caixa.itensSelecionados
@@ -62,16 +65,19 @@ export default {
         return {
            search: '',
            header:[
+               { text: '',align: 'start',sortable: false,value: ''},
                { text: 'Sku',align: 'start',sortable: false,value: 'SKU'},
-               { text: 'Descricao', value: 'descricao' },
-               { text: 'marca / fornecedor', value: 'marca' },
-               { text: 'Categoria', value: 'categoria_produto' },
-               { text: 'Preco(R$)', value: 'preco' },
+               { text: 'Descricao',align: 'start', value: 'descricao' },
+               { text: 'marca / fornecedor', align: 'start', value: 'marca' },
+               { text: 'Categoria',align: 'center', value: 'categoria_produto' },
+               { text: 'Preco(R$)', align: 'center', value: 'preco' },
            ],
+          
        } 
     },
     methods:{
         productSelect(item){
+            console.log('row selected',item)
             this.$store.dispatch('includeItensSelecionados',item)       
         },
         searchProduct(search){
@@ -81,8 +87,22 @@ export default {
             this.search = ''
         },
         noPrice(price){
-            return typeof price !== 'undefined' ? price:1
-        }
+            return typeof price !== 'undefined' ? price:this.valueFormat(9.99)
+        },
+        valueFormat(value){
+        return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+      },
+      changeColorCategory(categoria){
+          let exists = this.categorias.findIndex(x => x.categoria === categoria);
+          return this.categorias[exists].cor
+      },
+      haveChips(item){
+          console.log(item.fornecedor, item.marca)
+          if(item.fornecedor === '' || item.fornecedor === null  && item.marca == '' || item.marca == null){
+            return false
+          }
+          return true
+      }
     }
 }
 
@@ -90,5 +110,6 @@ export default {
 
 <style>
 #productCard{
+    min-width: 100%;
 }
 </style>
