@@ -1,24 +1,27 @@
-# v-pdv
+#V-PDV
 
-## Project setup
+consistem num projeto para o front de um PDV para uma loja de varejo.
+
+Utilizando as tecnologias:
+
+-vue;
+-vuex;
+-vuetify;
+
+e realizar a comunicação com um projeto PHP construido em adianti builder.
+
+algumas imagens do desenvolvimento
+
+## configuração do projeto
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### compilar e hot-reload
 ```
 npm run serve
 ```
+imagens do desenvolvimento:
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
