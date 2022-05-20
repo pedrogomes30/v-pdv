@@ -24,6 +24,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->foreignId('store_id')->constreined();
             //grupo empresarial
             //loja
             //modulos
@@ -35,8 +36,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down(){
+        $table->foreingnId('store_id')->constrained()->onDelete('cascade');
         Schema::dropIfExists('users');
     }
 };
