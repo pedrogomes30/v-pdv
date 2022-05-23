@@ -46,11 +46,11 @@ tecnologias utilizadas:
 
 <b> pos_products <b>
 
-  <img src='https://github.com/pedrogomes30/pos-project/blob/master/docs/Diagrams/Database%20Diagram/pos_products.png'/>
+  <img src='https://github.com/pedrogomes30/pos-project/blob/master/docs/Diagrams/Database%20Diagram/pos_product.png'/>
 
 <b> pos_sales <b>
 
-  <img src='https://github.com/pedrogomes30/pos-project/blob/master/docs/Diagrams/Database%20Diagram/pos_sales.png'/>
+  <img src='https://github.com/pedrogomes30/pos-project/blob/master/docs/Diagrams/Database%20Diagram/pos_sale.png'/>
   
   <b> Estrutura da aplicação </b>
 <img src='https://github.com/pedrogomes30/pos-project/blob/master/docs/img/estrutura%20projeto.png'/>
