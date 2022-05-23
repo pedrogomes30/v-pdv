@@ -1,7 +1,7 @@
 # pos-project
 este projeto está em desenvolvimento!
 
-pensando em uma pequena rede de lojas, com alto indice de vendas por minuto sendo cerca de 20 lojas gerando uma média de 3000 vendas ao dia, com uma média de 6,25 vendas por minuto além de contemplar multigrupos de lojas. e necessário o registro da venda em momentos offline. por esses motivos o atual não atende, por gerar vendas com dados errados, duplicados, ou excesso de valores. motivando a criação deste projeto.
+pensando em uma pequena rede de lojas, com alto indice de vendas por minuto sendo cerca de 20 lojas gerando uma média de 3000 vendas ao dia, com uma média de 6,25 vendas por minuto além de contemplar multigrupos de lojas. e necessário o registro da venda em momentos offline. por esse motivo foi pensado neste cenário de projeto agregando algumas caracteristicas descritas abaixo:
 
 principais caracteris que o PDV precisa ter:
 - Permitir o registro de venda no front, utilizando o storage do navegador:
@@ -42,7 +42,7 @@ tecnologias utilizadas:
 <b> pos_system </b>
 <img src='https://github.com/pedrogomes30/pos-project/blob/master/docs/Diagrams/Database%20Diagram/pos_system.png'/>
 
-**o motido de todos os usuarios serem em uma unica tabela é devido a qualquer pessoa cadastrada poder realizar uma compra, recebendo desconto de acordo com o seu tipo cadastrado.
+**o motivo de todos os usuarios serem em uma unica tabela é devido a qualquer pessoa cadastrada poder realizar uma compra, recebendo desconto de acordo com o seu tipo cadastrado.
 
 <b> pos_products <b>
 
