@@ -36,11 +36,11 @@ return new class extends Migration
             $table->unsignedBigInteger('store_id');
             $table->foreign('store_id')->references('id')->on('pos_system.stores');
             $table->unsignedBigInteger('employee_cashier_id');
-            $table->foreign('employee_cashier_id')->references('id')->on('pos_system.people');
+            $table->foreign('employee_cashier_id')->references('id')->on('pos_system.users');
             $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->references('id')->on('pos_system.people');
+            $table->foreign('client_id')->references('id')->on('pos_system.users');
             $table->unsignedBigInteger('salesman_id');
-            $table->foreign('salesman_id')->references('id')->on('pos_system.people');
+            $table->foreign('salesman_id')->references('id')->on('pos_system.users');
             $table->unsignedBigInteger('cashier_id');
             $table->foreign('cashier_id')->references('id')->on('pos_system.cashiers');
 

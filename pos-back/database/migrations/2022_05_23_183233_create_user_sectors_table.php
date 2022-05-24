@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cashiers', function (Blueprint $table) {
+        Schema::create('user_sectors', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->enum('cashier_type',['desktop','mobile'])->default('desktop');
-            $table->timestamps();
             //FK
-            $table->foreignId('user_id')->constrained()->nullable();
-            $table->foreignId('store_id')->constrained()->onDelete('CASCADE');
+            
+            $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('sector_id')->constrained()->onDelete('CASCADE');
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cashiers');
+        Schema::dropIfExists('user_sectors');
     }
 };
