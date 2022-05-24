@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('modules', function (Blueprint $table) {
+        Schema::create('cashiers', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->enum('cashier_type',['desktop','mobile'])->default('desktop');
             $table->timestamps();
+            //FK
+            $table->foreignId('person_id')->constrained()->nullable();
+            $table->foreignId('store_id')->constrained()->onDelete('CASCADE');
         });
     }
 
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('modules');
+        Schema::dropIfExists('cashiers');
     }
 };

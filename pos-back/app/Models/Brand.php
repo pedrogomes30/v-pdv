@@ -5,14 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreGroup extends Model
+class Brand extends Model
 {
+    protected $connection = 'pos_products';
     use HasFactory;
-
-    public function stores()
-    {
-        return $this->hasMany(Store::class);
-    }
     
 }
-

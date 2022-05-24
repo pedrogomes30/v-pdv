@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\userModule>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\StoreGroup>
  */
-class UserModuleFactory extends Factory
+class StoreGroupFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,6 @@ class UserModuleFactory extends Factory
     public function definition()
     {
         return [
-            //
         ];
     }
 }

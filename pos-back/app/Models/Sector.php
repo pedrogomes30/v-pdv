@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreGroup extends Model
+class Sector extends Model
 {
     use HasFactory;
 
-    public function stores()
-    {
-        return $this->hasMany(Store::class);
+    public function programs(){
+        return $this->hasMany(Program::class);
     }
-    
 }
-

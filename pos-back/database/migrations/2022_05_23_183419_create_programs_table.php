@@ -13,10 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('store_cashier', function (Blueprint $table) {
+        Schema::create('programs', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
+            $table->string('name',30)->unique();
+            $table->string('controller',30)->unique();
             $table->timestamps();
+            //FK
+            $table->foreignId('sector_id')->constrained()->onDelete('CASCADE');
         });
     }
 
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store_cashier');
+        Schema::dropIfExists('programs');
     }
 };

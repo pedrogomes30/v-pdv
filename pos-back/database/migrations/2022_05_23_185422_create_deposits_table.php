@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('personal_access_tokens', function (Blueprint $table) {
+        Schema::connection('pos_products')->create('deposits', function (Blueprint $table) {
             $table->id();
-            $table->morphs('tokenable');
-            $table->string('name');
-            $table->string('token', 64)->unique();
-            $table->text('abilities')->nullable();
-            $table->timestamp('last_used_at')->nullable();
-            $table->timestamps();
+            $table->string('name',30);
+            //FK DATABASE
+            $table->unsignedBigInteger('store_id');
+            $table->foreign('store_id')->references('id')->on('pos_system.stores')->onDelete('CASCADE');
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('personal_access_tokens');
+        Schema::connection('pos_products')->dropIfExists('deposits');
     }
 };

@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_programs', function (Blueprint $table) {
+        Schema::connection('pos_products')->create('providers', function (Blueprint $table) {
             $table->id();
+            $table->string('social_name',60)->unique()->nullable();
+            $table->string('fantasy_name',60)->unique();
+            $table->string('cnpj',16)->unique();
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_programs');
+        Schema::connection('pos_products')->dropIfExists('providers');
     }
 };

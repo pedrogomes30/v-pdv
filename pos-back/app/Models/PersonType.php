@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreGroup extends Model
+class PersonType extends Model
 {
     use HasFactory;
 
-    public function stores()
+    public function persons()
     {
-        return $this->hasMany(Store::class);
+        return $this->hasMany(Person::class);
     }
-    
 }
-

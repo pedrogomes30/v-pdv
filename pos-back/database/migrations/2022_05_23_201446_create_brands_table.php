@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('module_programs', function (Blueprint $table) {
+        Schema::connection('pos_products')->create('brands', function (Blueprint $table) {
             $table->id();
+            $table->string('name',30)->unique();
             $table->timestamps();
+            //FK
+            $table->foreignId('provider_id')->constraned()->nullable();
         });
     }
 
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('module_programs');
+        Schema::connection('pos_products')->dropIfExists('brands');
     }
 };

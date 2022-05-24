@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('modules_user', function (Blueprint $table) {
-            $table->foreignId('modules_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+        Schema::connection('pos_products')->create('ncms', function (Blueprint $table) {
+            $table->id();
+            $table->string('description',200)->nullable();
+            $table->string('number',15);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('modules_user');
+        Schema::connection('pos_products')->dropIfExists('ncms');
     }
 };

@@ -9,10 +9,19 @@ class Store extends Model
 {
     use HasFactory;
 
-    public function users(){
-        return $this->hasMany('App\models\User');
+    public function storeGroup()
+    {
+        return $this->belongsTo(StoreGroup::class);
     }
-    public function storeGroup(){
-        return $this->belongsTo('App\models\StoreGroup');
+
+    public function persons()
+    {
+        return $this->haveMany(Person::class);
     }
+
+    public function cashiers()
+    {
+        return $this->hasMany(Cashier::class);
+    }
+    
 }

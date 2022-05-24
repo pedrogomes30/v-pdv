@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('store_groups', function (Blueprint $table) {
+        Schema::create('person_programs', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            //FK
+            $table->foreignId('person_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('program_id')->constrained()->onDelete('CASCADE');
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store_groups');
+        Schema::dropIfExists('person_programs');
     }
 };

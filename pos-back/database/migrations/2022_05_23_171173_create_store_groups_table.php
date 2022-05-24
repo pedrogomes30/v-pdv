@@ -13,8 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('store_user', function (Blueprint $table) {
+        Schema::create('store_groups', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->json('default_theme')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store_user');
+        Schema::dropIfExists('store_groups');
     }
 };
