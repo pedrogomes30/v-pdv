@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('cashiers', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name',30)->unique();
             $table->enum('cashier_type',['desktop','mobile'])->default('desktop');
             $table->timestamps();
             //FK
-            $table->foreignId('user_id')->constrained()->nullable();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->foreignId('store_id')->constrained()->onDelete('CASCADE');
         });
     }

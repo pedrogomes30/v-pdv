@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $connection = 'pos_products';
+    protected $fillable = [
+        'name',
+        'website',
+        'cest_ncm_id',
+    ];
     use HasFactory;
 
     

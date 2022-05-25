@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class PriceList extends Model
 {
     protected $connection = 'pos_products';
+    protected $fillable = [
+        'name',
+        'store_id',
+    ];
     use HasFactory;
-}
+} 

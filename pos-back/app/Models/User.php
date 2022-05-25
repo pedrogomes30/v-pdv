@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'document',
+        'active',
+        'store_id',
+        'user_type_id',
     ];
 
     /**
@@ -41,6 +45,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function store()
     {
         return $this->belongsTo(Store::class);
@@ -48,7 +53,7 @@ class User extends Authenticatable
 
     public function personType()
     {
-        return $this->belongsTo(PersonType::class);
+        return $this->hasOne(PersonType::class);
     }
     
     public function programs()

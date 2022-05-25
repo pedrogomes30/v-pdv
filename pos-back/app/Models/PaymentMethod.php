@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentMethod extends Model
 {
     protected $connection = 'pos_sales';
+    protected $fillable = [
+        'method',
+        'phisical_payment',
+    ];
     use HasFactory;
 }

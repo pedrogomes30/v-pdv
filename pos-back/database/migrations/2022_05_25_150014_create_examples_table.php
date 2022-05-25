@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('store_groups', function (Blueprint $table) {
+        Schema::create('examples', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->json('default_theme')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store_groups');
+        Schema::dropIfExists('examples');
     }
 };

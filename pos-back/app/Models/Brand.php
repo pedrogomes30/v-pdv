@@ -9,5 +9,8 @@ class Brand extends Model
 {
     protected $connection = 'pos_products';
     use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
     
 }

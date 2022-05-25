@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class CestNcm extends Model
 {
     protected $connection = 'pos_products';
+    protected $fillable = [
+        'ncm',
+        'cest',
+    ];
     use HasFactory;
 }

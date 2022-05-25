@@ -5,17 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PersonSector extends Model
+class UserSector extends Model
 {
     use HasFactory;
+    
+    protected $fillable = [
+        'sector_id',
+        'user_id',
+    ];
 
     public function sectors()
     {
         return $this->belongsTo(Sector::class);
     }
 
-    public function person()
+    public function user()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(User::class);
     }
 }

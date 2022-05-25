@@ -9,6 +9,10 @@ class StoreGroup extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+    ];
+    
     public function stores()
     {
         return $this->hasMany(Store::class);

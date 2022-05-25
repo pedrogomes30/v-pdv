@@ -4,20 +4,21 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Cashier;
 
-class DatabaseSeeder extends Seeder
+class CashierSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        $this->call([
-            //StoreGroupSeeder::class,
-            //StoreSeeder::class,
-            CashierSeeder::class,
+        Cashier::create([
+            'name'=>'SAMPLE CASHIER 1',
+            'cashier_type'=>'desktop',
+            'store_id'=>1
         ]);
     }
 }

@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Program extends Model
+class UserType extends Model
 {
+    use HasFactory;
+    public $timestamps = false;
     protected $fillable = [
         'name',
-        'controller',
-        'sector_id',
+        'is_employee',
     ];
-    use HasFactory;
-    public function sector()
+    public function users()
     {
-        return $this->belongsTo(Sector::class);
+        return $this->hasMany(User::class);
     }
 }
