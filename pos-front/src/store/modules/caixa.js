@@ -4,7 +4,7 @@ const state = {//ou venda
     caixa:'',
     funcCaixa:'',    
     dtVenda:'',//ano-mes-dia hora:minuto
-    numero:'',
+    numero:'',//date(Y,m,d H:i)+storeAbbreviaiton+'-'+cashierId = 202202251652inval(totalvompra)CFJP-1
     obs:'',
     cliente:{
         documento:'',

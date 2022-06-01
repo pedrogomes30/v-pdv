@@ -1,12 +1,10 @@
 <template>
   <v-app>
-      <div app v-if="noIsLoginPage">
+      <div v-if="noIsLoginPage()">
           <SideMenu />
       </div>
     <v-main>
-      <div class='basePage'>
         <router-view/>
-      </div>
     </v-main>
   </v-app>
 </template>
@@ -16,20 +14,22 @@
 export default {
   name: "App",
   computed:{
-    noIsLoginPage(){
-      return this.$route.name !== "login"
-    }
+    
   },
   components:{
     SideMenu,
     }, 
-  setup(){
-    
-  },
-  
   data: () => ({
-    
+    sidemenu:true,
   }),
+  methods:{
+    noIsLoginPage(){
+     var sidemenu =  this.$route.name !== "login " ? true: false;
+     sidemenu     =  this.$route.name !== "StoreCashier" ? true: false;
+     console.log(this.$route.name,sidemenu);
+     return sidemenu
+    }
+  }
 };
 </script>
 <style >

@@ -14,11 +14,6 @@ class UserSector extends Model
         'user_id',
     ];
 
-    public function sectors()
-    {
-        return $this->belongsTo(Sector::class);
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -29,10 +29,8 @@ const state = {
 const actions = {
     updateProducts({commit},produtos){
         return new Promise(resolve =>{
-            //API to Backend 
-            produtos = null;
-            commit('returnProducts',produtos)
-            resolve()
+            
+            resolve(commit('returnProducts',produtos))
         })
     },
 };

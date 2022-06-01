@@ -7,6 +7,7 @@
       permanent
       app
       floating
+      @hover="!mini"
       color=0
     >
       <v-list-item class="px-2">
@@ -45,7 +46,7 @@
       </v-list>
     <div class="logout">
         <v-list dense>
-            <v-list-item to="/">
+            <v-list-item @click="logoff()">
                 <v-list-item-icon>
                     <v-icon title="Deslogar">fas fa-sign-out-alt</v-icon>
                 </v-list-item-icon>
@@ -93,9 +94,10 @@ export default {
             this.closeMenu = false
           }, this.time);
         }
-        console.log(this.time)
+      },
+      logoff(){
+        this.$store.dispatch('logoff')  
       }
-
     },
     
     

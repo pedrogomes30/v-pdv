@@ -16,7 +16,7 @@ export default new Vuex.Store({
    auth,
    caixa,
    produto,
-   pessoa,
+   pessoa, 
    descontos,
    vendas,
  },

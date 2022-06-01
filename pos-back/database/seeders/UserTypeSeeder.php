@@ -27,5 +27,9 @@ class UserTypeSeeder extends Seeder
             'name'=>'employeePartiner',
             'is_employee'=>false,
         ]);
+        UserType::create([
+            'name'=>'admin',
+            'is_employee'=>true,
+        ]);
     }
 }

@@ -18,12 +18,12 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name'=>'admin',
-            'email'=>'admin',
+            'email'=>'admin@admin.com',
             'password'=>Hash::make('admin'),
             'document'=>'00000000000000',
             'active'=>true,
-            'store_id'=>2,
-            'user_type_id'=>4,
+            'store_id'=>1,
+            'user_type_id'=>1,
         ]);
     }
 }
