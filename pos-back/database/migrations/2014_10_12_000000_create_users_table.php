@@ -16,16 +16,11 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('document',20)->unique()->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->boolean('active')->default(false);
             $table->timestamps();
-            //fk
-            $table->foreignId('store_id')->constrained();
-            $table->foreignId('user_type_id')->constrained()->onDelete('CASCADE');
         });
     }
 
