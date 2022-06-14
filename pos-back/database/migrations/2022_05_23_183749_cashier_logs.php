@@ -13,9 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('examples', function (Blueprint $table) {
+        Schema::create('cashier_logs', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->date('dt_login');
+            $table->date('dt_logout')->nullable();
+            //FK
+            $table->foreignId('cashier_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('examples');
+        Schema::dropIfExists('cashier_logs');
     }
 };

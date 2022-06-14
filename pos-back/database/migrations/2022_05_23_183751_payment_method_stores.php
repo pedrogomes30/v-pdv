@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('examples', function (Blueprint $table) {
+        Schema::connection('pos_system')->create('payment_method_stores', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            //FK
+            $table->foreignId('store_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('payment_method_id')->constrained()->onDelete('CASCADE');
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('examples');
+        Schema::dropIfExists('payment_method_stores');
     }
 };

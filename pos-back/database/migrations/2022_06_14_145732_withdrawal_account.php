@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('examples', function (Blueprint $table) {
+        Schema::connection('pos_withdrawal_closure')->create('withdrawal_accounts', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('withdrawal_account',50);
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('examples');
+        Schema::connection('pos_withdrawal_closure')->dropIfExists('withdrawal_accounts');
     }
 };
