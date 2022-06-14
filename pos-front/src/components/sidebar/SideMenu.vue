@@ -15,8 +15,8 @@
           <v-img src="../../assets/defaultUser.jpg"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>{{user}}</v-list-item-title>
-
+        <v-list-item-title>{{user.name}}</v-list-item-title>
+        <v-list-item-subtitle>{{user.email}}</v-list-item-subtitle>
         <v-btn
           icon
           @click.stop="mini = !mini"
@@ -66,16 +66,20 @@ export default {
     setup(){
         
         },
+    computed:{
+      user(){
+        return this.$store.state.auth.user
+      }
+    },
     data:()=>({
         selectedItem: 0,
         drawer: true,
         mini: true,
-        user: 'Admin',
         closeMenu: false,
         time:0,
         userImg: '../../assets/defaultUser.jpg',
         items: [
-            {icon:'fas fa-newspaper',title:'Novidades',link:'novidades'},
+            {icon:'fas fa-newspaper',title:'Novidades',link:'/'},
             {icon:'fas fa-cart-plus',title:'Caixa',link:'caixa'},
             {icon:'fas fa-history',title:'Histórico',link:'historico'},
             {icon:'mdi-cart-check',title:'Fechamento',link:'fechamentoCaixa'},
@@ -96,7 +100,7 @@ export default {
         }
       },
       logoff(){
-        this.$store.dispatch('logoff')  
+        this.$store.dispatch('logout')  
       }
     },
     

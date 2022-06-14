@@ -77,7 +77,6 @@ export default {
     },
     methods:{
         productSelect(item){
-            console.log('row selected',item)
             this.$store.dispatch('includeItensSelecionados',item)       
         },
         searchProduct(search){
@@ -97,7 +96,6 @@ export default {
           return this.categorias[exists].cor
       },
       haveChips(item){
-          console.log(item.fornecedor, item.marca)
           if(item.fornecedor === '' || item.fornecedor === null  && item.marca == '' || item.marca == null){
             return false
           }

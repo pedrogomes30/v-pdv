@@ -10,7 +10,6 @@ import HistoricoPage from '../views/HistoricoPage.vue'
 import PromocaoPage from '../views/PromocaoPage.vue'
 import RecuperarSenha from '../views/RecuperarSenha.vue'
 import NotFound from '../views/NotFound.vue'
-import StoreCashierPage from '../views/StoreCashierPage.vue'
 import Guard from '../services/middleware'
 
 
@@ -18,9 +17,8 @@ import Guard from '../services/middleware'
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/login',              name: 'login',        component: LoginPage,       },
-  { path: '/storecashier',  name: 'StoreCashier', component: StoreCashierPage },
-  { path: '/novidades',     name: 'news',         component: NewsPage,        beforeEnter:Guard.auth},
+  { path: '/login',         name: 'login',        component: LoginPage,       },
+  { path: '/',              name: 'news',         component: NewsPage,        beforeEnter:Guard.auth},
   { path: '/caixa',         name: 'caixa',        component: CaixaPage,       beforeEnter:Guard.auth},
   { path: '/clientes',      name: 'cliente',      component: ClientePage,     beforeEnter:Guard.auth},
   { path: '/configuracao',  name: 'configuracao', component: ConfiguracaoPage,beforeEnter:Guard.auth},

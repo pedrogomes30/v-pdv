@@ -9,6 +9,10 @@ class StoreGroupController extends Controller
 {
     public function index()
     {
-        return \App\Models\StoreGroup::with('stores')->get();
-    }
+        try{
+            return \App\Models\StoreGroup::with('stores')->get();
+        }catch(\Exception $e){
+            return response()->json();
+        }
+    }   
 }

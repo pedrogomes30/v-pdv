@@ -6,6 +6,14 @@
     <v-main>
         <router-view/>
     </v-main>
+    <v-footer padless>
+    <v-col
+      class="text-center"
+      cols="12"
+    >
+      {{ new Date().getFullYear() }} — <strong>Vhinfo</strong>
+    </v-col>
+  </v-footer>
   </v-app>
 </template>
 
@@ -24,9 +32,7 @@ export default {
   }),
   methods:{
     noIsLoginPage(){
-     var sidemenu =  this.$route.name !== "login " ? true: false;
-     sidemenu     =  this.$route.name !== "StoreCashier" ? true: false;
-     console.log(this.$route.name,sidemenu);
+     var sidemenu =  this.$route.name !== "login" ? true: false;
      return sidemenu
     }
   }

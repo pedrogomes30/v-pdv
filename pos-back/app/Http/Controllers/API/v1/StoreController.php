@@ -18,19 +18,9 @@ class StoreController extends Controller
         }
     }
 
-    public function show (){
+    public function show ($id){
         try{
-            $store                  = Store::findOrFail(auth()->user()->store_id);
-            $storeGroup             = StoreGroup::findOrFail($store->store_group_id);
-            $return                 = array();
-            $cashiers               = Cashier::where('store_id',$store->id)->get();
-            $return['id']           = $store->id;
-            $return['name']         = $store->fantasy_name;
-            $return['abbreviation'] = $store->abbreviation;
-            $return['store_group_id']= $storeGroup->id;
-            $return['store_group_name']= $storeGroup->name;
-            $return['cashiers']     = $cashiers;
-            return response()->json(['error'=>false,'message'=>'','data'=>$return],200);
+            return response()->json(['error'=>false,'message'=>'','data'=>Store::findOrFail($id)],200);
         }catch(\Exception $e){
             return response()->json(['error'=>false,'message'=>$e->getMessage(),'data'=>''],500);
         }
