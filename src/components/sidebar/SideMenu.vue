@@ -15,8 +15,8 @@
           <v-img src="../../assets/defaultUser.jpg"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>{{user.name}}</v-list-item-title>
-        <v-list-item-subtitle>{{user.email}}</v-list-item-subtitle>
+        <v-list-item-title>{{user.user_name}}</v-list-item-title>
+        <v-list-item-subtitle>{{user.profession}}</v-list-item-subtitle>
         <v-btn
           icon
           @click.stop="mini = !mini"
@@ -68,7 +68,7 @@ export default {
         },
     computed:{
       user(){
-        return this.$store.state.auth.user
+        return this.$store.state.auth.cashier_session
       }
     },
     data:()=>({

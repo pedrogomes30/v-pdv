@@ -9,9 +9,9 @@
                 </div>
                 <div >
                     <div class='text-center'>
-                        <h2>V-PDV LOGIN</h2>
+                        <h2>V-PDV LOJA</h2>
                     </div>
-                    <LoginCredentialsForm />
+                    <StoreCredentialsForm />
                 </div>
             </v-card>
         </v-col>
@@ -19,18 +19,27 @@
 </template>
 
 <script>
-import LoginCredentialsForm from '../components/loginPage/LoginCredentialsForm.vue';
+import StoreCredentialsForm from '../components/loginPage/StoreCredentialsForm.vue';
 export default {
     name:'LoginPage',
     computed:{
+        auth(){
+            return this.$store.state.auth.login.login
+        },
     },
     data:()=>({
 
     }),
     components:{
-        LoginCredentialsForm,
+        StoreCredentialsForm
     },
     methods:{
+        isloginOrStore(){
+            return this.auth.login
+        }
+    },
+    beforeMount(){
+        this.$store.dispatch('logout');
     },
 }
 </script>

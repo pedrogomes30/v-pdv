@@ -2,11 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 import auth from './modules/auth';
-import caixa from './modules/caixa';
-import produto from './modules/produto';
-import pessoa from './modules/pessoa';
-import descontos from './modules/descontos';
-import vendas from './modules/vendas';
+import cashierStore from './modules/cashierStore';
+import productStore from './modules/productStore';
+import personStore from './modules/personStore';
+import discontStore from './modules/discontStore';
+import salesStore from './modules/salesStore';
 
 
 Vue.use(Vuex)
@@ -14,11 +14,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
  modules:{
    auth,
-   caixa,
-   produto,
-   pessoa, 
-   descontos,
-   vendas,
+   cashierStore,
+   productStore,
+   personStore, 
+   discontStore,
+   salesStore,
  },
  plugins:[createPersistedState()]
 })

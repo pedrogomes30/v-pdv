@@ -24,7 +24,7 @@
 
 <script>
   
-import ProdutoCard from '../components/caixa/ProdutoCard.vue';
+import ProdutoCard from '../components/caixa/ProductCard.vue';
   export default {
     name: 'PromocaoPage',
 

@@ -90,6 +90,8 @@
 </template>
 
 <script>
+import {Authenticate} from '../../services/api/authApi'
+import router from '@/router';
 export default {
     data:()=>({
         loading:false,
@@ -110,13 +112,14 @@ export default {
         },
     }),
     methods:{
-        login(){
+        async login(){
             if(this.$refs.form.validate()){ 
                 this.loading = true;
                 try{
-                    this.$store.dispatch('login',this.userTemp)  
+                    await Authenticate(this.userTemp)
+                    router.push('/start')
                 }catch(e){
-                    alert('erro ao fazer login: ',e)
+                    alert(e)
                 }
                 this.loading = false;
             }

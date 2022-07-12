@@ -24,7 +24,7 @@
         <v-divider></v-divider>
       <v-tabs-items v-model="tabs" >
       <v-tab-item>
-        <ProdutoSelecionadoCard />
+        <ItemCard />
       </v-tab-item>
       <v-tab-item>
         <CupomDescontoCard />
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import ProdutoSelecionadoCard from './ProdutoSelecionadoCard.vue'
+  import ItemCard from './ItemsCard.vue'
   import CupomDescontoCard from './CupomDescontoCard.vue'
   import PagamentoCard from './PagamentoCard.vue'
   export default {
@@ -53,7 +53,7 @@
       }
     },
     components:{
-        ProdutoSelecionadoCard,
+        ItemCard,
         CupomDescontoCard,
         PagamentoCard,
     }

@@ -1,6 +1,6 @@
 <template> 
 <div class='basePage'> 
-  <!-- cabeçalho -->
+  <!-- header -->
   <v-row no-gutters dense style='max-height:20%'>
     <v-col cols="auto" align-self="center" >
       <v-list-item>
@@ -20,18 +20,18 @@
     </v-col>
   <!--  -->
   </v-row>
-    <!-- PAINEL PRINCIPAL -->
+    <!-- main card -->
     <v-row no-gutters dense>
-      <!-- esquerda -->
+      <!-- left -->
       <v-col cols='7' >
         <ProdutosCard />
       </v-col>
-      <!-- direita -->
+      <!-- right -->
       <v-col cols='5'  id="tabMenu">
         <TabCaixaCard />
         <TotalizadorCard />
         <v-row justify="space-around" class='pl-3 pr-3' >
-          <!-- MENU DE OBSERVAÇÂO DA VENDA -->
+          <!-- menu -->
             <v-menu
               v-model="menuObs"
               :close-on-content-click="false"
@@ -57,7 +57,7 @@
                         <v-icon color="white"> fa fa-list</v-icon>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                    <v-list-item-title>Observação da venda</v-list-item-title>
+                    <v-list-item-title>Observação da sale</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
                 </v-list>
@@ -76,7 +76,7 @@
                 <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click="menuObs = false">Cancelar</v-btn>
-                <v-btn color="var(--primary)" text @click="salvarObs(observacao)">salvar</v-btn>
+                <v-btn color="var(--primary)" text @click="saveObs(observacao)">salvar</v-btn>
                 </v-card-actions>
               </v-card>
             </v-menu>
@@ -114,7 +114,7 @@
                 <v-divider></v-divider>
                 <v-list>
                   <v-switch
-                    v-model="trocaPorSku"
+                    v-model="changeBySku"
                     label="troca SEM sku do produto"
                     color="var(--primary)"
                     class='pa-2'
@@ -123,13 +123,13 @@
                       label="SKU do produto"
                       hide-details="auto"
                       color="var(--primary)"
-                      v-model="produtoTroca.SKU"
+                      v-model="productChange.SKU"
                       hide-spin-buttons
                       class='pa-2'
                       type='number'
                       counter="13"
-                      :disabled="trocaPorSku === true"
-                      :rules="trocaPorSku !== true ? rules.SKU : [true]"
+                      :disabled="changeBySku === true"
+                      :rules="changeBySku !== true ? rules.SKU : [true]"
                       @change="procurarSkuTroca()"
                       prepend-icon='fa fa-box'
                       autofocus>                
@@ -139,7 +139,7 @@
                       hide-details="auto"
                       type='number'
                       color="var(--primary)"
-                      v-model="produtoTroca.quantidade"
+                      v-model="productChange.quantidade"
                       class='pa-2'
                       prepend-icon='fa fa-boxes'>                
                   </v-text-field>
@@ -148,15 +148,15 @@
                   Valor: 
                   <Money
                       v-bind="money"
-                      :disabled="trocaPorSku === false"
-                      v-model="produtoTroca.valor"
+                      :disabled="changeBySku === false"
+                      v-model="productChange.valor"
                       class='pa-2'
                       prepend-icon='fa fa-money-bill'>                
                   </Money>
                   </h5>
                   <v-select
-                    v-model="produtoTroca.motivo"
-                    :items="motivoTroca"
+                    v-model="productChange.motivo"
+                    :items="justifyChange"
                     :rules="rules.motivo"
                     color="var(--primary)"
                     label="Motivo da troca"
@@ -174,16 +174,16 @@
             </v-menu>
             <!-- fim -->
             
-            <v-btn height="14.5vh" width="15%"  color='red' dark   title="cancelar a venda" @click="onCancelOrder()">
+            <v-btn height="14.5vh" width="15%"  color='red' dark   title="cancelar a sale" @click="onCancelOrder()">
               <v-icon color="white" size='20'> fa fa-ban</v-icon>
             </v-btn>
-            <v-btn height="14.5vh" width="52%"  color='green' dark :disabled="!venda.vendaValida" @click='finalizarVenda()'>
+            <v-btn height="14.5vh" width="52%"  color='green' dark :disabled="!sale.valid_sale" @click='finalizarsale()'>
               FINALIZADO
             </v-btn>
         </v-row>
-        <v-row dense no-gutters class='pt-6' justify="center" v-if="venda.status !== 'Finalizada'">
+        <v-row dense no-gutters class='pt-6' justify="center" v-if="sale.status !== 'Finalizada'">
           <v-spacer></v-spacer>
-          <h5  class="white--text ml-3 mr-3 "> {{venda.status}}</h5>
+          <h5  class="white--text ml-3 mr-3 "> {{sale.status}}</h5>
           <v-icon color='white'>fa fa-exclamation</v-icon>
         </v-row>
       </v-col>
@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import ProdutosCard from '../components/caixa/ProdutoCard.vue'
+import ProdutosCard from '../components/caixa/ProductCard.vue'
 import ClienteVendedorCard from '../components/caixa/ClienteVendedorCard.vue'
 import TabCaixaCard from '../components/caixa/TabCaixaCard.vue'
 import TotalizadorCard from '../components/caixa/TotalizadorCard.vue'
@@ -206,32 +206,25 @@ export default {
       
     },    
   computed:{
-    venda(){
-      return this.$store.state.caixa
+    sale(){
+      return this.$store.state.cashierStore
     },   
-    produtos(){
-        return this.$store.state.produto.produtos
-    },  
-    usuario(){
-        return this.$store.state.auth
-    },  
   },
   data:()=>({    
     menuObs:false,
     menuTroca:false,
-    trocaPorSku:false,
-    produtoTroca:{
-      SKU: '', 
-      codigo: '#TROCA',
-      descricao:'',
-      todosProdutos:true,
-      comCliente :false,
-      porcentagem:false,
-      acumulativo:true,
-      valor:0,
-      quantidade:1,
+    changeBySku:false,
+    productChange:{
+      with_client: "",
+      code: "#TROC",
+      description: "Oferece o cupom com o valor do produto",
+      value: 10,
+      all_products: 0,
+      acumulate: 1,
+      percent: 1,
+      quantity: 1
     },
-    motivoTroca:[
+    justifyChange:[
       'danificado',
       'fora da validade',
       'desistência do cliente',
@@ -258,12 +251,11 @@ export default {
       
     },
     onCancelOrder(){
-      this.$store.dispatch('limparVenda')
+      this.$store.dispatch('limparsale')
     },
     onProductChange(){
-      console.log('há, vou troca produto')
     },
-    salvarObs(obs){
+    saveObs(obs){
       if(obs.length <=200){
         this.$store.dispatch('observacao',obs)
         this.menuObs = false
@@ -271,20 +263,20 @@ export default {
       }
     },
     aditObs(){
-      this.observacao = this.venda.obs
+      this.observacao = this.sale.obs
     },
     procurarSkuTroca(){
-      let indice = this.produtos.findIndex(x => x.SKU === this.produtoTroca.SKU);
+      let indice = this.produtos.findIndex(x => x.SKU === this.productChange.SKU);
       var produto = this.produtos[indice]
-      this.produtoTroca.valor = produto.valor
-      this.produtoTroca.descricao = 'troca referente ao SKU: '+produto.SKU
+      this.productChange.valor = produto.valor
+      this.productChange.descricao = 'troca referente ao SKU: '+produto.SKU
     },
     novaTroca(){
-      if(this.produtoTroca.valor>0 && this.produtoTroca.valor<=10000){this.produtoTroca.valor = this.produtoTroca.quantidade * this.produtoTroca.valor
-        console.log(this.produtoTroca.valor)
-        this.produtoTroca.descricao = this.produtoTroca.SKU ==='' ? 'referente ao produto não identificado' : 'referente ao produto '+this.produtoTroca.SKU
-        this.$store.dispatch('addDescontos',this.produtoTroca)
-        this.produtoTroca = 
+      if(this.productChange.valor>0 && this.productChange.valor<=10000){this.productChange.valor = this.productChange.quantidade * this.productChange.valor
+        console.log(this.productChange.valor)
+        this.productChange.descricao = this.productChange.SKU ==='' ? 'referente ao produto não identificado' : 'referente ao produto '+this.productChange.SKU
+        this.$store.dispatch('addDescontos',this.productChange)
+        this.productChange = 
         {
           SKU: '', 
           codigo: '#TROCA',
@@ -297,29 +289,29 @@ export default {
           quantidade:1,
         }
         this.menuTroca = false
-        this.trocaPorSku=false
+        this.changeBySku=false
       }else{
         alert('valor de troca inválida')
       }
     },
-    async finalizarVenda(){
+    async finalizarsale(){
       try{
-        this.venda.status     = "processando...";
-        var newVenda          = Object.assign({}, this.venda) //create a obj clone, not reference
-        newVenda.dtVenda      = format(new Date(), "yyyy-MM-dd kk:mm")
-        newVenda.status       = "Finalizada";
-        newVenda.caixa        = this.usuario.caixaNome;
-        newVenda.loja         = this.usuario.loja;
-        newVenda.lojaAbr      = this.usuario.abreviacao;
-        newVenda.funcCaixa    = this.usuario.nomeUsuario;
+        this.sale.status     = "processando...";
+        var newsale          = Object.assign({}, this.sale) //create a obj clone, not reference
+        newsale.dtsale      = format(new Date(), "yyyy-MM-dd kk:mm")
+        newsale.status       = "Finalizada";
+        newsale.caixa        = this.usuario.caixaNome;
+        newsale.loja         = this.usuario.loja;
+        newsale.lojaAbr      = this.usuario.abreviacao;
+        newsale.funcCaixa    = this.usuario.nomeUsuario;
 
-        this.$store.dispatch('newVenda',newVenda)
+        this.$store.dispatch('newsale',newsale)
         await setTimeout(() => {
-          this.$store.dispatch('limparVenda')
+          this.$store.dispatch('limparsale')
           }, 500);
           
       }catch(e){
-        console.log('console.finalizando venda',e)
+        console.log('console.finalizando sale',e)
       }
     }
   },

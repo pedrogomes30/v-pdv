@@ -33,9 +33,8 @@
                             <v-icon size="15" color="red" @click="removeItem(row)" >fa fa-xmark </v-icon>
                         </td>
                         <td class='pa-0'> 
-                            {{row.item.SKU}}   
-                        </td>
-                        <td>{{row.item.descricao}}</td>
+                            {{row.item.sku}}<br>
+                            <b>{{row.item.description}}</b></td>
                         <td>
                             <v-container class='pa-0' id="microButtons">
                                 <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
@@ -49,9 +48,9 @@
                                 <h6>
                                     {{valueFormat(row.item.total)}}
                                 </h6>
-                                <div v-if='row.item.descontos !== undefined '>
-                                    <div v-for="desconto in row.item.descontos" :key="desconto.codigo">
-                                        <h6 style="color:red;" :title="getDescTitle(desconto)">{{valueFormat(desconto.valor)}}-</h6>
+                                <div v-if='row.item.disconts !== undefined '>
+                                    <div v-for="desconto in row.item.disconts" :key="desconto.codigo">
+                                        <h6 style="color:red;" :title="getDescTitle(desconto)">{{valueFormat(desconto.value)}}-</h6>
                                     </div>
                                 </div>
                                 <h5>
@@ -80,7 +79,6 @@ export default {
     data:()=>{
         return{
             
-
         }
     },
     methods:{
