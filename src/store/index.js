@@ -4,7 +4,6 @@ import createPersistedState from "vuex-persistedstate";
 import auth from './modules/auth';
 import cashierStore from './modules/cashierStore';
 import productStore from './modules/productStore';
-import personStore from './modules/personStore';
 import discontStore from './modules/discontStore';
 import salesStore from './modules/salesStore';
 
@@ -15,8 +14,7 @@ export default new Vuex.Store({
  modules:{
    auth,
    cashierStore,
-   productStore,
-   personStore, 
+   productStore, 
    discontStore,
    salesStore,
  },

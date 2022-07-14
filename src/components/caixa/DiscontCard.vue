@@ -36,24 +36,24 @@
                 <v-text-field
                     label="código do cupom"
                     hide-details="auto"
-                    v-model="cupom.codigo"
+                    v-model="cupom.code"
                     class='pa-2'
                     color="var(--primary)"
-                    @change="cuponValidate"
-                    @focus="onFocusCodigo"
-                    :rules="rules.validCodigo"
+                    @change="code_validate"
+                    @focus="onFocuscode"
+                    :rules="rules.validcode"
                     prepend-icon='fa fa-ticket'>                
                 </v-text-field>
                 <div v-if="!cupom.todosProdutos">
                     <v-select
                         label="selecione o produto"
                         hide-details="auto"
-                        item-text="SKU"
-                        item-value="SKU"
+                        item-text="sku"
+                        item-value="sku"
                         color="var(--primary)"
-                        v-model='cupom.SKU'
-                        :items="itensSelecionados"
-                        :hint="`SKU: ${cupom.SKU}`"
+                        v-model='cupom.sku'
+                        :items="items"
+                        :hint="`sku: ${cupom.sku}`"
                         prepend-icon='fa fa-box'
                         class='pa-2'
                         :rules="rules.produto"
@@ -63,8 +63,8 @@
                 </v-select>
                 </div>
                 <div class='menu'>
-                    <h4 class='pa-2'>obs:<br> {{cupom.descricao}}</h4>
-                    <h4 class='pa-2'>valor: <br>{{cupom.porcentagem ? cupom.valor+'%' : valueFormat(cupom.valor)}}</h4>
+                    <h4 class='pa-2'>obs:<br> {{cupom.description}}</h4>
+                    <h4 class='pa-2'>valor: <br>{{cupom.percent ? cupom.value+'%' : valueFormat(cupom.value)}}</h4>
                 </div>
                 </v-list>
                 <v-card-actions>
@@ -78,7 +78,7 @@
         </v-card-title>        
         <v-data-table 
         :headers="header" 
-        :items="descontos"
+        :items="disconts"
         hide-default-footer
         hide-default-header
         calculate-widths
@@ -90,9 +90,9 @@
             <td>
                 <v-icon size="15" color="var(--primary)">fa fa-ticket </v-icon>
             </td>
-            <td>{{row.item.codigo}}</td>
+            <td>{{row.item.code}}</td>
             <td>{{skuFormat(row.item)}}</td>
-            <td>{{row.item.porcentagem ? row.item.valor+'%' : valueFormat(row.item.valor)}}</td>
+            <td>{{row.item.percent ? row.item.value+'%' : valueFormat(row.item.value)}}</td>
             <td>  
                 <v-icon size="10" color="red" @click="removeCupom(row.item)" >fa fa-xmark</v-icon>
             </td>
@@ -103,54 +103,47 @@
 </template>
 
 <script>
+import {getCupom} from '../../services/api/cuponsApi'
 export default {
     name:'CupomDescontoCard',
     computed:{
-        descontos(){
-            return this.$store.state.caixa.descontos
+        disconts(){
+            return this.$store.state.cashierStore.disconts
         },
-        valorProdutos(){
-          return this.$store.state.caixa.valorProdutos
+        items(){
+            return this.$store.state.cashierStore.items
         },
-        itensSelecionados(){
-            return this.$store.state.caixa.itensSelecionados
+        prefabCupons(){
+          return this.$store.state.auth.cashier_session.cupoms
         },
-        valorDesconto(){
-            return this.$store.state.caixa.valorDesconto
-        },
-        cuponsPreDefinidos(){
-          return this.$store.state.descontos.cuponsPreDefinidos
-        },
-        comCliente(){
-          return this.$store.state.caixa.comCliente
-        },
+        
     },
     data:()=>{
         return{
             menu: false,
             cupom:{
-                id:0,
-                SKU: '', 
-                codigo: '#',
-                descricao:'',
-                todosProdutos:false,
-                comCliente:false,
-                porcentagem:false,
-                acumulativo:false,
-                valor:'',
+                id: 0,
+                with_client: "",
+                code: "",
+                description: "",
+                value: 0,
+                all_products: 0,
+                acumulate: 1,
+                percent: 1,
+                quantity: 0
             }, 
             header:[
                 {
-                text: 'codigo',
+                text: 'code',
                 align: 'start',
                 sortable: false,
-                value: 'codigo',
+                value: 'code',
                 },
-                { text: 'valor(R$)', value: 'valor' },
+                { text: 'value(R$)', value: 'value' },
                 { text: 'Icon', value: 'icon' },
             ],
             rules:{
-                validCodigo:[true],
+                validcode:[true],
                 value: [
                     val => (val || '').length > 0 || 'necessário informar o produto!'
                 ],
@@ -158,58 +151,69 @@ export default {
         }
     },
     methods:{
-        cuponValidate(codigo){
-            let exists = this.cuponsPreDefinidos.findIndex(x => x.codigo === codigo);  
-            if(exists !== -1){
-                this.cupom = this.cuponsPreDefinidos[exists]
-            }else{
-                this.rules.validCodigo = ['Cupom inválido']
+        async code_validate(code){
+            //test this call
+            try{
+                let exists = this.prefabCupons.findIndex(x => x.code === code);  
+                if(exists !== -1){
+                    this.cupom = this.prefabCupons[exists]
+                }else{
+                    var newCupom = await getCupom(code)
+                    if( typeof(newCupom)!== 'undefined'){
+                        this.cupom = this.newCupom
+                    }else{
+                        this.rules.validCodigo = ['Cupom inválido']
+                    }
+                }
+            }catch(e){
+                alert(e)
             }
         },
         addCupom(){
-            if(this.cupom.acumulativo){
-                let noRepeat = this.descontos.findIndex(x => x.SKU === this.cupom.SKU);  
+            if(this.cupom.acumulate){
+                let noRepeat = this.disconts.findIndex(x => x.sku === this.cupom.sku);  
                 if(noRepeat !== -1){
-                    this.rules.validCodigo = ['Cupom já incluso neste item!']
+                    this.rules.validcode = ['Cupom já incluso neste item!']
                     return false
                 }
-                this.$store.dispatch('addDescontos',this.cupom)
+                this.$store.dispatch('addDisconts',this.cupom)
             }else{
-                let noRepeat = this.descontos.findIndex(x => x.codigo === this.cupom.codigo);  
+                let noRepeat = this.disconts.findIndex(x => x.code === this.cupom.code);  
                 if(noRepeat !== -1){
-                    this.rules.validCodigo = ['cupom já incluido!']
+                    this.rules.validcode = ['cupom já incluido!']
                     return false
                 }
-                noRepeat = this.descontos.findIndex(x => x.acumulativo === false)  
+                noRepeat = this.disconts.findIndex(x => x.acumulate === false)  
                 if(noRepeat !== -1){
-                    this.rules.validCodigo = ['já possui outro cupom não acumulativo']
+                    this.rules.validcode = ['já possui outro cupom não acumulativo']
                     return false
                 }
-                this.$store.dispatch('addDescontos',this.cupom)
+                this.$store.dispatch('addDisconts',this.cupom)
             }
             this.clearCupom()
             this.menu = false
         },
         removeCupom(cupom){
-            this.$store.dispatch('removeDescontos',cupom)
-            if(cupom.comCliente){
-            this.$store.dispatch('forceCliente',cupom.comCliente)
+            this.$store.dispatch('removeDisconts',cupom)
+            if(cupom.with_client){
+            this.$store.dispatch('forceCustomer',cupom.with_client)
             }
         },
-        onFocusCodigo(){
-            this.rules.validCodigo = [true]
+        onFocuscode(){
+            this.rules.validcode = [true]
             this.clearCupom();
         },
         clearCupom(){
             this.cupom={
-                    id:'',
-                    SKU: '', 
-                    descricao:'#',
-                    todosProdutos:false,
-                    comCliente:false,
-                    porcentagem:false,
-                    acumulativo:false,
-                    valor:'',
+                    id: 0,
+                    with_client: "",
+                    code: "",
+                    description: "",
+                    value: 0,
+                    all_products: 0,
+                    acumulate: 1,
+                    percent: 1,
+                    quantity: 0
                 } 
         },
         isPercent(value){

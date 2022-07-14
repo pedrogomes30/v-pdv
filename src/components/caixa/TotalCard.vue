@@ -11,17 +11,17 @@
                 <v-card no-gutters dense>
                     <div class='pl-2 pr-2'>
                         <v-row no-gutters dense><v-icon size='15' class='pa-1' color="var(--primary)">fa fa-boxes</v-icon>
-                            Total produtos <v-spacer></v-spacer>{{valueFormat(valorProdutos)}}</v-row>
+                            Total produtos <v-spacer></v-spacer>{{valueFormat(sale.products_value)}}</v-row>
                         <v-row no-gutters dense><v-icon size='15' class='pa-1' color="var(--primary)">fa fa-ticket</v-icon>
-                            Total descontos <v-spacer></v-spacer>-{{valueFormat(valorDesconto)}}</v-row>
+                            Total descontos <v-spacer></v-spacer>-{{valueFormat(sale.discont_value)}}</v-row>
                          <v-row no-gutters dense><v-icon size='15' class='pa-1' color="var(--primary)">fa fa-money-bill</v-icon>
-                            Total pagamentos <v-spacer></v-spacer>{{valueFormat(valorPagamentos)}}</v-row>
+                            Total pagamentos <v-spacer></v-spacer>{{valueFormat(sale.payments_value)}}</v-row>
                     </div>
                     </v-card>
             </v-card>
         </v-col>
         <v-col cols="3" class="pl-1 pt-1">
-            <v-card height="100%" width="100%" :color="vendaValida? '#51bd5c': '#d94343'" :title="status" dark>
+            <v-card height="100%" width="100%" :color="sale.valid_sale? '#51bd5c': '#d94343'" :title="sale.status" dark>
                 <v-card-text style="text-align:center">
                     <v-icon size='20' class='pa-1' color="white">fa fa-equals</v-icon>
                     <h4>
@@ -29,13 +29,13 @@
                     </h4> 
                     <v-spacer></v-spacer>
                     <h3>
-                        <b>{{valueFormat(valorVenda)}}</b>
+                        <b>{{valueFormat(sale.total_value)}}</b>
                     </h3>
-                    <div v-if="troco < 0 ">
-                        <h4 >FALTA</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(troco)}}</b></h3>
+                    <div v-if="sale.change_value < 0 ">
+                        <h4 >FALTA</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(sale.change_value)}}</b></h3>
                     </div> 
                    <div v-else>                        
-                        <h4 >TROCO</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(troco)}}</b></h3>
+                        <h4 >sale.change_value</h4>  <v-spacer></v-spacer><h3><b>{{valueFormat(sale.change_value)}}</b></h3>
                    </div>  
                 </v-card-text>
             </v-card>
@@ -45,28 +45,10 @@
 
 <script>
 export default {
-    name:'TotalizadorCard',
+    name:'TotalCard',
     computed:{
-        valorProdutos(){
-            return this.$store.state.caixa.valorProdutos 
-        },
-        valorPagamentos(){
-            return this.$store.state.caixa.valorPagamentos
-        },
-        valorDesconto(){
-            return this.$store.state.caixa.valorDesconto
-        },
-        valorVenda(){
-            return this.$store.state.caixa.valorVenda
-        },
-        troco(){
-            return this.$store.state.caixa.troco
-        },
-        vendaValida(){
-            return this.$store.state.caixa.vendaValida
-        },
-        status(){
-            return this.$store.state.caixa.status
+        sale(){
+            return this.$store.state.cashierStore 
         },
     },
     data:()=>({    
@@ -77,7 +59,7 @@ export default {
             return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         },
         changeColors(){
-            this.colorPayment = this.troco>=0?"#51bd5c":'#d94343'
+            this.colorPayment = this.sale.change_value>=0?"#51bd5c":'#d94343'
         }
     }
 }

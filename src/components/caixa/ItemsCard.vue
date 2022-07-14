@@ -1,5 +1,5 @@
 <template>
-    <!-- PRODUTOS DA SELECIONADOS DA VENDA -->
+    <!-- productS DA SELECIONADOS DA VENDA -->
         <v-card>
             <v-card-title>
                 <v-list-item-avatar rouded color="var(--primary">
@@ -16,7 +16,7 @@
             <div>
                 <v-data-table
                 
-                :items="itensSelecionados"
+                :items="Items"
                 disable-filtering
                 fixed-header
                 calculate-widths
@@ -36,11 +36,11 @@
                             {{row.item.sku}}<br>
                             <b>{{row.item.description}}</b></td>
                         <td>
+                            <h6>{{valueFormat(row.item.value)}} X</h6>
                             <v-container class='pa-0' id="microButtons">
                                 <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
-                                {{row.item.quantidade}} 
+                                {{row.item.quantity}} 
                                 <v-icon size="10" color="red" @click="qtdSub(row)" >fa fa-minus</v-icon>
-                                <h6>x{{valueFormat(row.item.valor)}}</h6>
                             </v-container>
                         </td>
                         <td>
@@ -49,12 +49,12 @@
                                     {{valueFormat(row.item.total)}}
                                 </h6>
                                 <div v-if='row.item.disconts !== undefined '>
-                                    <div v-for="desconto in row.item.disconts" :key="desconto.codigo">
-                                        <h6 style="color:red;" :title="getDescTitle(desconto)">{{valueFormat(desconto.value)}}-</h6>
+                                    <div v-for="discont in row.item.disconts" :key="discont.code">
+                                        <h6 style="color:red;" :title="getDescTitle(discont)">{{valueFormat(discont.price)}}-</h6>
                                     </div>
                                 </div>
                                 <h5>
-                                    <b>{{calculoDesconto(row.item)}}</b>
+                                    <b>{{discontCalculate(row.item)}}</b>
                                 </h5>
                             </div>
                         </td>                    
@@ -66,36 +66,27 @@
 </template>
 <script>
 export default {
-    name: 'ProdutoSelecionadoCard',
+    name: 'productSelecionadoCard',
     computed:{
-      itensSelecionados(){
-          return this.$store.state.caixa.itensSelecionados
+      Items(){
+        return this.$store.state.cashierStore.items
       },
-      valorVenda(){
-          return this.$store.state.caixa.valorVenda
-      },
-     
-    },
-    data:()=>{
-        return{
-            
-        }
     },
     methods:{
-        qtdAdd(produto){
-            produto.item.quantidade++
-            this.$store.dispatch('qtdItensSelecionados',produto.item)
+        qtdAdd(product){
+            product.item.quantity++
+            this.$store.dispatch('qtdItem',product.item)
         },
-        qtdSub(produto){
-            produto.item.quantidade--
-            if((produto.item.quantidade) <= 0){
-                this.$store.dispatch('removeItensSelecionados',produto.item)
+        qtdSub(product){
+            product.item.quantity--
+            if((product.item.quantity) <= 0){
+                this.$store.dispatch('removeItem',product.item)
             }else{
-                this.$store.dispatch('qtdItensSelecionados',produto.item)
+                this.$store.dispatch('qtdItem',product.item)
             }
         },
-        removeItem(produto){
-            this.$store.dispatch('removeItensSelecionados',produto.item)
+        removeItem(product){
+            this.$store.dispatch('removeItem',product.item)
         },
         cleanCart(){    
             this.$store.dispatch('cleanCart')
@@ -108,18 +99,18 @@ export default {
                 return ''
             }
         },
-        getDescTitle(desconto){
-            return desconto.codigo+': '+desconto.descricao
+        getDescTitle(discont){
+            return discont.code+': '+discont.description
         },
-        calculoDesconto(produto){
-            if(produto.descontos.lenght != 0 ){
-                var tempDesconto = 0
-                produto.descontos.forEach(desconto=>{
-                    tempDesconto += desconto.valor
+        discontCalculate(product){
+            if(product.disconts.lenght != 0 ){
+                var tempDiscont = 0
+                product.disconts.forEach(discont=>{
+                    tempDiscont += discont.price
                 })
-                return this.valueFormat(produto.total - tempDesconto)
+                return this.valueFormat(product.total - tempDiscont)
             }else{
-                return this.valueFormat(produto.total)
+                return this.valueFormat(product.total)
             }
         }
 

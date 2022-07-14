@@ -68,19 +68,18 @@ export default {
                { text: 'marca / fornecedor', align: 'start', value: 'provider' },
                { text: 'Categoria',align: 'center', value: 'category' },
                { text: 'Preco(R$)', align: 'center', value: 'price' },
-           ],
-          
+           ],          
        } 
     },
     methods:{
         newItem(item){
-            this.$store.dispatch('newItem',item)       
+            this.$store.dispatch('addItem',item)       
         },
         searchProduct(search){
             let exists = this.products.findIndex(x => x.sku === search);
             if( exists !== -1){
                 search = this.products[exists]
-                this.$store.dispatch('newItem',search)   
+                this.$store.dispatch('addItem',search)   
                 this.search = ''
             }
         },

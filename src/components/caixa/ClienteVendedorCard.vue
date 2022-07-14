@@ -7,7 +7,7 @@
         <v-list-item-content>
             <v-list-item-subtitle class="white--text">Cliente
                 <v-menu
-                  v-model="menuCliente"
+                  v-model="menuCustomer"
                   :close-on-content-click="false"
                   :nudge-width="200"
                   >
@@ -30,10 +30,10 @@
                     <v-list>
                     <v-list-item>
                         <v-list-item-avatar rouded color="var(--primary">
-                            <v-icon color="white"> {{!novoCliente?'fa fa-user': 'fa fa-user-plus'}}</v-icon>
+                            <v-icon color="white"> {{!newCustomer?'fa fa-user': 'fa fa-user-plus'}}</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
-                        <v-list-item-title>{{!novoCliente?'Incluir Cliente': 'Cadastrar Cliente'}}</v-list-item-title>
+                        <v-list-item-title>{{!newCustomer?'Incluir Cliente': 'Cadastrar Cliente'}}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     </v-list>
@@ -43,49 +43,49 @@
                           label="cpf/cnpj"
                           hide-details="auto"
                           color="var(--primary)"
-                          v-model=clienteVenda.documento
+                          v-model=customer.document
                           hide-spin-buttons
                           class='pa-2'
-                          v-mask="clienteVenda.documento.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
-                          :rules='rules.validarDocumento'
+                          v-mask="customer.document.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
+                          :rules='rules.documentValidate'
                           type='text'
                           counter="18"
-                          @keyup="validarDocumento()"
-                          @change="novoCliente?'':verificarPessoa()"
+                          @keyup="documentValidate()"
+                          @change="newCustomer?'':verificarPessoa()"
                           prepend-icon='fa fa-id-card'
                           autofocus>                
                       </v-text-field>
                       <v-text-field
-                          v-if="novoCliente"
-                          label="Nome"
+                          v-if="newCustomer"
+                          label="name"
                           hide-details="auto"
                           color="var(--primary)"
-                          v-model=clienteVenda.nome
+                          v-model=customer.name
                           hide-spin-buttons
-                          @focus="clienteVenda.nome=''"
-                          :disabled="!novoCliente"
+                          @focus="customer.name=''"
+                          :disabled="!newCustomer"
                           class='pa-2'
                           prepend-icon='fa fa-user'
                           autofocus>                
                       </v-text-field>
                       <v-text-field
-                          v-if="novoCliente"
+                          v-if="newCustomer"
                           label="e-mail"
                           hide-details="auto"
-                          :disabled="!novoCliente"
+                          :disabled="!newCustomer"
                           color="var(--primary)"
-                          v-model=clienteVenda.email
+                          v-model=customer.email
                           class='pa-2'
                           type="email"
                           prepend-icon='fa fa-envelope'
                           autofocus>                
                       </v-text-field>
                       <v-text-field
-                          v-if="novoCliente"
-                          label="Telefone(opcional)"
+                          v-if="newCustomer"
+                          label="phone(opcional)"
                           hide-details="auto"
                           color="var(--primary)"
-                          v-model=clienteVenda.telefone
+                          v-model=customer.phone
                           class='pa-2'
                           type="number"
                           hide-spin-buttons
@@ -93,38 +93,38 @@
                           autofocus>                
                       </v-text-field>
                        <v-switch
-                        v-if="novoCliente && caixa.lojatipo === 'shopping'"
-                        v-model="clienteParc"
+                        v-if="newCustomer && caixa.lojatipo === 'shopping'"
+                        v-model="customer_partioner"
                         color="var(--primary)"
                         label="Funcionário de loja parceira"
                         append-icon="fa fa-info"
                         
                       ></v-switch>
                       <v-text-field
-                          v-if="clienteParc "
+                          v-if="customer_partioner "
                           label="cnpj da loja deste funcionário"
                           hide-details="auto"
                           color="var(--primary)"
-                          v-model=clienteVenda.empresaParc
+                          v-model=customer.store_partiner_id
                           hide-spin-buttons
                           class='pa-2'
-                          v-mask="clienteVenda.documento.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
+                          v-mask="customer.document.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
                           :rules='rules.validarEmprParc'
                           type='text'
                           counter="18"
-                          @keyup="validarDocumento()"
+                          @keyup="documentValidate()"
                           @change="verificarPessoa()"
                           prepend-icon='fa fa-id-card'
                           autofocus>                
                       </v-text-field>
                       <v-text-field
-                          v-if="clienteParc"
-                          label="Nome da loja"
+                          v-if="customer_partioner"
+                          label="name da loja"
                           hide-details="auto"
                           color="var(--primary)"
-                          v-model=clienteVenda.nomeEmpresaParc
+                          v-model=customer.store_partiner_name
                           hide-spin-buttons
-                          :disabled="!novoCliente"
+                          :disabled="!newCustomer"
                           class='pa-2'
                           prepend-icon='fa fa-user'
                           autofocus>                
@@ -132,9 +132,9 @@
                       </v-list>
                     <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="green" text @click="novoCliente = !novoCliente">{{novoCliente?'pesquisar':'novo'}}</v-btn>
-                    <v-btn text @click="menuCliente = false">Cancelar</v-btn>
-                    <v-btn color="var(--primary)" text @click="!novoCliente?adicionarCliente():cadastrarCliente()">{{!novoCliente?'salvar':'cadastrar'}}</v-btn>
+                    <v-btn color="green" text @click="newCustomer = !newCustomer">{{newCustomer?'pesquisar':'novo'}}</v-btn>
+                    <v-btn text @click="menuCustomer = false">Cancelar</v-btn>
+                    <v-btn color="var(--primary)" text @click="!newCustomer?adicionarCliente():cadastrarCliente()">{{!newCustomer?'salvar':'cadastrar'}}</v-btn>
                     </v-card-actions>
                   </v-card>
                 <!--  -->
@@ -144,9 +144,9 @@
                 <v-icon right color="white">fa fa-xmark</v-icon>
               </v-btn>
               </v-list-item-subtitle>
-            <v-list-item-title class="white--text" >{{vendaCliente.nome}}</v-list-item-title>
+            <v-list-item-title class="white--text" >{{typeof(sale_customer.name) === 'undefined' ? '' : sale_customer.name}}</v-list-item-title>
         </v-list-item-content>
-        
+        s
         <v-list-item-avatar color="white" rouded>
               <v-img src="../../assets/defaultUser.jpg" />  
           </v-list-item-avatar>
@@ -189,14 +189,14 @@
                           label="cpf/cnpj"
                           hide-details="auto"
                           color="var(--primary)"
-                          v-model=vendedorVenda.documento
+                          v-model=vendedorVenda.document
                           hide-spin-buttons
                           class='pa-2'
-                          v-mask="clienteVenda.documento.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
-                          :rules='rules.validarDocumento'
+                          v-mask="customer.document.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
+                          :rules='rules.documentValidate'
                           type='text'
                           counter="18"
-                          @keyup="validarDocumento()"
+                          @keyup="documentValidate()"
                           @change="verificarPessoa('vendedor')"
                           prepend-icon='fa fa-id-card'
                           autofocus>                
@@ -204,82 +204,82 @@
                       </v-list>
                     <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn text @click="menuCliente = false">Cancelar</v-btn>
+                    <v-btn text @click="menuCustomer = false">Cancelar</v-btn>
                     <v-btn color="var(--primary)" text @click="adicionarCliente()">salvar</v-btn>
                     </v-card-actions>
                   </v-card>
                 <!--  -->
               </v-menu>
                 </v-list-item-subtitle>
-              <v-list-item-title class="white--text">{{vendaVendedor.nome}}</v-list-item-title>
+              <v-list-item-title class="white--text">{{vendaVendedor.name}}</v-list-item-title>
           </v-list-item-content>
       </v-list-item>      
 </template>
 <script>
+import {getCustomer} from '../../services/api/customerApi'
 export default {
     name:'ClienteVendedorCard',
     computed:{
-      pessoas(){
-        return this.$store.state.pessoa.pessoas
-      },
       caixa(){
         return this.$store.state.auth
       },
-      vendaCliente(){
-        return this.$store.state.caixa.cliente
+      sale_customer(){
+        return this.$store.state.cashierStore.customer
       },
       vendaVendedor(){
-        return this.$store.state.caixa.vendedor
+        return this.$store.state.cashierStore.salesman
       },
     },
 
     data: ()=>({
-      menuCliente:false,
-      novoCliente:false,
-      clienteParc:false,
+      menuCustomer:false,
+      newCustomer:false,
+      customer_partioner:false,
       btnRemove: false,
-      clienteVenda:{
-        documento:'',
-        nome:'cliente não identificado',
-        email:'',
-        telefone:'',
-        empresaParc:'',
-        nomeEmpresaParc:'',
-        tipo:'',    
+      pessoas:[],
+      customer:{
+        document: "",
+        name: "Cliente não identificado",
+        email: "",
+        phone: "",
+        type: "",
+        store_partiner_id: "",
+        store_partiner_name: ""
       },
       comVendedor:false,
       menuVendedor:false,
       vendedorVenda:{
-        documento:'',
-        nome:'vendedor não identificado',
-        email:'',
-        empresaParc:'',
-        nomeEmpresaParc:'',
-        tipo:'',    
+        document: "",
+        name: "Vendedor não identificado",
+        email: "",
+        phone: "",
+        type: "",
+        store_partiner_id: "",
+        store_partiner_name: ""   
       },
       rules:{
-        validarDocumento:[true],
+        documentValidate:[true],
         validarEmprParc:[true],
         email:[true],
       }
     }),
     methods:{
         //form methods
-        limparNome(){
+        limparname(){
           
         },
         //client methods
-        validarDocumento(){ //required - true -> exite para o cadastro; required - false -> não exige
-          var val = this.clienteVenda.documento
+        documentValidate(){ //required - true -> exite para o cadastro; required - false -> não exige
+          var val = this.customer.document
           val = val.toString();
           val = val.replace(/[^0-9]/g, '');
           //CPF
           if(val.length === 11){
-            this.rules.validarDocumento = this.validarCpf(val) ? [true]: ['cpf inválido!'];
+            this.rules.documentValidate = this.validarCpf(val) ? [true]: ['cpf inválido!'];
           }else if (val.length === 14){
-            this.rules.validarDocumento = this.validarCnpj(val) ? [true]: ['cnpj inválido!'];
+            this.rules.documentValidate = this.validarCnpj(val) ? [true]: ['cnpj inválido!'];
           }else{
-            this.rules.validarDocumento = ['documento inválido']
+            this.rules.documentValidate = ['document inválido']
           }
           //valide e então pesquise em:
           //verificarCliente()
@@ -348,47 +348,45 @@ export default {
           if (resultado != digitos.charAt(1)) return false
             return true;
           },
+
         cadastrarCliente(){
-          this.clienteVenda.tipo = this.clienteParc ? 'funcionarioParceiro' : 'cliente'
-          this.$store.dispatch('updatePessoa',this.clienteVenda)
+          this.customer.tipo = this.customer_partioner ? 'funcionarioParceiro' : 'cliente'
+          this.$store.dispatch('updatePessoa',this.customer)
           this.adicionarCliente()
           this.btnRemove = true
         },
         adicionarCliente(){
           this.btnRemove = true
-          this.$store.dispatch('addCliente',this.clienteVenda)
+          this.$store.dispatch('addCliente',this.customer)
         },
-        verificarPessoa(){ //se existe o CNPJ/CPF cadastrado
-          var val = this.clienteVenda.documento
-          val = val.toString();
-          val = val.replace(/[^0-9]/g, '');
-          let exists = this.pessoas.findIndex(x => x.documento === val);  
-            if(exists !== -1){
-                this.clienteVenda = this.pessoas[exists]
-            }else{
-                this.rules.validarDocumento = ['cliente não cadastrado']
-            }
+        async verificarPessoa(){ //se existe o CNPJ/CPF cadastrado
+          try{
+            //precisa de ajsute na API//
+            this.newCustomer  = await getCustomer(this.newCustomer.document)
+          }catch(e){
+            alert(e)
+          }
         },
         limparCliente(){
           try{
-            this.$store.dispatch('removerCliente',this.clienteVenda)
-            this.clienteVenda ={
-                documento:'',
-                nome:'',
+            this.$store.dispatch('removerCliente',this.customer)
+            this.customer ={
+                document:'',
+                name:'',
                 email:'',
-                telefone:'',
-                empresaParc:'',
-                nomeEmpresaParc:'',
+                phone:'',
+                store_partiner_id:'',
+                store_partiner_name:'',
                 tipo:'',    
               }
-            this.novoCliente = false
+            this.newCustomer = false
             this.btnRemove = false
           }catch(e){
             console.log(e)
           }
         },
         trocarTipoPessoa(tipoPessoa){
-          this.clienteParc = tipoPessoa === 'cliente' ?  false: true 
+          this.customer_partioner = tipoPessoa === 'cliente' ?  false: true 
         },
     }
 }

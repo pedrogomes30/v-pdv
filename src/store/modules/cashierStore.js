@@ -3,7 +3,7 @@ const state = {//ou venda
     change_value:0,
     qtd_items:0,
     qtd_payments:0,
-    force_customer:false,
+    forceCustomer:false,
     payment_method:'',
     valid_sale:false,
     //
@@ -26,22 +26,22 @@ const state = {//ou venda
         nfce_xml:'',
     },
     customer: {
-        // document: "",
-        // name: "",
-        // email: "",
-        // phone: "",
-        // type: "",
-        // store_partiner_id: "",
-        // store_partiner_name: ""
+        document: "",
+        name: "Cliente não identificado",
+        email: "",
+        phone: "",
+        type: "",
+        store_partiner_id: "",
+        store_partiner_name: ""
     },
     salesman: {
-        // document: "",
-        // name: "",
-        // email: "",
-        // phone: "",
-        // type: "",
-        // store_partiner_id: "",
-        // store_partiner_name: ""
+        document: "",
+        name: "Venddedor não identificado",
+        email: "",
+        phone: "",
+        type: "",
+        store_partiner_id: "",
+        store_partiner_name: ""
     },
     payments: [
         // {
@@ -61,9 +61,10 @@ const state = {//ou venda
         //     disconts:[
         //         {
                     // code:'',
-                    // description: '',
-                    // discont_total:0
-                    // disconts_calculated:0.00,
+                    // price:0.0,
+                    // description:'',
+                    // value:'',
+                    // percent:0
         //         }
         //     ]
         // },
@@ -135,9 +136,9 @@ const actions = {
             resolve(discont)
         })
     },
-    removedisconts({commit},discont){
+    removeDisconts({commit},discont){
         return new Promise(resolve =>{
-            commit('removedisconts',discont)
+            commit('removeDisconts',discont)
             resolve(discont)
         })
     },
@@ -180,16 +181,16 @@ const actions = {
             resolve()
         })
     },
-    force_customer({commit},tipo){
+    forceCustomer({commit},tipo){
         return new Promise(resolve =>{
-            commit('force_customer',tipo)
+            commit('forceCustomer',tipo)
             resolve(tipo)
         })
     },
     // Finalizar venda
     finalizarVenda({commit}){
         return new Promise(resolve =>{
-            console.log('find newVEnda')
+            console.log('newVenda')
             commit('newVenda',state)
             resolve()
             service.cleanSale()
@@ -207,7 +208,7 @@ const mutations = {
             state.items[exists].quantity = state.items[exists].quantity+1
         }else{
             product.quantity        = 1
-            product.disconts        =[]
+            product.disconts        = []
             product.value           = product.price
             state.items.push(product)
             state.qtd_items         = state.qtd_items +1
@@ -267,7 +268,7 @@ const mutations = {
             discont.id = state.disconts.length
             state.disconts.push(discont);
         }
-        state.force_customer = discont.with_client
+        state.forceCustomer = discont.with_client
         service.addDiscontsToProducts(state);
     },
     removeDisconts (state, discont){
@@ -299,7 +300,7 @@ const mutations = {
         state.qtd_items=0
         state.qtd_payments=0
         state.employee_sale=false
-        state.force_customer=false
+        state.forceCustomer=false
         state.payment_method=''
         state.valid_sale=false
         state.status='sem venda'
@@ -362,8 +363,8 @@ const service ={
             var temp_discont = 0
             if(product.disconts.lenght !== 0){
                 product.disconts.forEach(discont => {
-                    state.discont_value += discont.disconts_calculated
-                    temp_discont        += discont.disconts_calculated
+                    state.discont_value += discont.price
+                    temp_discont        += discont.price
                 })
             }
             state.total_value   += product.total - temp_discont
@@ -388,7 +389,7 @@ const service ={
         if(state.products_value <=0){state.valid_sale = false; state.status=' venda com o total de products zerado.'}
         if(state.discont_value > state.products_value){state.valid_sale = false; state.status=' valor de discont maior que o valor total da venda.'}
         if(state.change_value <0){state.valid_sale = false; state.status=' valor de pagamento menor que o valor total da venda.'}
-        if(state.force_customer && state.cliente.tipo !== state.force_customer){state.valid_sale = false; state.status=`necessário informar um ${state.force_customer} nesta venda.`}
+        if(state.forceCustomer && state.cliente.tipo !== state.forceCustomer){state.valid_sale = false; state.status=`necessário informar um ${state.forceCustomer} nesta venda.`}
     
         console.log('VENDA ->',state)
     },
@@ -460,7 +461,7 @@ const service ={
                             }
                         }
                     }
-                   state.force_customer = discont.with_client? discont.with_client : false
+                   state.forceCustomer = discont.with_client? discont.with_client : false
                 })
             })
             this.total(state)
