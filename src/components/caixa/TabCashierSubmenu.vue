@@ -30,7 +30,7 @@
         <DiscontCard />
       </v-tab-item>
       <v-tab-item>
-        <PagamentoCard />
+        <PaymentCard />
       </v-tab-item>
     </v-tabs-items>
   </v-card>
@@ -39,7 +39,7 @@
 <script>
   import ItemCard from './ItemsCard.vue'
   import DiscontCard from './DiscontCard.vue'
-  import PagamentoCard from './PagamentoCard.vue'
+  import PaymentCard from './PaymentCard.vue'
   export default {
     name:'TabCaixaCard',
     computed:{
@@ -55,7 +55,7 @@
     components:{
         ItemCard,
         DiscontCard,
-        PagamentoCard,
+        PaymentCard,
     }
   }
 </script>

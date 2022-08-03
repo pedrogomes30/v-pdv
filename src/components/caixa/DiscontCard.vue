@@ -44,7 +44,7 @@
                     :rules="rules.validcode"
                     prepend-icon='fa fa-ticket'>                
                 </v-text-field>
-                <div v-if="!cupom.todosProdutos">
+                <div v-if="!cupom.all_products">
                     <v-select
                         label="selecione o produto"
                         hide-details="auto"

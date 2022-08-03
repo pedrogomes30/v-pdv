@@ -24,11 +24,11 @@
     <v-row no-gutters dense>
       <!-- left -->
       <v-col cols='7' >
-        <ProdutosCard />
+        <ProductCard />
       </v-col>
       <!-- right -->
       <v-col cols='5'  id="tabMenu">
-        <TabCaixaCard />
+        <TabCashierSubmenu />
         <TotalCard />
         <v-row justify="space-around" class='pl-3 pr-3' >
           <!-- menu -->
@@ -193,9 +193,9 @@
 </template>
 
 <script>
-import ProdutosCard from '../components/caixa/ProductCard.vue'
+import ProductCard from '../components/caixa/ProductCard.vue'
 import ClienteVendedorCard from '../components/caixa/ClienteVendedorCard.vue'
-import TabCaixaCard from '../components/caixa/TabCaixaCard.vue'
+import TabCashierSubmenu from '../components/caixa/TabCashierSubmenu.vue'
 import TotalCard from '../components/caixa/TotalCard.vue'
 import {Money} from 'v-money'
 import { format } from 'date-fns'
@@ -316,9 +316,9 @@ export default {
     }
   },
   components: {
-      ProdutosCard,
+      ProductCard,
       ClienteVendedorCard,
-      TabCaixaCard,
+      TabCashierSubmenu,
       TotalCard,
       Money
   },

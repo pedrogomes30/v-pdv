@@ -39,10 +39,12 @@
             <v-select
                 label="Forma de pagamento"
                 hide-details="auto"
-                v-model='payment.method'
-                :items="paymentMethods"
+                v-model='onPayment.method'
+                item-text="method_alias"
+                item-value="method_alias"
+                :items="payment_method"
                 color="var(--primary)"
-                @input="changeIcon(payment.method)"
+                @input="changeIcon(onPayment.method)"
                 :prepend-icon='payIcon'
                 class='pa-2'>
             </v-select>
@@ -51,10 +53,10 @@
                 Valor:
                 <Money
                     label="Valor(R$)"   
-                    v-model="payment.valor"
+                    v-model="onPayment.valor"
                     v-bind="money"
                     :rules="rules.value"
-                    @focus="payment.valor = 0"
+                    @focus="onPayment.valor = 0"
                     color="var(--primary)"
                     class='pl-2 pr-2'>
                 </Money>
@@ -71,7 +73,7 @@
             <v-btn
                 color="var(--primary)"
                 text
-                @click="newPayment(payment)"
+                @click="newPayment(onPayment)"
             >
                 salvar
             </v-btn>
@@ -82,11 +84,11 @@
         </v-card-title>
         <v-data-table 
             :headers="header" 
-            :items="pagamentos"
+            :items="Payments"
             hide-default-footer
             hide-default-header
             @click:row="editPay"
-            id="scroll-payment"
+            id="scroll-onPayment"
             style="height: 25vh;padding-left:3px;padding-right:3px "
             class="overflow-y-auto"
         >
@@ -110,11 +112,11 @@ import {Money} from 'v-money'
 export default {
     name:'PagamentoCard',
     computed:{
-        pagamentos(){
-            return this.$store.state.caixa.pagamentos
+        Payments(){
+            return this.$store.state.cashierStore.payments
         },
-        formaPagamento(){
-            return this.$store.state.auth.formaPagamento
+        payment_method(){
+            return this.$store.state.auth.cashier_session.payment_methods
         },
         
     },
@@ -140,7 +142,7 @@ export default {
                 },
             menu:false,
             paymentMethods:['Dinheiro','Cartão Crédito à Vista','Cartão Crédito à parcelado','Cartão Débito','Pix','Crédito Funcionário'],
-            payment:{
+            onPayment:{
                 method:'',
                 datePay:'',
                 valor:0.00,
@@ -157,12 +159,12 @@ export default {
         }
     },
     methods:{
-        newPayment(payment){
-            console.log(payment.valor)
-            if(payment.valor > 0 && payment.valor <= 10000){
-                payment.datePay = new Date().toLocaleDateString()
-                this.$store.dispatch('addPayment',payment)
-                this.payment = {
+        newPayment(onPayment){
+            console.log(onPayment.valor)
+            if(onPayment.valor > 0 && onPayment.valor <= 10000){
+                onPayment.datePay = new Date().toLocaleDateString()
+                this.$store.dispatch('addPayment',onPayment)
+                this.onPayment = {
                     method:'',
                     valor:0.00,
                     icon:''
@@ -170,7 +172,7 @@ export default {
                 this.menu = false;
             }else{
                 alert('Pagamento inválido!')
-                this.payment = {
+                this.onPayment = {
                     method:'',
                     valor:0.00,
                     icon:''
@@ -187,11 +189,11 @@ export default {
                 {method:"Crédito Funcionário",icon:'fa-solid fa-id-card'}
             ]
             var icon = icons.find(x => x.method === method).icon
-            this.payment.icon = icon
+            this.onPayment.icon = icon
            this.payIcon = icon
         },
         editPay(editPayment){
-            this.payment = editPayment
+            this.onPayment = editPayment
             this.menu = true
         },
         removePay(rowItem){

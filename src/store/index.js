@@ -18,5 +18,5 @@ export default new Vuex.Store({
    discontStore,
    salesStore,
  },
- plugins:[createPersistedState()]
+  plugins:[createPersistedState()]
 })
