@@ -2,7 +2,7 @@
 <div class='basePage'> 
   <!-- header -->
   <v-row no-gutters dense style='max-height:20%'>
-    <v-col cols="auto" align-self="center" >
+    <v-col cols="cols-8" align-self="center" >
       <v-list-item>
         <v-list-item-avatar rouded color="var(--primary">
           <v-icon color="white"> fa fa-cart-plus</v-icon>
@@ -13,10 +13,11 @@
       </v-list-item>
     </v-col>  
     <v-spacer></v-spacer>
-    <v-col cols="auto" align-self="end">
-      <v-container id='clienteVendedor'>  
-        <ClienteVendedorCard />
-      </v-container>
+    <v-col cols="cols-2" align-self="center">
+        <CustomerCard />
+    </v-col>
+    <v-col cols="cols-2" align-self="center">
+        <SalesmanCard />
     </v-col>
   <!--  -->
   </v-row>
@@ -47,7 +48,7 @@
                     v-on="on"
                     title="adicionar uma observação"
                     @click='aditObs' >
-                    <v-icon color="white" size='20'> fa fa-list</v-icon>
+                    <v-icon color="white" size='35'> fa fa-list</v-icon>
                   </v-btn>      
               </template>
               <v-card>
@@ -83,7 +84,7 @@
             <!-- fim -->
             <!-- MENU DE TROCA DE PRODUTO -->
             <v-menu
-              v-model="menuTroca"
+              v-model="changeMenu"
               :close-on-content-click="false"
               :nudge-width="200"
               >
@@ -97,7 +98,7 @@
                     v-on="on"
                     title="troca produto"
                     @click='aditObs' >
-                    <v-icon color="white" size='20'> fa fa-boxes-packing</v-icon>
+                    <v-icon color="white" size='35'> fa fa-boxes-packing</v-icon>
                   </v-btn>   
               </template>
               <v-card>
@@ -123,14 +124,14 @@
                       label="SKU do produto"
                       hide-details="auto"
                       color="var(--primary)"
-                      v-model="productChange.SKU"
+                      v-model="productChange.sku"
                       hide-spin-buttons
                       class='pa-2'
                       type='number'
                       counter="13"
-                      :disabled="changeBySku === true"
+                      :disabled="changeBySku"
                       :rules="changeBySku !== true ? rules.SKU : [true]"
-                      @change="procurarSkuTroca()"
+                      @change="changeProductsBySku()"
                       prepend-icon='fa fa-box'
                       autofocus>                
                   </v-text-field>
@@ -139,23 +140,21 @@
                       hide-details="auto"
                       type='number'
                       color="var(--primary)"
-                      v-model="productChange.quantidade"
+                      v-model="productChange.quantity"
                       class='pa-2'
                       prepend-icon='fa fa-boxes'>                
                   </v-text-field>
-                  <h5 class='pl-3'>
-                  <v-icon  size='20'> fa fa-dollar-sign</v-icon> 
-                  Valor: 
-                  <Money
-                      v-bind="money"
-                      :disabled="changeBySku === false"
-                      v-model="productChange.valor"
-                      class='pa-2'
-                      prepend-icon='fa fa-money-bill'>                
-                  </Money>
-                  </h5>
+                  <v-currency-field 
+                    label="valor" 
+                    clearable
+                    prefix='R$'
+                    color="var(--primary)"
+                    class='pr-2'
+                    prepend-icon='fa fa-dollar-sign'
+                    :disabled="!changeBySku"
+                    v-model="productChange.value"/>
                   <v-select
-                    v-model="productChange.motivo"
+                    v-model="productChange.description"
                     :items="justifyChange"
                     :rules="rules.motivo"
                     color="var(--primary)"
@@ -167,19 +166,17 @@
                   </v-list>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="menuTroca = false">Cancelar</v-btn>
-                <v-btn color="var(--primary)" text @click="novaTroca()">salvar</v-btn>
+                <v-btn text @click="changeMenu = false">Cancelar</v-btn>
+                <v-btn color="var(--primary)" text @click="newChange()">salvar</v-btn>
                 </v-card-actions>
               </v-card>
             </v-menu>
             <!-- fim -->
             
             <v-btn height="14.5vh" width="15%"  color='red' dark   title="cancelar a sale" @click="onCancelOrder()">
-              <v-icon color="white" size='20'> fa fa-ban</v-icon>
+              <v-icon color="white" size='35'> fa fa-ban</v-icon>
             </v-btn>
-            <v-btn height="14.5vh" width="52%"  color='green' dark :disabled="!sale.valid_sale" @click='finalizarsale()'>
-              FINALIZADO
-            </v-btn>
+              <FinishSaleBt />
         </v-row>
         <v-row dense no-gutters class='pt-6' justify="center" v-if="sale.status !== 'Finalizada'">
           <v-spacer></v-spacer>
@@ -194,10 +191,11 @@
 
 <script>
 import ProductCard from '../components/caixa/ProductCard.vue'
-import ClienteVendedorCard from '../components/caixa/ClienteVendedorCard.vue'
+import CustomerCard from '../components/caixa/CustomerCard.vue'
+import SalesmanCard from '../components/caixa/SalesmanCard.vue'
 import TabCashierSubmenu from '../components/caixa/TabCashierSubmenu.vue'
+import FinishSaleBt from '../components/caixa/FinishSaleBt.vue'
 import TotalCard from '../components/caixa/TotalCard.vue'
-import {Money} from 'v-money'
 import { format } from 'date-fns'
 
 export default {
@@ -208,21 +206,25 @@ export default {
   computed:{
     sale(){
       return this.$store.state.cashierStore
-    },   
+    },
+    products(){
+      return this.$store.state.productStore.products
+    },
   },
   data:()=>({    
     menuObs:false,
-    menuTroca:false,
+    changeMenu:false,
     changeBySku:false,
     productChange:{
       with_client: "",
       code: "#TROC",
-      description: "Oferece o cupom com o valor do produto",
+      description: "Cupom de troca do SKU: ",
       value: 10,
       all_products: 0,
-      acumulate: 1,
-      percent: 1,
-      quantity: 1
+      acumulate: 0,
+      percent: 0,
+      quantity: 1,
+      sku:''
     },
     justifyChange:[
       'danificado',
@@ -251,13 +253,13 @@ export default {
       
     },
     onCancelOrder(){
-      this.$store.dispatch('limparsale')
+      this.$store.dispatch('cleanSale')
     },
     onProductChange(){
     },
     saveObs(obs){
       if(obs.length <=200){
-        this.$store.dispatch('observacao',obs)
+        this.$store.dispatch('addObs',obs)
         this.menuObs = false
         this.observacao = ''
       }
@@ -265,31 +267,40 @@ export default {
     aditObs(){
       this.observacao = this.sale.obs
     },
-    procurarSkuTroca(){
-      let indice = this.produtos.findIndex(x => x.SKU === this.productChange.SKU);
-      var produto = this.produtos[indice]
-      this.productChange.valor = produto.valor
-      this.productChange.descricao = 'troca referente ao SKU: '+produto.SKU
+    changeProductsBySku(){
+      let itemIndex     = this.sale.items.findIndex(x => x.sku === this.productChange.sku);
+      console.log('in set sku',itemIndex)
+      //check items add first
+      if(itemIndex !== -1){
+        var result = (this.sale.items[itemIndex].total / this.sale.items[itemIndex].quantity)
+        console.log('troca calculo',this.sale.items[itemIndex].total,this.sale.items[itemIndex].quantity,result)
+        this.productChange.value = result
+        this.productChange.description = 'troca referente ao SKU: ' + this.sale.items[itemIndex].sku
+      }else{
+        this.rules.SKU = ['sku não encontrado no carrinho!']
+      }
     },
-    novaTroca(){
-      if(this.productChange.valor>0 && this.productChange.valor<=10000){this.productChange.valor = this.productChange.quantidade * this.productChange.valor
-        console.log(this.productChange.valor)
-        this.productChange.descricao = this.productChange.SKU ==='' ? 'referente ao produto não identificado' : 'referente ao produto '+this.productChange.SKU
-        this.$store.dispatch('addDescontos',this.productChange)
+    newChange(){
+      if(this.productChange.value>0 && this.productChange.value<=10000){this.productChange.value = this.productChange.quantity * this.productChange.value
+        var newChange = Object.assign({}, this.productChange) 
+        this.productChange.description = this.productChange.sku ===''?
+            'Cupom de troca ao produto não identificado. motivo:'+this.productChange.description:
+            this.productChange.description
+        this.$store.dispatch('addDisconts',newChange)
         this.productChange = 
         {
-          SKU: '', 
-          codigo: '#TROCA',
-          descricao:'',
-          todosProdutos:true,
-          comCliente :false,
-          porcentagem:false,
-          acumulativo:true,
-          valor:0,
-          quantidade:1,
+          with_client: "",
+          code: "#TROC",
+          description: "Cupom de troca do SKU: ",
+          value: 10,
+          all_products: 0,
+          acumulate: 0,
+          percent: 0,
+          quantity: 1,
+          sku:''
         }
-        this.menuTroca = false
-        this.changeBySku=false
+        this.changeMenu  = false
+        this.changeBySku = false
       }else{
         alert('valor de troca inválida')
       }
@@ -298,7 +309,7 @@ export default {
       try{
         this.sale.status     = "processando...";
         var newsale          = Object.assign({}, this.sale) //create a obj clone, not reference
-        newsale.dtsale      = format(new Date(), "yyyy-MM-dd kk:mm")
+        newsale.dtsale       = format(new Date(), "yyyy-MM-dd kk:mm")
         newsale.status       = "Finalizada";
         newsale.caixa        = this.usuario.caixaNome;
         newsale.loja         = this.usuario.loja;
@@ -317,10 +328,11 @@ export default {
   },
   components: {
       ProductCard,
-      ClienteVendedorCard,
+      CustomerCard,
+      SalesmanCard,
       TabCashierSubmenu,
       TotalCard,
-      Money
+      FinishSaleBt,
   },
 }
 </script>

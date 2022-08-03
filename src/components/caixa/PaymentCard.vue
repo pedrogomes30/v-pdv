@@ -39,27 +39,24 @@
             <v-select
                 label="Forma de pagamento"
                 hide-details="auto"
-                v-model='onPayment.method'
+                v-model='onPayment.method_alias'
                 item-text="method_alias"
                 item-value="method_alias"
                 :items="payment_method"
                 color="var(--primary)"
-                @input="changeIcon(onPayment.method)"
+                @input="changeIconSelect(onPayment.method_alias,true)"
                 :prepend-icon='payIcon'
                 class='pa-2'>
             </v-select>
             <h5 class='pl-3'>
-                <v-icon  size='20'> fa fa-dollar-sign</v-icon>
-                Valor:
-                <Money
-                    label="Valor(R$)"   
-                    v-model="onPayment.valor"
-                    v-bind="money"
-                    :rules="rules.value"
-                    @focus="onPayment.valor = 0"
-                    color="var(--primary)"
-                    class='pl-2 pr-2'>
-                </Money>
+                <v-currency-field 
+                label="valor" 
+                clearable
+                prefix='R$'
+                color="var(--primary)"
+                class='pr-2'
+                prepend-icon='fa fa-dollar-sign'
+                v-model="onPayment.method_value"/>
             </h5>
             </v-list>
             <v-card-actions>
@@ -84,7 +81,7 @@
         </v-card-title>
         <v-data-table 
             :headers="header" 
-            :items="Payments"
+            :items="payments"
             hide-default-footer
             hide-default-header
             @click:row="editPay"
@@ -95,9 +92,9 @@
             <template v-slot:item="row">
                 <tr>
                     <td><v-icon size="15" color="blue" @click="editPay(row.item)" >fa fa-pencil</v-icon></td>
-                    <td><v-icon :color='red'>{{row.item.icon}}</v-icon></td>
-                    <td>{{row.item.method}}</td>
-                    <td>{{valueFormat(row.item.valor)}}</td>
+                    <td><v-icon >{{changeList(row.item.method_alias)}}</v-icon></td>
+                    <td>{{row.item.method_alias}}</td>
+                    <td>{{valueFormat(row.item.method_value)}}</td>
                     <td><v-icon size="15" color="red" @click="removePay(row.item)" >fa fa-xmark</v-icon></td>
                 </tr>
             </template>
@@ -107,27 +104,37 @@
 </template>
 
 <script>
-import {Money} from 'v-money'
+// import {Money} from 'v-money'
 
 export default {
     name:'PagamentoCard',
     computed:{
-        Payments(){
+        payments(){
             return this.$store.state.cashierStore.payments
         },
         payment_method(){
             return this.$store.state.auth.cashier_session.payment_methods
         },
-        
     },
     data:()=>{
         return{
+            icons: [
+                {method:"Dinheiro",                 icon:'fa-solid fa-money-bill'},
+                {method:"Cartão De Credito a Vista",icon:'fa-solid fa-credit-card'},
+                {method:"Cartão De Crédito Prazo",  icon:'fa-solid fa-money-check'},
+                {method:"Cartão De Débito",         icon:'fa-solid fa-money-check-dollar'},
+                {method:"Crédito Loja",             icon:'fa-solid fa-building-columns'},
+                {method:"Carteira Digital",         icon:'fa-solid fa-wallet'},
+                {method:"cashback",                 icon:'fa-solid fa-rotate-left'},
+                {method:"Pix",                      icon:'fa-brands fa-pix'},
+                {method:"Crédito Funcionário",      icon:'fa-solid fa-user-tag'}
+            ],
             header:[
                 {
                     text: '',
                     align: 'start',
                     sortable: false,
-                    value: 'icon',
+                    value: 'method_icon',
                 },
                 { text: 'forma pgto.', value: 'method' },
                 { text: 'valor(R$)', value: 'valor' },
@@ -141,12 +148,14 @@ export default {
                         ],
                 },
             menu:false,
-            paymentMethods:['Dinheiro','Cartão Crédito à Vista','Cartão Crédito à parcelado','Cartão Débito','Pix','Crédito Funcionário'],
             onPayment:{
-                method:'',
-                datePay:'',
-                valor:0.00,
-                icon:'',
+                    method_id:'',
+                    method_description:'',
+                    method_alias:'',
+                    method_issue:0,
+                    method_date:'',
+                    method_value:0.00,
+                    method_icon:'',
                 },
             payIcon:'fa fa-ban',
             money: {
@@ -160,37 +169,68 @@ export default {
     },
     methods:{
         newPayment(onPayment){
-            console.log(onPayment.valor)
-            if(onPayment.valor > 0 && onPayment.valor <= 10000){
-                onPayment.datePay = new Date().toLocaleDateString()
-                this.$store.dispatch('addPayment',onPayment)
-                this.onPayment = {
-                    method:'',
-                    valor:0.00,
-                    icon:''
+            if(onPayment.method_value >= 0 && onPayment.method_value <= 10000){
+                var value   = onPayment.method_value
+                let exists  = this.payment_method.findIndex(x => x.method_alias === onPayment.method_alias);
+                if(exists !== -1){
+                    onPayment               = this.payment_method[exists]
+                    onPayment.method_value  = value;
+                    onPayment.method_date   = new Date().toLocaleDateString()
+                    this.$store.dispatch('addPayment',onPayment)
+                    this.onPayment = {
+                        method_id:'',
+                        method_description:'',
+                        method_alias:'',
+                        method_issue:0,
+                        method_date:'',
+                        method_value:0.00,
+                        method_icon:'',
+                    }
+                    this.menu = false;
+                }else{
+                    console.log('methodo não encontrado')
                 }
-                this.menu = false;
             }else{
                 alert('Pagamento inválido!')
                 this.onPayment = {
-                    method:'',
-                    valor:0.00,
-                    icon:''
+                    method_id:'',
+                    method_description:'',
+                    method_alias:'',
+                    method_issue:0,
+                    method_date:'',
+                    method_value:0.00,
+                    method_icon:'',
                 }
             }
         },
-        changeIcon(method){
-            const icons= [
-                {method:"Dinheiro",icon:'fa-solid fa-money-bill'},
-                {method:"Cartão Crédito à Vista",icon:'fa-solid fa-credit-card'},
-                {method:"Cartão Crédito à parcelado",icon:'fa-solid fa-money-check'},
-                {method:"Cartão Débito",icon:'fa-solid fa-money-check-dollar'},
-                {method:"Pix",icon:'fa-brands fa-pix'},
-                {method:"Crédito Funcionário",icon:'fa-solid fa-id-card'}
-            ]
-            var icon = icons.find(x => x.method === method).icon
-            this.onPayment.icon = icon
-           this.payIcon = icon
+        changeIconSelect(method){
+            //iconChange
+            let exists = this.icons.findIndex(x => x.method === method.trim());
+            //icone
+            if(exists !== -1){
+                this.onPayment.method_icon = this.icons[exists].icon
+                this.payIcon = this.icons[exists].icon
+            }else{
+                console.log('methodo não encontrado')
+            }
+            //reset payment to edit
+            let edit = this.payments.findIndex(x => x.method_alias === method);
+            if(edit !== -1){
+                this.onPayment = Object.assign({}, this.payments[edit]) 
+            }else{
+                this.onPayment.method_value = 0.00
+                console.log('reset empty',this.payments.method_value)
+            }            
+        },
+        changeList(method){
+            let exists = this.icons.findIndex(x => x.method === method.trim());
+            var result = ''
+            if(exists !== -1){
+                result = this.icons[exists].icon
+            }else{
+                console.log('methodo não encontrado')
+            }
+            return result
         },
         editPay(editPayment){
             this.onPayment = editPayment
@@ -198,14 +238,13 @@ export default {
         },
         removePay(rowItem){
             this.$store.dispatch('removePayment',rowItem)
-            console.log(rowItem)
         },
         valueFormat(value){
             return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        }
+        },
     },
     components: {
-        Money,
+        // Money,
     },
 }
 </script>

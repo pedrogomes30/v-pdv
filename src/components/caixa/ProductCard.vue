@@ -16,6 +16,15 @@
             autofocus
             @keyup.enter="searchProduct(search)">
             ></v-text-field>
+            <v-btn 
+                icon 
+                title="Atualizar Produtos" 
+                right
+                center
+                :loading="loading"
+                @click="updateproducts(true)">
+                <v-icon color="green">fa-solid fa-arrows-rotate</v-icon>
+            </v-btn>
         </v-card-title>
         <v-card-text>
             <v-data-table   
@@ -29,6 +38,7 @@
                 style="height: 71vh;"
                 class="overflow-y-auto"
                 :loading=loading
+                loading-text="Carregando produtos..."
                 >
                 <template  v-slot:item="row" >
                     <tr @click='newItem(row.item)'>
@@ -90,19 +100,23 @@ export default {
             let exists = this.categorys.findIndex(x => x.id === categoria);
             return this.categorys[exists].name
         },
+        async updateproducts(update){
+            try{
+                if(this.products.length <= 0 || update){
+                    this.loading    = true
+                    var newProducts = await getProducts();
+                    this.$store.dispatch('updateProducts',newProducts );
+                    this.loading    = false
+                }
+            }catch(e){
+                alert(e)
+            }
+        }
     },
     async beforeMount(){
-        try{
-            if(this.products.length <= 0 ){
-                this.loading    = true
-                var newProducts = await getProducts();
-                this.$store.dispatch('updateProducts',newProducts );
-                this.loading    = false
-            }
-        }catch(e){
-            alert(e)
-        }
-    }
+        this.updateproducts(false)
+    },
+
 }
 
 </script>

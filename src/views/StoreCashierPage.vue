@@ -38,9 +38,6 @@ export default {
             return this.auth.login
         }
     },
-    beforeMount(){
-        this.$store.dispatch('logout');
-    },
 }
 </script>
 

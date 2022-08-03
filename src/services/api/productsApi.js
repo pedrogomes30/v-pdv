@@ -3,7 +3,7 @@ import Cookie from 'js-cookie'
 
 export async function getProducts (){
     var myHeaders = new Headers();
-    myHeaders.append("Authorization","Bearer "+Cookie.get('._token') );    
+    myHeaders.append("Authorization","Bearer "+Cookie.get('._token'));    
     var requestOptions = {
       method: 'GET',
       headers: myHeaders,

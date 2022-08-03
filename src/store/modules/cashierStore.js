@@ -36,7 +36,7 @@ const state = {//ou venda
     },
     salesman: {
         document: "",
-        name: "Venddedor não identificado",
+        name: "Vendedor não identificado",
         email: "",
         phone: "",
         type: "",
@@ -52,19 +52,23 @@ const state = {//ou venda
     ],
     items:[
         // {
-        //     product_id: "25",
-        //     description:'',
-        //     quantity: 5,
-        //     value: 3.99,
-        //     discont_value: 1.99,
-        //     item_date:'',
+        //     category:0,
+        //     description:"",
+        //     id:0,
+        //     price:0,
+        //     provider:"",
+        //     quantity:5,
+        //     sku:"",
+        //     total:0,
+        //     value:0,
+        //     website:null,            
         //     disconts:[
         //         {
-                    // code:'',
-                    // price:0.0,
-                    // description:'',
-                    // value:'',
-                    // percent:0
+        //             code:'',
+        //             price:0.0,
+        //             description:'',
+        //             value:'',
+        //             percent:0
         //         }
         //     ]
         // },
@@ -181,10 +185,10 @@ const actions = {
             resolve()
         })
     },
-    forceCustomer({commit},tipo){
+    forceCustomer({commit},userType){
         return new Promise(resolve =>{
-            commit('forceCustomer',tipo)
-            resolve(tipo)
+            commit('forceCustomer',userType)
+            resolve(userType)
         })
     },
     // Finalizar venda
@@ -241,8 +245,8 @@ const mutations = {
     addPayment(state, payment){
         state.status = 'em pagamento'
         let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
-        if(exists !== -1){
-            state.payments[exists].value += payment.value
+        if(exists !== -1 ){
+            state.payments[exists].method_value = payment.method_value
         }else{
             state.payments.push(payment);
         }
@@ -261,13 +265,7 @@ const mutations = {
     //DISCONTS ...
     addDisconts(state, discont){
         state.status = 'em disconts'
-        let exists = state.disconts.findIndex(x => x.id === discont.id);
-        if(exists !== -1){
-            state.disconts[exists] = discont
-        }else{
-            discont.id = state.disconts.length
-            state.disconts.push(discont);
-        }
+        state.disconts.push(discont);
         state.forceCustomer = discont.with_client
         service.addDiscontsToProducts(state);
     },
@@ -279,6 +277,9 @@ const mutations = {
         }else{
             alert('impossivel remover discont')
         }
+        if(discont.with_client){
+            service.removeForceCustomer(state)
+        }
         service.addDiscontsToProducts(state)
     },
     //  OBSERVATION
@@ -287,25 +288,52 @@ const mutations = {
     },
     // LIMPAR A VENDA
     cleanSale(state){
-        state.customer='',
-        state.salesman='',
-        state.payment=[]
-        state.items=[]
-        state.disconts=[]
-        state.products_value=0
-        state.payments_value=0
-        state.discont_value=0
-        state.total_value=0
-        state.change_value=0
-        state.qtd_items=0
-        state.qtd_payments=0
-        state.employee_sale=false
-        state.forceCustomer=false
-        state.payment_method=''
-        state.valid_sale=false
-        state.status='sem venda'
-        state.sale_date=''
-        state.obs=''
+        state.change_value = 0
+        state.qtd_items = 0
+        state.qtd_payments = 0
+        state.forceCustomer = false
+        state.payment_method = ''
+        state.valid_sale = false
+        state.number =  ''
+        state.sale_date =  ''
+        state.store =  ''
+        state.cashier =  ''
+        state.employee_cashier =  ''
+        state.employee_sale =  false
+        state.obs =  ''
+        state.invoice = false
+        state.products_value =  0
+        state.payments_value =  0
+        state.discont_value =  0
+        state.total_value =  0
+        state.nfce = {
+            serie : '',
+            number : '',
+            cupom_pdf  :'',
+            nfce_xml : ''
+        }
+        state.customer =  {
+            document:  "",
+            name :  "Cliente não identificado",
+            email :  "",
+            phone :  "",
+            type :  "",
+            store_partiner_id :  "",
+            store_partiner_name :  ""
+        }
+        state.salesman =  {
+            document  : "",
+            name  : "Vendedor não identificado",
+            email :  "",
+            phone : "",
+            type :  "",
+            store_partiner_id :  "",
+            store_partiner_name :  "",
+        }
+        state.payments =  []
+        state.items = []
+        state.disconts = []
+        service.total(state)
     },
     //CLIENTE
     addCustomer(state, customer){
@@ -313,7 +341,15 @@ const mutations = {
         service.total(state)
     },
     removeCustomer(state){
-        state.customer = ''
+        state.customer = {
+            document: "",
+            name: "Cliente não identificado",
+            email: "",
+            phone: "",
+            type: "",
+            store_partiner_id: "",
+            store_partiner_name: ""
+        }
         service.total(state)
     },
     addSalesman(state, salesman){
@@ -321,12 +357,22 @@ const mutations = {
         service.total(state)
     },
     removeSalesman(state){
-        state.vendedor = ''
+        state.salesman = {
+            document: "",
+            name: "Vendedor não identificado",
+            email: "",
+            phone: "",
+            type: "",
+            store_partiner_id: "",
+            store_partiner_name: ""
+        }
         service.total(state)
     },
 };
 const getters = {
-    
+    getItems(state){
+        return state.items
+    }
 };
 const service ={
     /*
@@ -347,7 +393,6 @@ const service ={
             })
         }
     this.addDiscontsToProducts(state)
-    this.total(state)
     },
     total(state){
         state.subtotal=0
@@ -374,7 +419,7 @@ const service ={
         //pagamento -- change_value
         if(state.payments.length > 0){
             state.payments.forEach(payment=>{
-                state.value += payment.value
+                state.payments_value += payment.method_value
                 state.qtd_payments++ 
             })
         }
@@ -389,9 +434,9 @@ const service ={
         if(state.products_value <=0){state.valid_sale = false; state.status=' venda com o total de products zerado.'}
         if(state.discont_value > state.products_value){state.valid_sale = false; state.status=' valor de discont maior que o valor total da venda.'}
         if(state.change_value <0){state.valid_sale = false; state.status=' valor de pagamento menor que o valor total da venda.'}
-        if(state.forceCustomer && state.cliente.tipo !== state.forceCustomer){state.valid_sale = false; state.status=`necessário informar um ${state.forceCustomer} nesta venda.`}
+        if(state.forceCustomer && state.customer.type !== state.forceCustomer){state.valid_sale = false; state.status=`necessário informar um ${state.forceCustomer} nesta venda.`}
     
-        console.log('VENDA ->',state)
+        // console.log('VENDA ->',state)
     },
     // discontS ...
     addDiscontsToProducts(state){
@@ -406,7 +451,8 @@ const service ={
             state.items.forEach((product)=>{
                 product.disconts = []
                 //loop disconts
-                state.disconts.forEach((discont)=>{
+                state.disconts.forEach((discont,key)=>{
+                    var total_disconts = 0
                     //discont em todos os itens
                     if(discont.all_products){
                         let totalproduct = product.total
@@ -420,6 +466,7 @@ const service ={
                                 value           :discont.value,
                                 percent         :discont.percent
                             })
+                            total_disconts += discont_value - totalproduct
                         }
                         //em R$
                         else{
@@ -433,6 +480,7 @@ const service ={
                                 value       :'',
                                 percent     :discont.percent
                             })
+                            total_disconts += percent_product - totalproduct
                         }
                         //discont em um SKU especifico
                     }else{
@@ -448,6 +496,7 @@ const service ={
                                     value           :discont.value,
                                     percent         :discont.percent
                                 })
+                                total_disconts += discont_value - totalproduct
                             }
                             //em R$
                             else{
@@ -458,15 +507,23 @@ const service ={
                                     value           :'',
                                     percent         :discont.percent
                                 })
+                                total_disconts += totalproduct - discont.value
                             }
                         }
                     }
                    state.forceCustomer = discont.with_client? discont.with_client : false
+                   console.log('produto', state.items[key], total_disconts)
+                //    if(total_disconts > 0){
+                //    }
                 })
             })
             this.total(state)
         }
-    }
+    },
+    removeForceCustomer(state){
+        state.forceCustomer = false
+        service.total(state)
+    },
     
 }
 export default {

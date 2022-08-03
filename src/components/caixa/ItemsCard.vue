@@ -28,7 +28,7 @@
                 class="overflow-y-auto"
                 >
                 <template v-slot:item="row">
-                    <tr >
+                    <tr v-if="row.item.id !== 0" >
                         <td >
                             <v-icon size="15" color="red" @click="removeItem(row)" >fa fa-xmark </v-icon>
                         </td>
@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                                 <h5>
-                                    <b>{{discontCalculate(row.item)}}</b>
+                                    <b>{{valueFormat(row.item.total)}}</b>
                                 </h5>
                             </div>
                         </td>                    
@@ -102,17 +102,7 @@ export default {
         getDescTitle(discont){
             return discont.code+': '+discont.description
         },
-        discontCalculate(product){
-            if(product.disconts.lenght != 0 ){
-                var tempDiscont = 0
-                product.disconts.forEach(discont=>{
-                    tempDiscont += discont.price
-                })
-                return this.valueFormat(product.total - tempDiscont)
-            }else{
-                return this.valueFormat(product.total)
-            }
-        }
+        
 
     }
 }

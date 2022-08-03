@@ -1,12 +1,21 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-Vue.use(Vuex)
+// import Vue from 'vue';
 
 const state = {
-  cashier_session :'',
+  cashier_session :{},
 };
 const getters = {
-
+    getStore: state =>{
+      return state.cashier_session.store;
+    },
+    getPymentMethod: state=>{
+      return state.cashier_session.payment_methods;
+    },
+    getCupoms: state=>{
+      return state.cashier_session.cupoms;
+    },
+    getCashierSession: state=>{
+      return state.cashier_session;
+    }
 };
 const actions = {
     logout({commit}){
@@ -15,23 +24,21 @@ const actions = {
       })
     },
     start({commit},startObj){
-      return new Promise(() =>{
-        commit('start',startObj)
+      console.log('in START');
+      return new Promise(resolve =>{
+        setTimeout(()=>{
+          commit('SET_START',startObj,{root:true});
+          resolve();
+        },250);
       })
     },
   }
-
-
-
-
-const mutations = {
-  
-  logout(state){
+const mutations = {  
+  LOGOUT(state){
     state.cashier_session = ""
   },
-  start(state,startObj){
+  SET_START(state,startObj){
     state.cashier_session = startObj
-    
   } 
 };
 export default {

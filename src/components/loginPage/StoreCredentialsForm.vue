@@ -1,16 +1,16 @@
 <template>
     <v-form @submit.prevent="sendStoreCashier()" ref="form" >
         <v-text-field
-            v-model="start.store.store_name"
+            v-model="startValue.store.store_name"
             :rules="rules.store"
             disabled
             type="text"
-            :label="`${start.store.store_name} - ${start.store.store_abbreviation}`"
+            :label="`${startValue.store.store_name} - ${startValue.store.store_abbreviation}`"
             prepend-inner-icon="mdi-store"
         />
         <v-select                
-            v-model="start.cashier_id" 
-            :items="start.store.store_cashiers"
+            v-model="startValue.cashier_id" 
+            :items="startValue.store.store_cashiers"
             :rules="rules.cashier"
             item-text="cashier_name"
             item-value="cashier_id"
@@ -32,13 +32,14 @@
 
 <script>
 import router from '@/router';
-import {start} from '../../services/api/authApi'
+import {start as startValue} from '../../services/api/authApi'
+// import {mapAction} from 'vuex'
 export default {
     computed:{
-      
+    //   ...mapState(['auth'])
     },
     data:()=>({
-        start:{
+        startValue:{
             store: {
                 store_id: 1,
                 store_name: "",
@@ -66,7 +67,7 @@ export default {
     }),
     async beforeMount(){
         try{
-           this.start = await start();
+           this.startValue = await startValue();
         }catch(e){
             alert(e)
         }
@@ -75,22 +76,22 @@ export default {
         sendStoreCashier(){
             if(this.$refs.form.validate()){ 
                 try{
-                    let exists = this.start.store.store_cashiers.findIndex(x => x.cashier_id === this.start.cashier_id);
-                    console.log(this.start.cashier_id)
+                    let exists = this.startValue.store.store_cashiers.findIndex(x => x.cashier_id === this.startValue.cashier_id);
+                    console.log(this.startValue.cashier_id)
                     if(exists !== -1){
                         this.loading = true;
-                        this.start.cashier_name = this.start.store.store_cashiers[exists].cashier_name
+                        this.startValue.cashier_name = this.startValue.store.store_cashiers[exists].cashier_name
                         this.loading = false;
                     }else{
                         throw new Error('store cashier not found')
                     }
-                    this.$store.dispatch('start',this.start)  
+                    this.$store.dispatch('start',this.startValue)  
                     router.push('/')
                 }catch(e){
                     alert(e)
                 }
             }
-        }        
+        },  
     },
 }
 </script>

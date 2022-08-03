@@ -114,9 +114,8 @@ export default {
             return this.$store.state.cashierStore.items
         },
         prefabCupons(){
-          return this.$store.state.auth.cashier_session.cupoms
+            return this.$store.state.auth.cashier_session.cupoms
         },
-        
     },
     data:()=>{
         return{
@@ -130,7 +129,8 @@ export default {
                 all_products: 0,
                 acumulate: 1,
                 percent: 1,
-                quantity: 0
+                quantity: 0,
+                sku:''
             }, 
             header:[
                 {
@@ -162,7 +162,7 @@ export default {
                     if( typeof(newCupom)!== 'undefined'){
                         this.cupom = this.newCupom
                     }else{
-                        this.rules.validCodigo = ['Cupom inválido']
+                        this.rules.validcode = ['Cupom inválido']
                     }
                 }
             }catch(e){
@@ -170,34 +170,39 @@ export default {
             }
         },
         addCupom(){
-            if(this.cupom.acumulate){
-                let noRepeat = this.disconts.findIndex(x => x.sku === this.cupom.sku);  
-                if(noRepeat !== -1){
-                    this.rules.validcode = ['Cupom já incluso neste item!']
-                    return false
+            try{
+                if(this.cupom.description == '') throw new Error("sem cupom válido definido!")
+                var newCupom = Object.assign({}, this.cupom) 
+                if(newCupom.acumulate){
+                    let noRepeat = this.disconts.findIndex(x => x.sku === this.cupom.sku);  
+                    console.log(noRepeat)
+                    if(noRepeat !== -1){
+                        this.rules.validcode = ['Cupom já incluso neste item!']
+                        return false
+                    }
+                    this.$store.dispatch('addDisconts',newCupom)
+                }else{
+                    let noRepeat = this.disconts.findIndex(x => x.code === this.cupom.code);  
+                    if(noRepeat !== -1){
+                        this.rules.validcode = ['cupom já incluido!']
+                        return false
+                    }
+                    noRepeat = this.disconts.findIndex(x => x.acumulate === false)  
+                    if(noRepeat !== -1){
+                        this.rules.validcode = ['já possui outro cupom não acumulativo']
+                        return false
+                    }
+                    this.$store.dispatch('addDisconts',newCupom)
                 }
-                this.$store.dispatch('addDisconts',this.cupom)
-            }else{
-                let noRepeat = this.disconts.findIndex(x => x.code === this.cupom.code);  
-                if(noRepeat !== -1){
-                    this.rules.validcode = ['cupom já incluido!']
-                    return false
-                }
-                noRepeat = this.disconts.findIndex(x => x.acumulate === false)  
-                if(noRepeat !== -1){
-                    this.rules.validcode = ['já possui outro cupom não acumulativo']
-                    return false
-                }
-                this.$store.dispatch('addDisconts',this.cupom)
+                this.clearCupom()
+                this.menu = false
+            }catch(e){
+                this.clearCupom()
+                this.rules.validcode = ['já possui outro cupom não acumulativo']
             }
-            this.clearCupom()
-            this.menu = false
         },
         removeCupom(cupom){
             this.$store.dispatch('removeDisconts',cupom)
-            if(cupom.with_client){
-            this.$store.dispatch('forceCustomer',cupom.with_client)
-            }
         },
         onFocuscode(){
             this.rules.validcode = [true]
@@ -223,10 +228,10 @@ export default {
             return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         },
         skuFormat(desconto){
-            if(desconto.SKU === ''){
+            if(desconto.sku === '' || typeof(desconto.sku) === 'undefined' ){
                 return 'PARA TODOS OS PRODUTOS'
             }else{
-                return desconto.SKU
+                return desconto.sku
             }
         }
     }
