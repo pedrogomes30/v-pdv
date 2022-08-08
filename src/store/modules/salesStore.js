@@ -1,29 +1,24 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-
-
-Vue.use(Vuex)
-
 const state = {
-    vendas:[]
+    sales:[]
 };
 
 const getters = {
-
+    sales(state){
+        return state.sales
+    }
 };
 const actions = {
-  newVenda({commit},venda){
-    return new Promise(resolve =>{
-        //obter da api  
-        commit('newVenda',venda)
-        resolve()
-    })
-},    
+    newSale({commit},sale){
+        return new Promise(resolve =>{
+            commit('newSale',sale)
+            resolve()
+        })
+    },    
 };
 const mutations = {
-    newVenda(state,venda){
-        state.vendas.push(venda)
+    newSale(state,sale){
+        //to sincronyze
+        state.sales.push(sale)
     },
 };
 export default {

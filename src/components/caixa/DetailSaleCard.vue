@@ -2,6 +2,7 @@
    <v-dialog
     transition="dialog-top-transition"
     max-width="800"
+    v-model="active"
     >
     <template v-slot:activator="{ on, attrs }">
         <v-btn 
@@ -65,7 +66,7 @@
                                 <v-col cols="6"><span>Operador de caixa: <b>{{session.user_name}}</b></span></v-col>
                             </v-row>
                             <v-row>
-                                <v-col cols="6"><span>Número: <b>{{numberGenerate()}}</b></span></v-col>
+                                <v-col cols="6"><span>Número: <b>{{session.number}}</b></span></v-col>
                                 <v-col cols="6"><span>Caixa: <b>{{session.cashier_name}}</b></span></v-col>
                             </v-row>
                             <v-row>
@@ -137,17 +138,17 @@
             color='red'
             dark
             @click="dialog.value = false"
-            >Cancelar
+            >Fechar
             <v-icon
                 right
                 dark
             >
-            fa-ban
+            fa-xmark
             </v-icon>
             </v-btn>
             <v-btn
                 color='green'
-                @click="dialog.value = false"
+                @click="createSale"
                 :loading="loading"
                 dark
                 >Finalizar 
@@ -165,7 +166,7 @@
 </template>
 
 <script>
-import { format } from 'date-fns'
+import generateSale from '../../services/createSale'
 export default {
     name:'FinishSaleBt',
     computed:{
@@ -175,27 +176,30 @@ export default {
       session(){
         return this.$store.state.auth.cashier_session
       },
+      sales(){
+        return this.$store.state.salesStore.sales
+      },
     },
     data:()=>({    
         number: '',
         loading: false,
+        active: false,
     }),
     methods:{
         valueFormat(value){
             return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         },
-        numberGenerate(){
-            var number = format(new Date(), "yyyyMMddkkmm")+ this.session.store.store_id
-            return number
+        async createSale(){
+            var sale                    = Object.assign({},this.sale) 
+            var session                 = Object.assign({},this.session) 
+            var newSale                 = await generateSale(sale,this.sales,session)
+            await this.dispatchSale(newSale)
+            this.active                 = false
         },
-        newSale(){
-            var newSale                 = Object.assign({}, this.sale)
-            var auth                    = Object.assign({}, this.session)
-            newSale.store               = auth.store.store_id
-            newSale.cashier             = auth.cashier_id
-            newSale.employee_cashier    = auth.user_id
-            this.$store.dispatch('addSale',newSale)
-        }
+        async dispatchSale(newSale){
+            await this.$store.dispatch('newSale',newSale)
+            await this.$store.dispatch('cleanSale')
+        }        
     }
 }
 </script>

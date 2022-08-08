@@ -6,7 +6,7 @@ import CashierPage from '../views/CashierPage.vue'
 import ClientePage from '../views/ClientePage.vue'
 import ConfiguracaoPage from '../views/ConfiguracaoPage.vue'
 import FechamentoPage from '../views/FechamentoPage.vue'
-import HistoricoPage from '../views/HistoricoPage.vue'
+import HistorySalePage from '../views/HistorySalePage.vue'
 import PromotionPage from '../views/PromotionPage.vue'
 import RecuperarSenha from '../views/RecuperarSenha.vue'
 import NotFound from '../views/NotFound.vue'
@@ -25,7 +25,7 @@ const routes = [
   { path: '/clientes',      name: 'cliente',      component: ClientePage,     beforeEnter:Guard.auth},
   { path: '/configuracao',  name: 'configuracao', component: ConfiguracaoPage,beforeEnter:Guard.auth},
   { path: '/fechamentoCaixa',name: 'fechamento',  component: FechamentoPage,  beforeEnter:Guard.auth},
-  { path: '/historico',     name: 'historico',    component: HistoricoPage,   beforeEnter:Guard.auth},
+  { path: '/historico',     name: 'historico',    component: HistorySalePage, beforeEnter:Guard.auth},
   { path: '/promocao',      name: 'promocao',     component: PromotionPage,   beforeEnter:Guard.auth},
   { path: '/passRecover',   name: 'passRecover',  component: RecuperarSenha,  beforeEnter:Guard.auth},
   { path: '*',              name: 'NotFound',     component: NotFound,        },

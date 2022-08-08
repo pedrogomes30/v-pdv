@@ -12,8 +12,7 @@
         </v-list-item-content>
       </v-list-item>
     </v-col>
-  </v-row> 
-  <!--  -->
+  </v-row>
   <VendasCard />
 </div>
 </template>

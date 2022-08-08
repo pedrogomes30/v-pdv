@@ -191,17 +191,6 @@ const actions = {
             resolve(userType)
         })
     },
-    // Finalizar venda
-    finalizarVenda({commit}){
-        return new Promise(resolve =>{
-            console.log('newVenda')
-            commit('newVenda',state)
-            resolve()
-            service.cleanSale()
-        })
-    },
-    
-
 };
 const mutations = {
     //CART ...

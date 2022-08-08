@@ -219,7 +219,6 @@ export default {
                 this.onPayment = Object.assign({}, this.payments[edit]) 
             }else{
                 this.onPayment.method_value = 0.00
-                console.log('reset empty',this.payments.method_value)
             }            
         },
         changeList(method){

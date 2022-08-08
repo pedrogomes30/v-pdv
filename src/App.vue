@@ -24,7 +24,6 @@ export default {
   }),
   methods:{
     noIsLoginPage(){
-      console.log('router name',this.$route.name )
      return this.$route.name === "login" || this.$route.name === "start"  ? false: true;
     }
   }
