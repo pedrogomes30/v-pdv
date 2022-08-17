@@ -26,7 +26,7 @@ const state = {//ou venda
         nfce_xml:'',
     },
     customer: {
-        document: "",
+        document: "1",
         name: "Cliente não identificado",
         email: "",
         phone: "",
@@ -35,7 +35,7 @@ const state = {//ou venda
         store_partiner_name: ""
     },
     salesman: {
-        document: "",
+        document: "2",
         name: "Vendedor não identificado",
         email: "",
         phone: "",
@@ -302,7 +302,7 @@ const mutations = {
             nfce_xml : ''
         }
         state.customer =  {
-            document:  "",
+            document:  "1",
             name :  "Cliente não identificado",
             email :  "",
             phone :  "",
@@ -311,7 +311,7 @@ const mutations = {
             store_partiner_name :  ""
         }
         state.salesman =  {
-            document  : "",
+            document  : "2",
             name  : "Vendedor não identificado",
             email :  "",
             phone : "",
@@ -331,7 +331,7 @@ const mutations = {
     },
     removeCustomer(state){
         state.customer = {
-            document: "",
+            document: "1",
             name: "Cliente não identificado",
             email: "",
             phone: "",
@@ -347,7 +347,7 @@ const mutations = {
     },
     removeSalesman(state){
         state.salesman = {
-            document: "",
+            document: "2",
             name: "Vendedor não identificado",
             email: "",
             phone: "",
@@ -368,7 +368,7 @@ const service ={
         calculate total of a product ( quantity * value_unitary)
     */
     processItemValue(state,indice){
-        if(indice !== undefined){
+        if(typeof(indice) !== 'undefined'){
             if(typeof state.items[indice].value === 'undefined'){
                 alert('erro ao calcular total do produto')
             }
@@ -384,7 +384,6 @@ const service ={
     this.addDiscontsToProducts(state)
     },
     total(state){
-        state.subtotal=0
         state.products_value=0
         state.payments_value=0
         state.discont_value=0
@@ -394,15 +393,13 @@ const service ={
         state.qtd_payments=0
         //products -- disconts
         state.items.forEach(product => {
-            var temp_discont = 0
             if(product.disconts.lenght !== 0){
                 product.disconts.forEach(discont => {
                     state.discont_value += discont.price
-                    temp_discont        += discont.price
                 })
             }
-            state.total_value   += product.total - temp_discont
-            state.products_value += product.total 
+            state.total_value           += product.total
+            state.products_value        += product.quantity * product.price 
             state.qtd_items++
         })
         //pagamento -- change_value
@@ -439,9 +436,9 @@ const service ={
             //loop products
             state.items.forEach((product)=>{
                 product.disconts = []
+                product.total = product.price * product.quantity
                 //loop disconts
                 state.disconts.forEach((discont,key)=>{
-                    var total_disconts = 0
                     //discont em todos os itens
                     if(discont.all_products){
                         let totalproduct = product.total
@@ -455,7 +452,7 @@ const service ={
                                 value           :discont.value,
                                 percent         :discont.percent
                             })
-                            total_disconts += discont_value - totalproduct
+                            product.total -= discont_value
                         }
                         //em R$
                         else{
@@ -469,7 +466,7 @@ const service ={
                                 value       :'',
                                 percent     :discont.percent
                             })
-                            total_disconts += percent_product - totalproduct
+                            product.total -= discontPercent
                         }
                         //discont em um SKU especifico
                     }else{
@@ -485,7 +482,7 @@ const service ={
                                     value           :discont.value,
                                     percent         :discont.percent
                                 })
-                                total_disconts += discont_value - totalproduct
+                                product.total -= discont_value
                             }
                             //em R$
                             else{
@@ -496,12 +493,12 @@ const service ={
                                     value           :'',
                                     percent         :discont.percent
                                 })
-                                total_disconts += totalproduct - discont.value
+                                product.total -= discont.value
                             }
                         }
                     }
                    state.forceCustomer = discont.with_client? discont.with_client : false
-                   console.log('produto', state.items[key], total_disconts)
+                   console.log('produto', state.items[key])
                 //    if(total_disconts > 0){
                 //    }
                 })

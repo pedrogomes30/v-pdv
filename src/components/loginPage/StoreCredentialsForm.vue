@@ -77,7 +77,6 @@ export default {
             if(this.$refs.form.validate()){ 
                 try{
                     let exists = this.startValue.store.store_cashiers.findIndex(x => x.cashier_id === this.startValue.cashier_id);
-                    console.log(this.startValue.cashier_id)
                     if(exists !== -1){
                         this.loading = true;
                         this.startValue.cashier_name = this.startValue.store.store_cashiers[exists].cashier_name

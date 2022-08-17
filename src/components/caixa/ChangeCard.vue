@@ -152,17 +152,17 @@ export default {
     },
     newChange(){
       if(this.productChange.value>0 && this.productChange.value<=10000){this.productChange.value = this.productChange.quantity * this.productChange.value
-        var newChange = Object.assign({}, this.productChange) 
         this.productChange.description = this.productChange.sku ===''?
             'Cupom de troca ao produto não identificado. motivo:'+this.productChange.description:
             this.productChange.description
+        var newChange = Object.assign({}, this.productChange) 
         this.$store.dispatch('addDisconts',newChange)
         this.productChange = 
         {
           with_client: "",
           code: "#TROC",
           description: "Cupom de troca do SKU: ",
-          value: 10,
+          value: 0,
           all_products: 0,
           acumulate: 0,
           percent: 0,

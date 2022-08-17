@@ -166,7 +166,7 @@
 </template>
 
 <script>
-import generateSale from '../../services/createSale'
+import generateSale from '../../services/SaleServices/createSale'
 export default {
     name:'FinishSaleBt',
     computed:{

@@ -1,28 +1,21 @@
 <template>
     <v-navigation-drawer
-      id=''
-      style="border-radius:5px;margin:0.3%; max-height:98%"
+      style="border-radius:5px;margin:0.3%"
       v-model="drawer"
-      :mini-variant.sync="mini"
-      permanent
+      :mini-variant="mini"      
       app
       floating
-      @hover="!mini"
-      color=0
+      :expand-on-hover.sync="mini"
     >
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img src="../../assets/defaultUser.jpg"></v-img>
+          <v-img src='../../assets/defaultUser.jpg'></v-img>
         </v-list-item-avatar>
-
-        <v-list-item-title>{{user.user_name}}</v-list-item-title>
-        <v-list-item-subtitle>{{user.profession}}</v-list-item-subtitle>
-        <v-btn
-          icon
-          @click.stop="mini = !mini"
-        >
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
+        <v-container>
+          <v-list-item-title><b>{{user.user_name}}</b></v-list-item-title>
+          <v-list-item-subtitle>{{user.cashier_name }}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{user.profession}}</v-list-item-subtitle>
+        </v-container>
       </v-list-item>
 
       <v-divider></v-divider>
@@ -34,7 +27,6 @@
           link
           :to="item.link"
           color="#ED0280"
-          @click='onCloseMenu'
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -46,12 +38,12 @@
       </v-list>
     <div class="logout">
         <v-list dense>
-            <v-list-item @click="logoff()">
+            <v-list-item @click="logoff()" >
                 <v-list-item-icon>
-                    <v-icon title="Deslogar">fas fa-sign-out-alt</v-icon>
+                    <b><v-icon title="Deslogar">fas fa-sign-out-alt</v-icon></b>
                 </v-list-item-icon>
                 <v-list-item-content>
-                    <v-list-item-title>Deslogar</v-list-item-title>
+                    <v-list-item-title ><b>Deslogar</b></v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
         </v-list>
@@ -60,6 +52,7 @@
 </template>
 
 <script>
+import router from '@/router';
 export default {
     name:"SideMenu",
     props:{},
@@ -83,9 +76,8 @@ export default {
             {icon:'fas fa-cart-plus',title:'Caixa',link:'caixa'},
             {icon:'fas fa-history',title:'Histórico',link:'historico'},
             {icon:'mdi-cart-check',title:'Fechamento',link:'fechamentoCaixa'},
-            {icon:'fas fa-users',title:'Clientes',link:'clientes'},
-            {icon:'fas fa-percent',title:'Promoções', link:'promocao'},
-            {icon:'fas fa-cog',title:'Configurações',link:'configuracao'},
+            {icon:'fas fa-percent',title:'Produtos e Promoções', link:'promocao'},
+            // {icon:'fas fa-cog',title:'Configurações',link:'configuracao'},
         ],
     }),
     methods:{
@@ -99,8 +91,10 @@ export default {
           }, this.time);
         }
       },
+      
       logoff(){
         this.$store.dispatch('logout')  
+        router.push('/login')
       }
     },
     
@@ -110,10 +104,5 @@ export default {
 
 <style>
 
-.logout{
-    position: absolute;
-    bottom:2%; 
-    margin-left: auto;
-    margin-right: auto;
-}
+
 </style>

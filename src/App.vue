@@ -40,7 +40,8 @@ a { text-decoration: none; }
     --dividerLight: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
     --dividerDark: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
     --navMenuNoBackground: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(252,252,252,0) 0%);
-    
+    padding: 0;
+    margin: 0;
 }
 .v-main{
   background: var(--accent); 
@@ -48,7 +49,7 @@ a { text-decoration: none; }
 .basePage{
   height: 100%;
   width: 98%;
-  margin-left:1%;
+  margin-left:1.5%;
 }
 
 </style>

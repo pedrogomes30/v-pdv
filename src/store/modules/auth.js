@@ -1,5 +1,7 @@
 // import Vue from 'vue';
 
+import Cookie from "js-cookie";
+
 const state = {
   cashier_session :{},
 };
@@ -24,7 +26,6 @@ const actions = {
       })
     },
     start({commit},startObj){
-      console.log('in START');
       return new Promise(resolve =>{
         setTimeout(()=>{
           commit('SET_START',startObj,{root:true});
@@ -34,8 +35,10 @@ const actions = {
     },
   }
 const mutations = {  
-  LOGOUT(state){
+  logout(state){
     state.cashier_session = ""
+    Cookie.remove('._token')
+    Cookie.remove('expires')
   },
   SET_START(state,startObj){
     state.cashier_session = startObj

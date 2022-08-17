@@ -21,9 +21,14 @@
                 title="Atualizar Produtos" 
                 right
                 center
+                fab
+                outlined
+                small
+                color='green'
                 :loading="loading"
+                class='ma-3'
                 @click="updateproducts(true)">
-                <v-icon color="green">fa-solid fa-arrows-rotate</v-icon>
+                <v-icon >fa-solid fa-arrows-rotate</v-icon>
             </v-btn>
         </v-card-title>
         <v-card-text>
@@ -35,19 +40,41 @@
                 calculate-widths
                 dense                
                 :items-per-page="50"
-                style="height: 71vh;"
+                style="height: 76vh;"
                 class="overflow-y-auto"
                 :loading=loading
                 loading-text="Carregando produtos..."
                 >
                 <template  v-slot:item="row" >
-                    <tr @click='newItem(row.item)'>
-                        <!-- <td><v-icon size="20" color="var(--primary)"   >fa fa-box </v-icon>   </td> -->
-                        <td class='ma-0 pa-0 pr-1'>{{row.item.sku}}</td>
-                        <td class='ma-0 pa-0'>{{row.item.description}}</td>
-                        <td class='ma-0 pa-0'>{{row.item.provider}}</td>
-                        <td class='ma-0 pa-0'>{{nameCategory(row.item.category)}}</td>
-                        <td class='ma-0 pa-0 justify-center'><b>{{valueFormat(row.item.price)}}</b></td>
+                    <tr >
+                        <td>
+                            <v-icon 
+                                size="20" 
+                                @click='newItem(row.item)'
+                                title='Enviar apra o carrinho'
+                                color="var(--primary)">
+                                    fa fa-cart-plus 
+                            </v-icon>
+                        </td>
+                        <td class=''>{{row.item.sku}}<br><b>{{row.item.description}}</b></td>
+                        <td class=''>
+                            <h5>{{row.item.provider.toLowerCase()}}</h5>
+                            <h4>{{nameCategory(row.item.category)}}</h4>
+                        </td>
+                        <td >
+                            <h3>
+                                {{valueFormat(row.item.price)}}
+                            </h3>
+                        </td>
+                        <td>
+                            <v-icon 
+                                size="18" 
+                                title='Reportar diferença de preço'
+                                color='red'
+                                @click='priceReport(row.item)' 
+                                >fa fa-hand-holding-dollar 
+                            </v-icon>
+                        </td>
                     </tr>
                 </template>
             </v-data-table>
@@ -73,11 +100,11 @@ export default {
            search: '',
            loading:false,
            header:[
-               { text: 'Sku',align: 'start',sortable: false,value: 'sku'},
-               { text: 'Descricao',align: 'start', value: 'description' },
-               { text: 'marca / fornecedor', align: 'start', value: 'provider' },
-               { text: 'Categoria',align: 'center', value: 'category' },
+               { text: '',align: 'center',sortable: false,value: ''},
+               { text: 'Sku / Descricao',align: 'start', value: 'description' },
+               { text: 'Categoria / Fornecedor', align: 'start', value: 'provider' },
                { text: 'Preco(R$)', align: 'center', value: 'price' },
+               { text: '', align: 'center', value: '' },
            ],          
        } 
     },
@@ -99,6 +126,14 @@ export default {
         nameCategory(categoria){
             let exists = this.categorys.findIndex(x => x.id === categoria);
             return this.categorys[exists].name
+        },
+        colorCategory(categoria){
+            let exists = this.categorys.findIndex(x => x.id === categoria);
+            return this.categorys[exists].color
+        },
+        priceReport(item){
+            //TODO
+            console.log(item)
         },
         async updateproducts(update){
             try{

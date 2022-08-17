@@ -102,7 +102,7 @@ export default {
       btSave:true,
       salesmanCache:{
         document: "",
-        name: "Vendedor não identificado",
+        name: "indisponível",
         email: "",
         phone: "",
         type: "",

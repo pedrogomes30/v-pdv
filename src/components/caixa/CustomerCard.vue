@@ -216,6 +216,7 @@ export default {
                 this.newCustomer      = true
               }else{
                 this.customerCache    = customer.data.data
+                this.adicionarCliente()
               }
               this.loading            = false
             }
@@ -233,8 +234,8 @@ export default {
             parDoc          = customerCache.store_partiner_cnpj.toString()
             parDoc          = parDoc.replace(/[^0-9]/g, '');
             store_partiner  = {
-                name: customerCache.store_partiner_name,
-                cnpj: parDoc
+              name: customerCache.store_partiner_name,
+              cnpj: parDoc
             }
           }
           var newCustomer = {
@@ -260,6 +261,7 @@ export default {
         adicionarCliente(){
           console.log('incluir na venda')
           var newCustomer = Object.assign({}, this.customerCache)
+          newCustomer.document = newCustomer.document === '' ? 1:newCustomer.document 
           this.$store.dispatch('addCustomer',newCustomer)
           this.btnRemoveCustomer = true
           this.menuCustomer = false

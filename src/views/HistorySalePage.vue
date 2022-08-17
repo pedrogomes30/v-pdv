@@ -13,18 +13,18 @@
       </v-list-item>
     </v-col>
   </v-row>
-  <VendasCard />
+  <SalesCard />
 </div>
 </template>
 
 <script>
   
-import VendasCard from '../components/historicoVendas/VendasCard.vue'
+import SalesCard from '../components/historicoVendas/SalesCard.vue'
   export default {
-    name: 'HistoricoPage',
+    name: 'HistorySalePage',
 
     components: {
-      VendasCard,
+      SalesCard,
     },
   }
 </script>

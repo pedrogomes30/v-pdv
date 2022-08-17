@@ -7,55 +7,59 @@
                 </v-list-item-avatar>
                 Carrinho
                 <v-spacer></v-spacer>
-                 <v-icon  
-                    color="red" 
+                <v-icon
+                    @click="cleanCart"
+                    color="red"
                     title="esvaziar carrinho"
-                    @click="cleanCart">fa fa-xmark
+                    size="15"
+                    >
+                    fa fa-trash
                 </v-icon>
             </v-card-title>
             <div>
                 <v-data-table
-                
+                :headers="header"
                 :items="Items"
                 disable-filtering
                 fixed-header
                 calculate-widths
                 dense
+                hide-default-header
                 hide-default-footer
                 :items-per-page="-1"
                 id="scroll-cart"
-                style="height: 25vh;padding-left:3px;padding-right:3px "
+                style="height: 27vh;padding-left:3px;padding-right:3px "
                 class="overflow-y-auto"
                 >
                 <template v-slot:item="row">
                     <tr v-if="row.item.id !== 0" >
                         <td >
-                            <v-icon size="15" color="red" @click="removeItem(row)" >fa fa-xmark </v-icon>
+                            <v-icon size="20" color="red" @click="removeItem(row)" class='ma-0 pa-0' >fa fa-xmark </v-icon>
                         </td>
-                        <td class='pa-0'> 
+                        <td > 
                             {{row.item.sku}}<br>
                             <b>{{row.item.description}}</b></td>
                         <td>
-                            <h6>{{valueFormat(row.item.value)}} X</h6>
-                            <v-container class='pa-0' id="microButtons">
-                                <v-icon size="10" color="green" @click="qtdAdd(row)" >fa fa-plus</v-icon>
+                            <v-container id="miniButtons" >
+                            <h5>{{valueFormat(row.item.value)}}</h5>
+                                <v-icon size="10" color="green" @click="qtdAdd(row)" class='mr-1'>fa fa-plus</v-icon>
                                 {{row.item.quantity}} 
-                                <v-icon size="10" color="red" @click="qtdSub(row)" >fa fa-minus</v-icon>
+                                <v-icon size="10" color="red" @click="qtdSub(row)" class='ml-1'>fa fa-minus</v-icon>
                             </v-container>
                         </td>
                         <td>
                             <div>
-                                <h6>
-                                    {{valueFormat(row.item.total)}}
-                                </h6>
+                                <h5>
+                                    {{valueFormat(row.item.price * row.item.quantity)}}
+                                </h5>
                                 <div v-if='row.item.disconts !== undefined '>
                                     <div v-for="discont in row.item.disconts" :key="discont.code">
-                                        <h6 style="color:red;" :title="getDescTitle(discont)">{{valueFormat(discont.price)}}-</h6>
+                                        <h5 style="color:red;" :title="getDescTitle(discont)">{{valueFormat(discont.price)}}-</h5>
                                     </div>
                                 </div>
-                                <h5>
+                                <h4>
                                     <b>{{valueFormat(row.item.total)}}</b>
-                                </h5>
+                                </h4>
                             </div>
                         </td>                    
                     </tr>
@@ -71,6 +75,16 @@ export default {
       Items(){
         return this.$store.state.cashierStore.items
       },
+    },
+    data:()=>{
+        return {
+           header:[
+               { text: '',align: 'center',sortable: false,value: ''},
+               { text: 'Produto',align: 'center', value: 'description' },
+               { text: 'preço / quantidade', align: 'center', value: 'price' },
+               { text: 'total / descontos', align: 'center', value: 'total' },
+           ],          
+       } 
     },
     methods:{
         qtdAdd(product){
@@ -101,20 +115,15 @@ export default {
         },
         getDescTitle(discont){
             return discont.code+': '+discont.description
-        },
-        
-
+        },     
     }
 }
 </script>
 <style>
 
-#microButtons{
-  display: flex;
-  align-content:space-between ;
-  justify-content: center;
+#miniButtons{
+  padding: 0;
+  margin: 0;
 }
-#microButtons .v-icon{
-  padding:5px;
-}
+
 </style>

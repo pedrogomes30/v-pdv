@@ -1,8 +1,8 @@
 <template> 
 <div class='basePage'> 
   <!-- header -->
-  <v-row no-gutters dense style='max-height:20%'>
-    <v-col cols="cols-8" align-self="center" >
+  <v-row no-gutters dense>
+    <v-col cols="cols-10" align-self="center" >
       <v-list-item>
         <v-list-item-avatar rouded color="var(--primary">
           <v-icon color="white"> fa fa-cart-plus</v-icon>
@@ -13,10 +13,10 @@
       </v-list-item>
     </v-col>  
     <v-spacer></v-spacer>
-    <v-col cols="cols-2" align-self="center">
+    <v-col cols="cols-1" align-self="center">
         <CustomerCard />
     </v-col>
-    <v-col cols="cols-2" align-self="center">
+    <v-col cols="cols-1" align-self="center">
         <SalesmanCard />
     </v-col>
   <!--  -->
