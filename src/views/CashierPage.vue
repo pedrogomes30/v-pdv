@@ -31,18 +31,17 @@
       <v-col cols='5'  id="tabMenu">
         <TabCashierSubmenu />
         <TotalCard />
+        <v-row dense no-gutters class='pt-0' justify="center" v-if="sale.status !== 'Finalizada'">
+          <v-spacer></v-spacer>
+          <h5  class="white--text ml-3 mr-3 "> {{sale.status}}</h5>
+        </v-row>
         <v-row justify="space-around" class='pl-3 pr-3' >
           <ObsCard />
           <ChangeCard />            
-          <v-btn height="14.5vh" width="15%"  color='red' dark   title="cancelar a sale" @click="onCancelOrder()">
+          <v-btn height="14.5vh" width="15%"  color='red' dark   title="cancelar a venda" @click="onCancelOrder()">
             <v-icon color="white" size='35'> fa fa-ban</v-icon>
           </v-btn>
           <DetailSaleCard />
-        </v-row>
-        <v-row dense no-gutters class='pt-6' justify="center" v-if="sale.status !== 'Finalizada'">
-          <v-spacer></v-spacer>
-          <h5  class="white--text ml-3 mr-3 "> {{sale.status}}</h5>
-          <v-icon color='white'>fa fa-exclamation</v-icon>
         </v-row>
       </v-col>
     </v-row>   

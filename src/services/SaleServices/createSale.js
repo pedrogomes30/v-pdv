@@ -19,6 +19,12 @@ export default async function generateSale(newSale,sales,auth){
             user_id : auth.user_id,
             user_name : auth.user_name
         }
+        newSale.status = {
+            "status_id": 8,
+            "status_description": "Enviando",
+            "status_icon": 'fa fa-rotate',
+            "status_color": 'green'
+        }
         newSale.payment_method      = newSale.payments.lengh >1 ? 6 : newSale.payments[0].method_id
         newSale.sale_date           = newSale.sale_date == '' ? format(new Date(), "yyyy-MM-dd HH:mm:ss") : newSale.sale_date
         newSale.number              = newSale.number == '' ? getNumber(newSale,sales,auth) : newSale.number
@@ -34,8 +40,9 @@ export default async function generateSale(newSale,sales,auth){
         }
         return newSale
     }catch(e){
-        newSale.status = 'Erro'
-        console.log('error',e)
+        newSale.status.description      = 'Erro'
+        newSale.sys_obs     = e
+        console.log("ERRO AO CRIAR VENDA", e)
         return newSale
     }
 }

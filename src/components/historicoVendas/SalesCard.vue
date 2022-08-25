@@ -15,7 +15,7 @@
             dense
             autofocus
             >
-            ></v-text-field>
+            </v-text-field>
         </v-card-title>
         <v-card-text>
       <v-data-table
@@ -38,20 +38,20 @@
             <template v-slot:item="row">
                 <tr >
                   <td>
-                    <v-btn elevation="3" icon color="red" class='ma-1' outlined title="Cancelar venda">
+                    <v-btn elevation="3" icon color="red" class='ma-1' outlined title="Cancelar venda" :loading="loading">
                       <v-icon size="20" >fa fa-xmark </v-icon>
                     </v-btn>
-                    <v-btn elevation="3" icon color="green" class='ma-1' outlined title="imprimir Nfc-e">
+                    <v-btn elevation="3" icon color="green" class='ma-1' outlined title="imprimir Nfc-e" @click="openInvoice(row.item)" :loading="loading">
                       <v-icon size="20" >fa fa-receipt </v-icon>
                     </v-btn>
-                    <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="blue" class='ma-1' outlined title="Re-sincronizar" @click='reSendSale(row.item)'>
+                    <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="blue" class='ma-1' outlined title="Re-sincronizar" @click='reSendSale(row.item)' :loading="loading">
                       <v-icon size="20" >fa fa-rotate</v-icon>
                     </v-btn>
-                    <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="red" class='ma-1' outlined title="Informar bug na venda" >
+                    <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="red" class='ma-1' outlined title="Informar bug na venda" :loading="loading">
                       <v-icon size="20" >fa-solid fa-bug</v-icon>
                     </v-btn>
                   </td>
-                  <td>>id:{{row.item.id}}<br><b>{{row.item.number}}</b></td>
+                  <td>id:{{row.item.id}}<br><b>{{row.item.number}}</b></td>
                   <td>{{dateFormat(row.item.sale_date)}}</td>
                   <td>{{row.item.cashier.cashier_name}}</td>
                   <td>{{row.item.employee_cashier.user_name}}</td>
@@ -66,8 +66,8 @@
                   <td>{{valueFormat(row.item.discont_value)}}</td>
                   <td>{{valueFormat(row.item.total_value)}}</td>
                   <td class="justify-center">
-                    <v-btn elevation="2" icon :title="row.item.status === 'Erro' ? row.item.sys_obs : row.item.status" :color="setIconStatus(row.item,true)" class='ma-1' outlined>
-                      <v-icon size="20">  {{setIconStatus(row.item,false)}}</v-icon>
+                    <v-btn elevation="2" icon :title="setTitle(row.item)" :color="row.item.status.status_color" class='ma-1' outlined>
+                      <v-icon size="20">  {{row.item.status.status_icon}}</v-icon>
                     </v-btn>
                   </td>
                 </tr>
@@ -95,20 +95,20 @@
                 <template v-slot:item="row">
                     <tr >
                       <td>
-                        <v-btn elevation="3" icon color="red" class='ma-1' outlined title="Cancelar venda">
+                        <v-btn elevation="3" icon color="red" class='ma-1' outlined title="Cancelar venda" :loading="loading">
                           <v-icon size="20" >fa fa-xmark </v-icon>
                         </v-btn>
-                        <v-btn elevation="3" icon color="green" class='ma-1' outlined title="imprimir Nfc-e">
+                        <v-btn elevation="3" icon color="green" class='ma-1' outlined title="imprimir Nfc-e" @click="openInvoice(row.item)" :loading="loading">
                           <v-icon size="20" >fa fa-receipt </v-icon>
                         </v-btn>
-                        <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="blue" class='ma-1' outlined title="Re-sincronizar" @click='reSendSale(row.item)'>
+                        <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="blue" class='ma-1' outlined title="Re-sincronizar" @click='reSendSale(row.item)' :loading="loading">
                           <v-icon size="20" >fa fa-rotate</v-icon>
                         </v-btn>
-                        <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="red" class='ma-1' outlined title="Informar bug na venda" >
+                        <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="red" class='ma-1' outlined title="Informar bug na venda" :loading="loading">
                           <v-icon size="20" >fa-solid fa-bug</v-icon>
                         </v-btn>
                       </td>
-                      <td>>id:{{row.item.id}}<br><b>{{row.item.number}}</b></td>
+                      <td>id:{{row.item.id}}<br><b>{{row.item.number}}</b></td>
                       <td>{{dateFormat(row.item.sale_date)}}</td>
                       <td>{{row.item.cashier.cashier_name}}</td>
                       <td>{{row.item.employee_cashier.user_name}}</td>
@@ -116,15 +116,19 @@
                       <td>{{row.item.customer.name}}</td>
                       <td><v-chip 
                         :title="formatPaymentMethod(row.item) ? row.item.payment_method :'Forma de pagamento não disponível na data atual'"
-                        class='ma-1'
                         color='var(--primary)'
                         outlined>
                         {{formatPaymentMethod(row.item) ? formatPaymentMethod(row.item) : '????????'}}</v-chip></td>
                       <td>{{valueFormat(row.item.discont_value)}}</td>
                       <td>{{valueFormat(row.item.total_value)}}</td>
                       <td class="justify-center">
-                        <v-btn elevation="2" icon :title="row.item.status === 'Erro' ? row.item.sys_obs : row.item.status" :color="setIconStatus(row.item,true)" class='ma-1' outlined>
-                          <v-icon size="20">  {{setIconStatus(row.item,false)}}</v-icon>
+                        <v-btn 
+                          elevation="2" 
+                          icon 
+                          :title="setTitle(row.item)" 
+                          :color="row.item.status.status_color" 
+                          outlined>
+                          <v-icon size="20">{{row.item.status.status_icon}}</v-icon>
                         </v-btn>
                       </td>
                     </tr>
@@ -138,7 +142,7 @@
 <script>
 import { format } from 'date-fns'
 import generateSale from '../../services/SaleServices/createSale'
-import {getSale} from '../../services/api/saleApi'
+import {getSale, getCupoun} from '../../services/api/saleApi'
 export default {
   name:'SalesCard',
   computed:{
@@ -146,7 +150,7 @@ export default {
       return this.$store.state.salesStore.sales
     },  
     to_sync_sales(){
-      return this.$store.state.salesStore.to_sync_sales
+      return this.$store.state.salesStore.to_sync_sales.length > 0 ? this.$store.state.salesStore.to_sync_sales : false
     },  
     updated_at(){
       return this.$store.state.salesStore.updated_at
@@ -208,28 +212,34 @@ export default {
           return 'A enviar'
         }
       },
-      setIconStatus(sale,isColor=false){  
-        var result  = null
-        var status  = this.verifyStatus(sale)
-        var iconSet = [
-          {status:'Finalizada',icon:'fa fa-check',color:'green'},
-          {status:'Erro',icon:'fa fa-triangle-exclamation',color:'red'},
-          {status:'A enviar',icon:'fa-solid fa-rotate',color:'yellow'},
-        ]
-        let find = iconSet.findIndex(x => x.status === status);
-        if(find !== -1){
-          result = isColor ? iconSet[find].color : iconSet[find].icon
-        }
-        return result
+      setTitle(sale){
+        if(sale.sys_obs) return sale.sys_obs
+        return sale.status.status_description
       },
       detailSale(){
         this.detailMenu = true
       },
+      async openInvoice(sale){
+        this.loading      = true
+          if(sale.invoice_coupon  === '' || sale.invoice_coupon  === null || typeof(sale.invoice_coupon) ==='undefined'){
+            var nfce = await getCupoun(sale.id);
+            //set nfce link to this sale
+            console.log('no NFCE nfce',nfce.data.data);
+            window.open(nfce.data.data.invoice_coupon, '_blank');
+            await this.updateSales();
+          }else{
+            console.log('with nfce',sale.invoice_coupon);
+            window.open(sale.invoice_coupon, '_blank');
+            }
+        this.loading      = false
+      },
       async reSendSale(sale){
           var session                 = Object.assign({},this.session)
           var newSale                 = await generateSale(sale,this.sales,session)
-          await this.dispatchSale(newSale)
-          await this.updateSales()
+          if(newSale.status !== "Erro" || newSale.status !== "Negada" ){
+            await this.dispatchSale(newSale)
+            await this.updateSales()
+          }
       },
       async updateSales(){
         this.loading      = true

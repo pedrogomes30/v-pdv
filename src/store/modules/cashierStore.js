@@ -14,17 +14,16 @@ const state = {//ou venda
     employee_cashier: '',
     employee_sale: false,
     obs: '',
-    invoice:false,
+    sys_obs:'',
     products_value: 0,
     payments_value: 0,
     discont_value: 0,
     total_value: 0,
-    nfce:{
-        serie:'',
-        number:'',
-        cupom_pdf:'',
-        nfce_xml:'',
-    },
+    invoice:false,
+    invoice_serie:'',
+    invoice_number:'',
+    invoice_coupon:'',
+    invoice_xml:'',
     customer: {
         document: "1",
         name: "Cliente não identificado",
@@ -290,6 +289,7 @@ const mutations = {
         state.employee_cashier =  ''
         state.employee_sale =  false
         state.obs =  ''
+        state.sys_obs =  ''
         state.invoice = false
         state.products_value =  0
         state.payments_value =  0
@@ -369,13 +369,13 @@ const service ={
     */
     processItemValue(state,indice){
         if(typeof(indice) !== 'undefined'){
-            if(typeof state.items[indice].value === 'undefined'){
+            if(typeof (state.items[indice].value) === 'undefined'){
                 alert('erro ao calcular total do produto')
             }
             state.items[indice].total = (state.items[indice].quantity * state.items[indice].value)
         }else{
             state.items.forEach((product)=>{
-                if(typeof product.value === 'undefined'){
+                if(typeof(product.value) === 'undefined'){
                     alert('erro ao calcular total do produto')
                 }
                 product.total = (product.quantity * product.value)
@@ -414,7 +414,7 @@ const service ={
         //validar a venda
         state.valid_sale = true
         state.status = "Finalizada"
-        if(typeof state.items === 'undefined'){state.valid_sale = false; state.status=' Não há item nesta venda.'}
+        if(typeof(state.items) === 'undefined'){state.valid_sale = false; state.status=' Não há item nesta venda.'}
         if(state.change_value >= 0 && state.payments_value === 0){state.valid_sale = false; state.status=' Não há pagamentos nesta venda.'}
         if(state.total_value < 0 ){state.valid_sale = false; state.status=' venda com o total negativo.'}
         if(state.products_value <=0){state.valid_sale = false; state.status=' venda com o total de products zerado.'}
@@ -432,7 +432,7 @@ const service ={
         state.items.forEach((product)=>{
             tempTotal += product.total
         })
-        if(typeof state.disconts !== 'undefined'){
+        if(typeof(state.disconts) !== 'undefined'){
             //loop products
             state.items.forEach((product)=>{
                 product.disconts = []

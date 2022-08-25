@@ -11,7 +11,7 @@
               :nudge-width="200"
               >
               <template v-slot:activator="{ on, attrs }">
-                  <!-- <v-icon v-if="checkCustomer()" color="red" size='20'> fa-solid fa-triangle-exclamation</v-icon>  -->
+                  <v-icon v-if="checkCustomer()" color="red" size='20'> fa-solid fa-triangle-exclamation</v-icon> 
                   <v-btn
                     color='grey' 
                     dark  
@@ -38,102 +38,183 @@
                 </v-list-item>
                 </v-list>
                 <v-divider></v-divider>
-                <v-list>
-                  <v-text-field
-                      label="cpf/cnpj"
-                      hide-details="auto"
-                      color="var(--primary)"
-                      v-model=customerCache.document
-                      hide-spin-buttons
-                      class='pa-2'
-                      v-mask="customerCache.document.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
-                      :rules='rules.documentValidate'
-                      type='text'
-                      counter="18"
-                      @change="documentValidate(false)"
-                      prepend-icon='fa fa-id-card'
-                      autofocus>                
-                  </v-text-field>
-                  <div v-if="newCustomer">
+                <v-row class="pa-3">
+                  <v-list>
+                    <!-- PERSON DATA -->
                     <v-text-field
-                      label="name"
-                      hide-details="auto"
-                      color="var(--primary)"
-                      v-model=customerCache.name
-                      hide-spin-buttons
-                      @focus="customerCache.name=''"
-                      :disabled="!newCustomer"
-                      class='pa-2'
-                      prepend-icon='fa fa-user'
-                      autofocus
-                    >                
+                        label="Cpf/Cnpj"
+                        hide-details="auto"
+                        color="var(--primary)"
+                        v-model=customerCache.document
+                        hide-spin-buttons
+                        class='pa-2'
+                        v-mask="customerCache.document.length <= 14 ? '###.###.###-##' : '##.###.###/####-##'"
+                        :rules='rules.documentValidate'
+                        type='text'
+                        counter="18"
+                        @change="documentValidate(false)"
+                        prepend-icon='fa fa-id-card'
+                        autofocus>                
                     </v-text-field>
-                    <v-text-field
-                      label="e-mail"
-                      hide-details="auto"
-                      :disabled="!newCustomer"
-                      color="var(--primary)"
-                      v-model=customerCache.email
-                      class='pa-2'
-                      type="email"
-                      prepend-icon='fa fa-envelope'
-                    >                
-                    </v-text-field>
-                    <v-text-field
-                      label="phone(opcional)"
-                      hide-details="auto"
-                      color="var(--primary)"
-                      v-model=customerCache.phone
-                      class='pa-2'
-                      type="number"
-                      hide-spin-buttons
-                      :disabled="!newCustomer"
-                      prepend-icon='fa fa-phone'
-                    >                
-                    </v-text-field>
-                      <v-switch
-                      v-if="newCustomer && store_type === 'shopping'"
-                      v-model="customer_partioner"
-                      color="var(--primary)"
-                      class="pl-2 pr-2"
-                      label="Funcionário de loja parceira"
-                      append-icon="fa-solid fa-store"
-                      
-                    ></v-switch>
-                    <v-text-field
-                      v-if="customer_partioner "
-                      label="cnpj da loja deste funcionário"
-                      hide-details="auto"
-                      color="var(--primary)"
-                      v-model=customerCache.store_partiner_cnpj
-                      hide-spin-buttons
-                      class='pa-2'
-                      v-mask="'##.###.###/####-##'"
-                      :rules='rules.validarEmprParc'
-                      type='text'
-                      counter="18"
-                      @change="documentValidate(true)"
-                      prepend-icon='fa fa-id-card'
-                    >                
-                    </v-text-field>
-                    <v-text-field
-                      v-if="customer_partioner"
-                      label="name da loja"
-                      hide-details="auto"
-                      color="var(--primary)"
-                      v-model=customerCache.store_partiner_name
-                      hide-spin-buttons
-                      :disabled="!customer_partioner"
-                      class='pa-2'
-                      prepend-icon='fa fa-user'
-                    >                
-                    </v-text-field>
-                  </div>
+                      <div v-if="newCustomer">
+                        <v-text-field
+                          label="Nome"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.name
+                          hide-spin-buttons
+                          @focus="customerCache.name=''"
+                          :disabled="!newCustomer"
+                          class='pa-2'
+                          prepend-icon='fa fa-user'
+                          autofocus
+                        >                
+                        </v-text-field>
+                        <v-text-field
+                          label="Email"
+                          hide-details="auto"
+                          :disabled="!newCustomer"
+                          color="var(--primary)"
+                          v-model=customerCache.email
+                          class='pa-2'
+                          type="email"
+                          prepend-icon='fa fa-envelope'
+                        >                
+                        </v-text-field>
+                        <v-text-field
+                          label="Telefone(opcional)"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.phone
+                          class='pa-2'
+                          v-mask="customerCache.phone.length > 13 ? '(##)#-####-####' : '(##)####-####'"
+                          type="text"
+                          hide-spin-buttons
+                          :disabled="!newCustomer"
+                          prepend-icon='fa fa-phone'
+                        >    
+                        </v-text-field>
+                        </div>
+                    </v-list>
+                    <v-list>
+                      <div v-if="newCustomer">
+                        <!-- ADDRESS -->
+                        <v-text-field
+                          label="Cep"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.postal_code
+                          hide-spin-buttons
+                          class='pa-2'
+                          v-mask="'#####-###'"
+                          :rules='rules.cep'
+                          type='text'
+                          counter="9"
+                          @change="checkGetAdressByCep()"
+                          prepend-icon='fa fa-envelopes-bulk'
+                        />
+                        <v-text-field
+                          label="Cidade"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.city
+                          hide-spin-buttons
+                          class='pa-2'
+                          type='text'
+                          prepend-icon='fa fa-city'
+                        />
+                        <v-text-field
+                          label="Uf"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.uf
+                          hide-spin-buttons
+                          class='pa-2'                          
+                          counter="2"
+                          type='text'
+                          prepend-icon='fa fa-earth-americas'
+                        />
+                        <v-text-field
+                          label="Bairro"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.district
+                          hide-spin-buttons
+                          class='pa-2'
+                          type='text'
+                          prepend-icon='fa fa-tree-city'
+                        />
+                        <v-text-field
+                          label="Logradouro"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.street
+                          hide-spin-buttons
+                          class='pa-2'
+                          type='text'
+                          prepend-icon='fa fa-road'
+                        />
+                        <v-text-field
+                          label="Numero"
+                          hide-details="auto"
+                          color="var(--primary)"
+                          v-model=customerCache.number
+                          hide-spin-buttons
+                          class='pa-2'
+                          type='text'
+                          counter="10"
+                          prepend-icon='fa fa-hashtag'
+                        />
+                      </div>
+                    </v-list>
+                </v-row>
+                  <v-list>
+                    <div v-if="newCustomer">                    
+                      <!-- STORE PARTINER DATA-->
+                        <v-switch
+                        v-if="newCustomer && store_type === 'shopping'"
+                        v-model="customer_partioner"
+                        color="var(--primary)"
+                        class="pl-2 pr-2"
+                        label="Funcionário de loja parceira"
+                        append-icon="fa-solid fa-store"
+                        
+                      ></v-switch>
+                      <v-text-field
+                        v-if="customer_partioner "
+                        label="Cnpj da loja deste funcionário"
+                        hide-details="auto"
+                        color="var(--primary)"
+                        v-model=customerCache.store_partiner_cnpj
+                        hide-spin-buttons
+                        class='pa-2'
+                        v-mask="'##.###.###/####-##'"
+                        :rules='rules.validarEmprParc'
+                        type='text'
+                        counter="18"
+                        @change="documentValidate(true)"
+                        prepend-icon='fa fa-id-card'
+                      >                
+                      </v-text-field>
+                      <v-text-field
+                        v-if="customer_partioner"
+                        label="Nome da loja"
+                        hide-details="auto"
+                        color="var(--primary)"
+                        v-model=customerCache.store_partiner_name
+                        hide-spin-buttons
+                        :disabled="!customer_partioner"
+                        class='pa-2'
+                        prepend-icon='fa-solid fa-store'
+                      >    
+                      <!-- FINISH -->
+                      </v-text-field>
+                    </div>
                   </v-list>
                 <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click="menuCustomer = false">Cancelar</v-btn>
-                <v-btn color="var(--primary)" text @click="newCustomer?cadastrarCliente():adicionarCliente()">{{newCustomer?'cadastrar':'salvar'}}</v-btn>
+                <v-btn color="var(--primary)" text @click="newCustomer?saveCustomer():addCustomer()">{{newCustomer?'cadastrar':'salvar'}}</v-btn>
                 </v-card-actions>
               </v-card>
             <!--  -->
@@ -143,12 +224,14 @@
           </v-btn>
           <!-- fim -->
           </v-list-item-subtitle>
-        <v-list-item-title class="white--text" >{{typeof(sale_customer.name) === 'undefined' ? '' : sale_customer.name}}</v-list-item-title>
+        <v-list-item-title class="white--text">{{sale_customer.name}}</v-list-item-title>
+        <h6 class="white--text" v-if="typeof(sale_customer.store_partiner_name) !== 'undefined' || sale_customer.store_partiner_name !== ''"> {{sale_customer.store_partiner_name}}</h6>
     </v-list-item-content>       
     </v-list-item>      
 </template>
 <script>
 import {getCustomer,setCustomer} from '../../services/api/customerApi'
+import {getAdressByCep} from  '../../services/api/viaCepApi'
 import {checkDocument} from '../../services/checkCpfCnpj'
 export default {
     name:'ClienteVendedorCard',
@@ -170,19 +253,26 @@ export default {
       customer_partioner:false,
       btnRemoveCustomer:false,
       customerCache:{
-        document: "",
         name: "Cliente não identificado",
+        document: "",
         email: "",
+        city: "",
+        uf: "",
+        postal_code: "",
         phone: "",
         type: "",
-        store_partiner_id: "",
-        store_partiner_name: "",
-        store_partiner_cnpj:"",
+        street: "",
+        number: "",
+        district:"",
+          store_partiner_id: "",
+          store_partiner_name: "",
+          store_partiner_cnpj:"",
       },
       rules:{
         documentValidate:[true],
         validarEmprParc:[true],
         email:[true],
+        cep:[true]
       }
     }),
     methods:{
@@ -207,6 +297,16 @@ export default {
             }
           }
         },
+        async checkGetAdressByCep(){
+          this.rules.cep =[true]
+          var adress = await getAdressByCep(this.customerCache.postal_code);
+          if(typeof(adress.cep) ==='undefined') this.rules.cep = ['cep inválido!'];
+          this.customerCache.district     = adress.bairro
+          this.customerCache.city         = adress.localidade
+          this.customerCache.uf           = adress.uf
+          this.customerCache.street       = adress.logradouro
+          this.customerCache.number       = ''
+        },
         async checkDocumentserver(document){
           try{
             if(document !== '' || document !==null || typeof(document) !== 'undefined' ){
@@ -216,7 +316,7 @@ export default {
                 this.newCustomer      = true
               }else{
                 this.customerCache    = customer.data.data
-                this.adicionarCliente()
+                // this.addCustomer()
               }
               this.loading            = false
             }
@@ -224,58 +324,55 @@ export default {
             alert(e)
           }
         },
-        async cadastrarCliente(){
-          var customerCache = Object.assign({}, this.customerCache)
-          var doc           = customerCache.document.toString()
-          doc               = doc.replace(/[^0-9]/g, '');
-          var parDoc        = null
-          var store_partiner= null
+        async saveCustomer(){
+          var customerCache                 = Object.assign({}, this.customerCache)
+          //removes masks
+          customerCache.document            = customerCache.document.toString()
+          customerCache.document            = customerCache.document.replace(/[^0-9]/g, '')
+          customerCache.phone               = customerCache.phone.toString()
+          customerCache.phone               = customerCache.phone.replace(/[^0-9]/g, '')
+          customerCache.store_partiner_cnpj = customerCache.store_partiner_cnpj.toString()
+          customerCache.store_partiner_cnpj = customerCache.store_partiner_cnpj.replace(/[^0-9]/g, '')
+          customerCache.postal_code         = customerCache.postal_code.toString()
+          customerCache.postal_code         = customerCache.postal_code.replace(/[^0-9]/g, '')
+          //add store partioner
           if(customerCache.store_partiner_cnpj !== ''){
-            parDoc          = customerCache.store_partiner_cnpj.toString()
-            parDoc          = parDoc.replace(/[^0-9]/g, '');
-            store_partiner  = {
+            customerCache.store_partiner  = {
               name: customerCache.store_partiner_name,
-              cnpj: parDoc
+              cnpj: customerCache.store_partiner_cnpj
             }
           }
-          var newCustomer = {
-            name: customerCache.name,
-            document: doc,
-            document_type: doc.length <= 11 ? false : true,
-            email: customerCache.email,
-            city: "",
-            uf: "",
-            postal_code: "",
-            phone1: "",
-            phone2: "",
-            phone3: "",
-            store_partiner: store_partiner,            
-          }
           this.customerCache.type = this.customer_partioner ? 'funcionarioParceiro' : 'cliente'
-          newCustomer         = await setCustomer(newCustomer)
+          var newCustomer         = await setCustomer(customerCache)
           if(newCustomer.data.error){
             alert(newCustomer.data.data)
           }
-          this.adicionarCliente()
+          this.addCustomer()
         },
-        adicionarCliente(){
-          console.log('incluir na venda')
-          var newCustomer = Object.assign({}, this.customerCache)
-          newCustomer.document = newCustomer.document === '' ? 1:newCustomer.document 
+        addCustomer(){
+          var newCustomer         = Object.assign({}, this.customerCache)
+          newCustomer.document    = newCustomer.document === '' ? 1:newCustomer.document 
           this.$store.dispatch('addCustomer',newCustomer)
-          this.btnRemoveCustomer = true
-          this.menuCustomer = false
+          this.newCustomer        = false
+          this.btnRemoveCustomer  = true
+          this.menuCustomer       = false
         },
         cleanCache(){
           this.customerCache = {
-            document: "",
             name: "Cliente não identificado",
+            document: "",
             email: "",
+            city:"",
+            uf:"",
+            postal_code:'',
             phone: "",
             type: "",
-            store_partiner_id: "",
-            store_partiner_name: "",
-            store_partiner_cnpj:"",
+            street:"",
+            number:'',
+            district:"",
+              store_partiner_id: "",
+              store_partiner_name: "",
+              store_partiner_cnpj:"",
           }
           this.newCustomer = false
         },
@@ -286,9 +383,9 @@ export default {
           this.btnRemoveCustomer = false
         },
     },
-    mounted(){
+    async mounted(){
       this.cleanCache()
-      if(this.sale_customer.document !== ""){
+      if(this.sale_customer.document != 1){
         this.btnRemoveCustomer = true
       }
     }

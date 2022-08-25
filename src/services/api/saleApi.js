@@ -15,14 +15,14 @@ export async function setSale (sale){
     };    
     const call = await fetch(`${configs.configs.BASE_URL}/sale`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw Error(response.statusText);
         return response.json()
     })
     .then(result => {
         return result
     })
     .catch(error => {
-        throw new Error(error)
+        throw Error(error)
     });
     return call   
 }
@@ -52,6 +52,34 @@ export async function getSale (getObj){
     });
     return call   
 }
+
+export async function getCupoun (saleID){
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization","Bearer " + Cookie.get('._token') ); 
+    
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };    
+    const call = await fetch(`${configs.configs.BASE_URL}/sale/${saleID}`, requestOptions)
+    .then(response => {
+        if(!response.ok) throw Error(response.statusText);
+        return response.json()
+    })
+    .then(result => {
+        return result
+    })
+    .catch(error => {
+        throw Error(error)
+    });
+    return call   
+}
+
+
+
+
+
 /*
     TESTE FOR API PIPEDREAM
 */
