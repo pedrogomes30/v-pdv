@@ -101,6 +101,4 @@ export async function sendPipedream(sale){
 
     await fetch("https://1534e1ba1a4295c5c42230f3eebfb9ce.m.pipedream.net", requestOptions)
     .then(response => response.text())
-    .then(result => console.log('PIPEDREAM',result))
-    .catch(error => console.log(' pipedream error', error));
 }

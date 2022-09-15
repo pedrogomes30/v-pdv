@@ -28,7 +28,7 @@ const actions = {
     start({commit},startObj){
       return new Promise(resolve =>{
         setTimeout(()=>{
-          commit('SET_START',startObj,{root:true});
+          commit('SET_START',startObj);
           resolve();
         },250);
       })

@@ -29,7 +29,6 @@ export async function getCustomer (document){
 }
 
 export async function setCustomer (customer){
-    console.log('setcutomerApi',customer)
     var myHeaders = new Headers();
     myHeaders.append("Authorization","Bearer "+Cookie.get('._token') ); 
     var raw = JSON.stringify({

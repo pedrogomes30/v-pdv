@@ -19,7 +19,6 @@
     <v-col cols="cols-1" align-self="center">
         <SalesmanCard />
     </v-col>
-  <!--  -->
   </v-row>
     <!-- main card -->
     <v-row no-gutters dense>
