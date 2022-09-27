@@ -1,7 +1,7 @@
 <template>
 <div class='basePage'> 
   <!-- header -->
-  <v-row no-gutters dense>
+  <v-row no-gutters dense >
     <v-col cols="cols-10" align-self="center" >
       <v-list-item>
         <v-list-item-avatar rouded color="var(--primary">
@@ -12,31 +12,35 @@
         </v-list-item-content>
       </v-list-item>
     </v-col>  
+    <v-col>
+      <v-row class="d-flex flex-row-reverse pr-5 pt-3">
+        <NewClosureForm />
+        <NewWithdrawalForm/>
+      </v-row>
+    </v-col>
   </v-row>
   <!-- body -->
-  <v-row>
-   <v-col cols="8">
-    <ClosureSlide />
-   </v-col>
-   <v-col cols="2" class="ml-3">
-    <NewClosureCard />
-   </v-col>
-  </v-row>
+  <div  style="height:100%" id="exemplo">
+       <ManagerView />        
+  </div>
 </div>
 </template>
 
 <script>
-  import ClosureSlide from '../components/fechamento/ClosureSlide.vue';
-  import NewClosureCard from '../components/fechamento/NewClosure.vue';
-
-  export default {
+  import ManagerView from '../components/fechamento/ManagerView'
+  import NewClosureForm from '../components/fechamento/NewClosureForm';
+  import NewWithdrawalForm from '../components/fechamento/NewWithdrawalForm';  
+export default {
     name: 'ClosurePage',
-    data:()=>({
-        
-    }),
-    components: {
-    NewClosureCard,
-    ClosureSlide,
-},
+  components:{
+    ManagerView,
+    NewClosureForm,
+    NewWithdrawalForm,
+}
   }
 </script>
+<style>
+  #body_content{
+    height: 90vh;
+  }
+</style>

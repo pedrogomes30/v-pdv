@@ -26,7 +26,7 @@
   
 import ProdutoCard from '../components/caixa/ProductCard.vue';
   export default {
-    name: 'PromocaoPage',
+    name: 'ProductPick',
 
     components: {
       ProdutoCard,

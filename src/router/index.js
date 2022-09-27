@@ -6,7 +6,8 @@ import CashierPage from '../views/CashierPage.vue'
 import ConfiguracaoPage from '../views/ConfiguracaoPage.vue'
 import ClosurePage from '../views/ClosurePage.vue'
 import HistorySalePage from '../views/HistorySalePage.vue'
-import PromotionPage from '../views/PromotionPage.vue'
+import ProductPick from '../views/ProductPick.vue'
+import ProductBalance from '../views/ProductBalance.vue'
 import RecuperarSenha from '../views/RecuperarSenha.vue'
 import NotFound from '../views/NotFound.vue'
 import StoreCashierPage from '../views/StoreCashierPage.vue'
@@ -22,7 +23,8 @@ const routes = [
   { path: '/configuracao',  name: 'configuracao', component: ConfiguracaoPage,beforeEnter:Guard.auth},
   { path: '/fechamentoCaixa',name: 'fechamento',  component: ClosurePage,     beforeEnter:Guard.auth},
   { path: '/historico',     name: 'historico',    component: HistorySalePage, beforeEnter:Guard.auth},
-  { path: '/promocao',      name: 'promocao',     component: PromotionPage,   beforeEnter:Guard.auth},
+  { path: '/product_count',      name: 'contar_produto',     component: ProductBalance,   beforeEnter:Guard.auth},
+  { path: '/solicitar_produto',      name: 'solicitar_produto',     component: ProductPick,   beforeEnter:Guard.auth},
   { path: '/passRecover',   name: 'passRecover',  component: RecuperarSenha,  beforeEnter:Guard.auth},
   { path: '*',              name: 'NotFound',     component: NotFound,        },
 ]

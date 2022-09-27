@@ -76,8 +76,8 @@ export default {
             {icon:'fas fa-cart-plus',title:'Caixa',link:'caixa'},
             {icon:'fas fa-history',title:'Histórico',link:'historico'},
             {icon:'mdi-cart-check',title:'Fechamento',link:'fechamentoCaixa'},
-            {icon:'fas fa-percent',title:'Produtos e Promoções', link:'promocao'},
-            // {icon:'fas fa-cog',title:'Configurações',link:'configuracao'},
+            {icon:'fa-solid fa-scale-balanced',title:'Balanço',link:'product_count'},
+            {icon:'fa-solid fa-boxes-packing',title:'Solicitar produtos', link:'solicitar_produto'},
         ],
     }),
     methods:{

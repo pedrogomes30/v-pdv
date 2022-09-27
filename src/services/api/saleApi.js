@@ -75,30 +75,3 @@ export async function getCupoun (saleID){
     });
     return call   
 }
-
-
-
-
-
-/*
-    TESTE FOR API PIPEDREAM
-*/
-export async function sendPipedream(sale){
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "");
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-        sale
-    });
-
-    var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-    };
-
-    await fetch("https://1534e1ba1a4295c5c42230f3eebfb9ce.m.pipedream.net", requestOptions)
-    .then(response => response.text())
-}
