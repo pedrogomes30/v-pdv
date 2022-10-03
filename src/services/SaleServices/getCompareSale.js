@@ -4,13 +4,13 @@ export   function mergeSales(to_sync_sales, salesServe){
         not_up:[]
     }
     // not cache
-    if(!to_sync_sales || to_sync_sales.length === 0){
+    if(typeof(to_sync_sales) !== 'undefined' || !to_sync_sales || to_sync_sales.length === 0){
         result.up     = salesServe
         result.not_up = []
         return result
     } 
     //not server sales
-    if(!salesServe || salesServe.length === 0){
+    if(typeof(salesServe) !== 'undefined' ||  !salesServe || salesServe.length === 0){
         result.up     = []
         result.not_up = to_sync_sales
         return result

@@ -1,6 +1,10 @@
 <template>
     <v-row  style="height:100%" no-gutters dense>
-        <v-carousel height="93%" hide-delimiter-background show-arrows-on-hover >
+        <LoadComponent :overlay="loading" />
+        <h2 class="white--text" v-if="error.error">
+            {{error.data}}
+        </h2>
+        <v-carousel  height='93%' hide-delimiter-background show-arrows-on-hover v-else>
             <template v-slot:prev="{ on, attrs }" >
             <v-btn
                 color="var(--primary)"
@@ -19,7 +23,7 @@
                 title='próximo dia de fechamento'
             ><v-icon>fa-solid fa-angles-right</v-icon></v-btn>
             </template>
-            <v-carousel-item v-for="(data, day) in closures" :key='day'  >
+            <v-carousel-item heigth='100%' v-for="(data, day) in closures" :key='day'  >
                 <!-- switch card title -->
                 <v-list-item >
                     <v-list-item-content class="mb-2">
@@ -152,6 +156,7 @@
 import { format } from 'date-fns';
 import {getClosure} from '../../services/api/closureApi';
 import {deleteWithdrawal} from '../../services/api/withdrawalApi';
+import LoadComponent from '../SysComponents/LoadComponent.vue';
 
   export default {
     name: 'ClosurePage',
@@ -166,6 +171,7 @@ import {deleteWithdrawal} from '../../services/api/withdrawalApi';
         closures:[],
         refDate:null,
         check_cashier:false,
+        error:false,
         obs:'',
         icons: [
           {method:"Dinheiro",                 icon:'fa-solid fa-money-bill'},
@@ -183,7 +189,10 @@ import {deleteWithdrawal} from '../../services/api/withdrawalApi';
     methods: {
         async updateClosure(){
             this.loading      = true
-            this.closures     = await getClosure()
+            var callClosure   = await getClosure()
+            if(callClosure.error)
+                this.error    = callClosure
+            this.closures     = callClosure.data
             this.loading      = false
         },
         setDate(day){
@@ -231,8 +240,8 @@ import {deleteWithdrawal} from '../../services/api/withdrawalApi';
       await this.updateClosure();
     },
     components:{
-       
-    }
+    LoadComponent
+}
 }
 </script>
 

@@ -16,8 +16,8 @@ export async function getClosure(){
         return response.json()
     })
     .then(result => {
-        return result.data.data
-    })
+        return result.data
+        })
     .catch(error => {
         throw new Error(error)
     });

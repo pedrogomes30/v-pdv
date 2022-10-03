@@ -3,8 +3,8 @@
       <div v-if="noIsLoginPage()">
           <SideMenu />
       </div>
-    <v-main>
-        <router-view/>
+    <v-main >
+        <router-view transition="scroll-x-transition"/>
     </v-main>
   </v-app>
 </template>

@@ -1,5 +1,6 @@
 <template>
     <v-form @submit.prevent="setStart()" ref="form" >
+        <LoadComponent :overlay="loading"/>
         <v-text-field
             v-model="startValue.store.store_name"
             :rules="rules.store"
@@ -70,93 +71,100 @@
 <script>
 import router from '@/router';
 import {start, setCashier} from '../../services/api/authApi'
+import LoadComponent from '../SysComponents/LoadComponent.vue';
 // import {mapAction} from 'vuex'
 export default {
-    computed:{
+    computed: {
     //   ...mapState(['auth'])
     },
-    data:()=>({
-        startValue:{
+    data: () => ({
+        startValue: {
             store: {
                 store_id: 1,
                 store_name: "SEM RESULTADO DE LOJA",
                 store_abbreviation: "",
-                store_group_id: '',
+                store_group_id: "",
                 store_group_name: "",
                 store_group_theme: null,
                 store_cashiers: [
                     {
-                        cashier_id: '',
+                        cashier_id: "",
                         cashier_name: "Selecione um caixa",
-                        cashier_store: ''
+                        cashier_store: ""
                     },
                 ]
             },
         },
-        cashier_selected:{
-            cashier_id: '',
+        cashier_selected: {
+            cashier_id: "",
             cashier_name: "Selecione um caixa",
-            cashier_store: '',
+            cashier_store: "",
             user_authenticated: {
-                user_id: '',
-                user_name: ''
-            }          
+                user_id: "",
+                user_name: ""
+            }
         },
-        dialog:false,
-        rules:{
-            store:[
-                v=>!!v || 'a loja é obrigatória!',
+        loading: false,
+        dialog: false,
+        rules: {
+            store: [
+                v => !!v || "a loja é obrigatória!",
             ],
-            cashier:[
-                v=>!!v || 'o cashier é obrigatório!',
+            cashier: [
+                v => !!v || "o cashier é obrigatório!",
             ],
         },
     }),
-    async beforeMount(){
-        try{
-           this.startValue = await start();
-           this.cashier_selected = []
-        }catch(e){
-            alert(e)
+    async beforeMount() {
+        try {
+            this.startValue = await start();
+            this.cashier_selected = [];
+        }
+        catch (e) {
+            alert(e);
         }
     },
     methods: {
-        verifyCashier(){
-            if(this.$refs.form.validate()){ 
-                try{
+        verifyCashier() {
+            if (this.$refs.form.validate()) {
+                try {
                     let exists = this.startValue.store.store_cashiers.findIndex(x => x.cashier_id === this.cashier_selected.cashier_id);
-                    if(exists !== -1){
-                        var cashier_selected = this.startValue.store.store_cashiers[exists]
-                        if(cashier_selected.user_authenticated && cashier_selected.user_authenticated.user_id !== this.startValue.user_id){
-                            this.cashier_selected = Object.assign({},cashier_selected) 
-                            this.dialog = true
-                        }else{
-                            this.cashier_selected = Object.assign({},cashier_selected) 
+                    if (exists !== -1) {
+                        var cashier_selected = this.startValue.store.store_cashiers[exists];
+                        if (cashier_selected.user_authenticated && cashier_selected.user_authenticated.user_id !== this.startValue.user_id) {
+                            this.cashier_selected = Object.assign({}, cashier_selected);
+                            this.dialog = true;
                         }
-                    }else{
-                        throw new Error('store cashier not found')
+                        else {
+                            this.cashier_selected = Object.assign({}, cashier_selected);
+                        }
                     }
-                }catch(e){
-                    alert(e)
+                    else {
+                        throw new Error("store cashier not found");
+                    }
+                }
+                catch (e) {
+                    alert(e);
                 }
             }
         },
-        noKickUser(){
-            this.dialog = false
-            this.cashier_selected = []  
+        noKickUser() {
+            this.dialog = false;
+            this.cashier_selected = [];
         },
-        async setStart(){
-            if(this.cashier_selected.cashier_id !== ''){
+        async setStart() {
+            if (this.cashier_selected.cashier_id !== "") {
                 this.loading = true;
-                await setCashier(this.cashier_selected.cashier_id)
-                this.startValue.cashier_id      = this.cashier_selected.cashier_id
-                this.startValue.cashier_name    = this.cashier_selected.cashier_name
-                this.$store.dispatch('start',this.startValue)  
-                router.push('/')
-                this.loading = false; 
+                await setCashier(this.cashier_selected.cashier_id);
+                this.startValue.cashier_id = this.cashier_selected.cashier_id;
+                this.startValue.cashier_name = this.cashier_selected.cashier_name;
+                this.$store.dispatch("start", this.startValue);
+                router.push("/");
+                this.loading = false;
             }
         }
     },
+    components: { LoadComponent }
 }
 </script>
 

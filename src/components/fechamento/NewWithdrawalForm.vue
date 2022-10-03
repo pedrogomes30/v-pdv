@@ -37,6 +37,7 @@
               :hint="hint"
               prepend-icon='fa fa-table-list'
               class='pa-2'
+              :rules="rules.account"
               persistent-hint
               @change='changeAccount()'
             />
@@ -48,7 +49,6 @@
               class='pr-2 pl-1'
               text-color="var(--primary)"
               prepend-icon='fa fa-dollar-sign'
-              rule="value"
               v-model="withdrawal_cache['value']"
             />
             <v-text-field
@@ -93,7 +93,10 @@ export default {
         withdrawal_cache:[],
         rules: {
           value: [
-              val => (val || '' || val <= 0 ).length > 0 || 'necessário informar o valor!!'
+              val => (val || '' || val <= 0 || typeof(val)==='undefined').length > 0 || 'necessário informar o valor!!'
+          ],
+          account: [
+              val => (val || '' || val <= 0 ).length > 0 || 'necessário informar a conta!'
           ],
         },
         icons: [
@@ -109,41 +112,44 @@ export default {
         ],
     }),
     methods:{
-        valueFormat(value){
-          if(typeof(value) === 'number')
-            return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        },  
-        changeAccount(){
-          let exists = this.accounts.findIndex(x => x.id === this.account);
-          if(exists !== -1){
-            this.withdrawal_cache['account'] = this.accounts[exists]
-            this.hint = `${this.withdrawal_cache['account']['number']} - ${this.withdrawal_cache['account']['name']} -> ${this.withdrawal_cache['account']['description']}`
-          }
-          return "fa fa-triangle-exclamation"
-        },
-        getMethodId(method){
-          console.log('METHOD ->>>>>',method,this.methods)
-          let exists = this.methods.findIndex(x => x.method_alias === method);
-          if(exists !== -1){
-            return this.methods[exists].method_id
-          }
-        },
-        createWithdrawal(){
-          var withdrawal = {
-            id:'',
-            ref_date: format(new Date(), "yyyy-MM-dd"),
-            value: this.withdrawal_cache.value,
-            obs: this.withdrawal_cache.obs,
-            cashier: this.cashier_session.cashier_id,
-            store:this.cashier_session.store.store_id,
-            payment_method: this.getMethodId('Dinheiro'),
-            withdrawal_account:this.withdrawal_cache['account']['id'],
-            user:this.cashier_session.user_id
-          }
-          console.log(withdrawal)
-          saveWithdrawal(withdrawal)
-        }           
+      validLabel(){
+        console.log(this.withdrawal_cache['value'])
       },
+      valueFormat(value=false){
+        if(typeof(value) === 'number')
+          return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+      },  
+      changeAccount(){
+        let exists = this.accounts.findIndex(x => x.id === this.account);
+        if(exists !== -1){
+          this.withdrawal_cache['account'] = this.accounts[exists]
+          this.hint = `${this.withdrawal_cache['account']['number']} - ${this.withdrawal_cache['account']['name']} -> ${this.withdrawal_cache['account']['description']}`
+        }
+        return "fa fa-triangle-exclamation"
+      },
+      getMethodId(method){
+        let exists = this.methods.findIndex(x => x.method_alias === method);
+        if(exists !== -1){
+          return this.methods[exists].method_id
+        }
+      },
+      createWithdrawal(){
+        var withdrawal = {
+          id:'',
+          ref_date: format(new Date(), "yyyy-MM-dd"),
+          value: this.withdrawal_cache.value,
+          obs: typeof(this.withdrawal_cache.obs) === 'undefined' ? '' : this.withdrawal_cache.obs,
+          cashier: this.cashier_session.cashier_id,
+          store:this.cashier_session.store.store_id,
+          payment_method: this.getMethodId('Dinheiro'),
+          withdrawal_account:this.withdrawal_cache['account']['id'],
+          user:this.cashier_session.user_id
+        }
+        saveWithdrawal(withdrawal)
+        this.withdrawal_cache = []
+        this.active = false
+      }           
+    },
       async beforeMount() {
         this.loading = true
         this.accounts = await getWithdrawalAccount();

@@ -19,9 +19,10 @@
             <v-spacer></v-spacer>
             <v-icon size="30">fa-solid fa-arrow-right</v-icon>
         </v-row>
-        </v-btn>
-    </template>
-    <template v-slot:default="dialog">
+    </v-btn>
+</template>
+<template v-slot:default="dialog">
+    <LoadComponent :overlay="loading"/>
         <v-card>
         <v-toolbar
             color="var(--primary)"
@@ -134,8 +135,6 @@
         </v-card-text>
         <v-card-actions class="justify-end">
             <v-btn
-            :loading="loading"
-            color='red'
             dark
             @click="dialog.value = false"
             >Fechar
@@ -149,7 +148,6 @@
             <v-btn
                 color='green'
                 @click="createSale"
-                :loading="loading"
                 dark
                 >Finalizar 
                 <v-icon
@@ -167,40 +165,44 @@
 
 <script>
 import generateSale from '../../services/SaleServices/createSale'
+import LoadComponent from '../SysComponents/LoadComponent.vue'
 export default {
-    name:'FinishSaleBt',
-    computed:{
-      sale(){
-        return this.$store.state.cashierStore
-      },
-      session(){
-        return this.$store.state.auth.cashier_session
-      },
-      sales(){
-        return this.$store.state.salesStore.sales
-      },
+    name: "FinishSaleBt",
+    computed: {
+        sale() {
+            return this.$store.state.cashierStore;
+        },
+        session() {
+            return this.$store.state.auth.cashier_session;
+        },
+        sales() {
+            return this.$store.state.salesStore.sales;
+        },
     },
-    data:()=>({    
-        number: '',
+    data: () => ({
+        number: "",
         loading: false,
         active: false,
     }),
-    methods:{
-        valueFormat(value){
-            return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+    methods: {
+        valueFormat(value) {
+            return value.toLocaleString("pt-br", { style: "currency", currency: "BRL" });
         },
-        async createSale(){
-            var sale                    = Object.assign({},this.sale) 
-            var session                 = Object.assign({},this.session) 
-            var newSale                 = await generateSale(sale,this.sales,session)
-            await this.dispatchSale(newSale)
-            this.active                 = false
+        async createSale() {
+            this.loading = true;
+            var sale = Object.assign({}, this.sale);
+            var session = Object.assign({}, this.session);
+            var newSale = await generateSale(sale, this.sales, session);
+            await this.dispatchSale(newSale);
+            this.active = false;
+            this.loading = false;
         },
-        async dispatchSale(newSale){
-            await this.$store.dispatch('newSale',newSale)
-            await this.$store.dispatch('cleanSale')
-        }        
-    }
+        async dispatchSale(newSale) {
+            await this.$store.dispatch("newSale", newSale);
+            await this.$store.dispatch("cleanSale");
+        }
+    },
+    components: { LoadComponent }
 }
 </script>
 

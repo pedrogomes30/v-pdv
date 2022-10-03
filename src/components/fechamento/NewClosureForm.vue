@@ -19,7 +19,8 @@
           </v-btn>
       </template>
       <template>  
-        <v-stepper v-model="e6" vertical :loading="loading">
+        <LoadComponent :overlay="loading" />
+        <v-stepper v-model="e6" vertical >
           <v-list-item-subtitle class="text-h4 d-flex justify-center align-center pa-4">
             <v-icon size="40" class='pr-5' color="var(--primary)"  title="Fechamento não verificado"> mdi-cart-check</v-icon>
             <b>Novo Fechamento</b>
@@ -76,109 +77,111 @@
 <script>
 import { format } from 'date-fns'
 import {saveClosure} from '../../services/api/closureApi'
+import LoadComponent from '../SysComponents/LoadComponent.vue'
 export default {
-    name:'NewClosureForm',
-    computed:{
-      methods_computed(){
-        return this.$store.state.auth.cashier_session.payment_methods
-      },
-      cashier_session(){
-        return this.$store.state.auth.cashier_session
-      }
+    name: "NewClosureForm",
+    computed: {
+        methods_computed() {
+            return this.$store.state.auth.cashier_session.payment_methods;
+        },
+        cashier_session() {
+            return this.$store.state.auth.cashier_session;
+        }
     },
-    data:()=>({    
-        number: '',
+    data: () => ({
+        number: "",
         loading: false,
         active: false,
-        finished:false,
-        closure_cache:[],
-        payments:[],
-        e6:0,
-        steps:0,
+        finished: false,
+        closure_cache: [],
+        payments: [],
+        e6: 0,
+        steps: 0,
         rules: {
-          value: [
-              val => (val || '' || val <= 0 ).length > 0 || 'necessário informar o valor!!'
-          ],
+            value: [
+                val => (val || "" || val <= 0).length > 0 || "necessário informar o valor!!"
+            ],
         },
         icons: [
-          {method:"Dinheiro",                 icon:'fa-solid fa-money-bill'},
-          {method:"Cartão De Credito a Vista",icon:'fa-solid fa-credit-card'},
-          {method:"Cartão De Crédito Prazo",  icon:'fa-solid fa-money-check'},
-          {method:"Cartão De Débito",         icon:'fa-solid fa-money-check-dollar'},
-          {method:"Crédito Loja",             icon:'fa-solid fa-building-columns'},
-          {method:"Carteira Digital",         icon:'fa-solid fa-wallet'},
-          {method:"cashback",                 icon:'fa-solid fa-rotate-left'},
-          {method:"Pix",                      icon:'fa-brands fa-pix'},
-          {method:"Crédito Funcionário",      icon:'fa-solid fa-user-tag'}
+            { method: "Dinheiro", icon: "fa-solid fa-money-bill" },
+            { method: "Cartão De Credito a Vista", icon: "fa-solid fa-credit-card" },
+            { method: "Cartão De Crédito Prazo", icon: "fa-solid fa-money-check" },
+            { method: "Cartão De Débito", icon: "fa-solid fa-money-check-dollar" },
+            { method: "Crédito Loja", icon: "fa-solid fa-building-columns" },
+            { method: "Carteira Digital", icon: "fa-solid fa-wallet" },
+            { method: "cashback", icon: "fa-solid fa-rotate-left" },
+            { method: "Pix", icon: "fa-brands fa-pix" },
+            { method: "Crédito Funcionário", icon: "fa-solid fa-user-tag" }
         ],
     }),
-    methods:{
-        valueFormat(value){
-          if(typeof(value) === 'number')
-            return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        },     
-        getPaymentIcon(payment){
-          let exists = this.icons.findIndex(x => x.method === payment.trim());
-          if(exists !== -1){
-            return this.icons[exists].icon
-          }
-          return "fa fa-triangle-exclamation"
+    methods: {
+        valueFormat(value) {
+            if (typeof (value) === "number")
+                return value.toLocaleString("pt-br", { style: "currency", currency: "BRL" });
         },
-        stepCalculate(){
-          this.e6++
-          if(this.e6 === this.steps)
-            this.finished = true
-          if(this.e6 > this.steps)
-            this.createClosure()
+        getPaymentIcon(payment) {
+            let exists = this.icons.findIndex(x => x.method === payment.trim());
+            if (exists !== -1) {
+              return this.icons[exists].icon;
+            }
+            return "fa fa-triangle-exclamation";
         },
-        getPaymentByAlias(alias){
-          let exists = this.payments.findIndex(x => x.method_alias === alias);  
-          if(exists !== -1){
-            return this.payments[exists]
-          }
-          return false
+        stepCalculate() {
+            this.e6++;
+            if (this.e6 === this.steps)
+                this.finished = true;
+            if (this.e6 > this.steps)
+                this.createClosure();
         },
-        async createClosure(){
-          this.loading = true
-          var obs = typeof(this.closure_cache['obs']) === 'undefined' ? '' : this.closure_cache['obs']
-          var closure = {
-            closure_type:false,
-            ref_date:format(new Date(), "yyyy-MM-dd"),
-            cashier: this.cashier_session.cashier_id,
-            store:this.cashier_session.store.store_id,
-            obs: obs
-          }
-          delete this.closure_cache['obs'] //delete obs for enable payments foreach
-          var closure_payment_method_array = []
-          for(const payment in this.closure_cache){
-              closure_payment_method_array.push({
-              payment_method: this.getPaymentByAlias(payment).method_id,
-              value: this.closure_cache[payment],
-              quantity: 0
-            })            
-          }
-          closure.closure_payment_method = closure_payment_method_array
-          await saveClosure(closure)
-          this.active = false
-          this.loading = false;
+        getPaymentByAlias(alias) {
+            let exists = this.payments.findIndex(x => x.method_alias === alias);
+            if (exists !== -1) {
+                return this.payments[exists];
+            }
+            return false;
         },
-        findRemovePayment(index){
-          let exists = this.payments.findIndex(x => x.method_id === index);  
-          if(exists !== -1){
-            this.payments.splice(exists,1)
-          }
+        async createClosure() {
+            this.loading = true;
+            var obs = typeof (this.closure_cache["obs"]) === "undefined" ? "" : this.closure_cache["obs"];
+            var closure = {
+                closure_type: false,
+                ref_date: format(new Date(), "yyyy-MM-dd"),
+                cashier: this.cashier_session.cashier_id,
+                store: this.cashier_session.store.store_id,
+                obs: obs
+            };
+            delete this.closure_cache["obs"]; //delete obs for enable payments foreach
+            var closure_payment_method_array = [];
+            for (const payment in this.closure_cache) {
+                closure_payment_method_array.push({
+                    payment_method: this.getPaymentByAlias(payment).method_id,
+                    value: this.closure_cache[payment],
+                    quantity: 0
+                });
+            }
+            closure.closure_payment_method = closure_payment_method_array;
+            await saveClosure(closure);
+            this.active = false;
+            this.loading = false;
         },
-      },
-      beforeMount() {
-        this.loading = true
-        var id_payment_remove = [7,5] //payment id that tha cashier cant report, ex: mixed payment sale, store employee sale
-        this.payments = Object.assign(this.methods_computed) 
-        id_payment_remove.forEach(toremove =>{this.findRemovePayment(toremove)})
-        this.e6 = 0
-        this.closure_cache = []
-        this.steps = this.payments.length
-        this.loading = false
-      },
+        findRemovePayment(index) {
+            let exists = this.payments.findIndex(x => x.method_id === index);
+            if (exists !== -1) {
+                this.payments.splice(exists, 1);
+            }
+        },
+    },
+    beforeMount() {
+        this.loading = true;
+        var id_payment_remove = [7, 5]; //payment id that tha cashier cant report, ex: mixed payment sale, store employee sale
+        this.payments = Object.assign(this.methods_computed);
+        id_payment_remove.forEach(toremove => { this.findRemovePayment(toremove); });
+        this.e6 = 0;
+        this.closure_cache = [];
+        this.steps = this.payments.length;
+        this.loading = false;
+    },
+    components: { LoadComponent }
 }
 </script>
 
