@@ -23,7 +23,7 @@ const routes = [
   { path: '/historico',     name: 'historico',    component: HistorySalePage, beforeEnter:Guard.auth},
   { path: '/product_count',      name: 'contar_produto',     component: ProductBalance,   beforeEnter:Guard.auth},
   { path: '/solicitar_produto',      name: 'solicitar_produto',     component: ProductPickPage,   beforeEnter:Guard.auth},
-  { path: '/expired',       name: 'SessionExpired',  component: SessionExpired,  beforeEnter:Guard.auth},
+  { path: '/expired',       name: 'SessionExpiredPage',  component: SessionExpired},
   { path: '*',              name: 'NotFound',     component: NotFound,        },
 ]
 

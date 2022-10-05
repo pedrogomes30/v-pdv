@@ -27,7 +27,7 @@
         </v-tab>
       </v-tabs >
         <v-divider></v-divider>
-      <v-tabs-items v-model="tabs" style='min-height: 35vh;'>
+      <v-tabs-items v-model="tabs" style='min-height: 36vh; max-height:36vh'>
       <v-tab-item>
         <ItemCard />
       </v-tab-item>
@@ -63,6 +63,30 @@ import SalesmanCard from './SalesmanCard.vue'
       return {
         tabs: null,       
       }
+    },
+    mounted() {
+        this._keyListener = function(e) {
+            if (e.key === "c" && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault(); 
+                this.tabs = 0
+            }
+            if (e.key === "d" && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault(); 
+                this.tabs = 1
+            }
+            if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault(); 
+                this.tabs = 2
+            }
+            if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault(); 
+                this.tabs = 3
+            }
+        };
+        document.addEventListener('keydown', this._keyListener.bind(this));
+    },
+    beforeDestroy() {
+        document.removeEventListener('keydown', this._keyListener);
     },
     components:{
     ItemCard,

@@ -1,5 +1,6 @@
 import configs from './config'
 import Cookie from 'js-cookie'
+import alert from '../errorHandler'
 
 
 export async function getClosure(){
@@ -12,17 +13,19 @@ export async function getClosure(){
     };    
     const call = await fetch(`${configs.configs.BASE_URL}/closure`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data
         })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }
+
+
 export async function saveClosure(closure){
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer "+Cookie.get('._token'));
@@ -33,17 +36,16 @@ export async function saveClosure(closure){
       body: raw,
       redirect: 'follow'
     };
-    
     const call = await fetch(`${configs.configs.BASE_URL}/closure`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }

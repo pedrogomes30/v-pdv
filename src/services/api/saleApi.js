@@ -1,5 +1,6 @@
 import configs from './config'
 import Cookie from 'js-cookie'
+import alert from '../errorHandler'
 
 export async function setSale (sale){
     var myHeaders = new Headers();
@@ -15,14 +16,14 @@ export async function setSale (sale){
     };    
     const call = await fetch(`${configs.configs.BASE_URL}/sale`, requestOptions)
     .then(response => {
-        if(!response.ok) throw Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result
     })
     .catch(error => {
-        throw Error(error)
+        alert('error',error.message)
     });
     return call   
 }
@@ -41,14 +42,14 @@ export async function getSale (getObj){
     };    
     const call = await fetch(`${configs.configs.BASE_URL}/sale`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }
@@ -64,14 +65,14 @@ export async function getCupoun (saleID){
     };    
     const call = await fetch(`${configs.configs.BASE_URL}/sale/${saleID}`, requestOptions)
     .then(response => {
-        if(!response.ok) throw Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result
     })
     .catch(error => {
-        throw Error(error)
+        alert('error',error.message)
     });
     return call   
 }

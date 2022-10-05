@@ -1,5 +1,6 @@
 import configs from './config'
 import Cookie from 'js-cookie'
+import alert from '../errorHandler'
 
 export async function getCupom (code){
     var myHeaders = new Headers();
@@ -15,14 +16,14 @@ export async function getCupom (code){
     
     const call = await fetch(`${configs.configs.BASE_URL}/cupom`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+      if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+      alert('error',error.message)
     });
     return call   
 }

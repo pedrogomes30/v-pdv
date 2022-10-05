@@ -1,5 +1,6 @@
 import configs from './config'
 import Cookie from 'js-cookie'
+import alert from '../errorHandler'
 
 
 export async function getWithdrawal(){
@@ -12,14 +13,14 @@ export async function getWithdrawal(){
     };    
     const call = await fetch(`${configs.configs.BASE_URL}/withdrawal`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }
@@ -33,14 +34,14 @@ export async function getWithdrawalAccount(){
     };    
     const call = await fetch(`${configs.configs.BASE_URL}/withdrawal/accounts`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }
@@ -58,14 +59,14 @@ export async function saveWithdrawal(withdrawal){
     
     const call = await fetch(`${configs.configs.BASE_URL}/withdrawal`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }
@@ -81,14 +82,14 @@ export async function deleteWithdrawal(id){
     
     const call = await fetch(`${configs.configs.BASE_URL}/withdrawal/${id}`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }

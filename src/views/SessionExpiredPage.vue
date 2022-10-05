@@ -8,7 +8,7 @@
     <v-icon size='50'>fa-regular fa-face-sad-cry</v-icon>
     </v-progress-circular>
     <h2>
-        Seção inativa, Relogando...
+        Seção inativa, Redirecionando...
     </h2>
     </v-overlay>
 </div>
@@ -16,10 +16,7 @@
 <script>
     import router from '@/router';
     export default {
-        
-        data: () => ({
-            
-        }),
+        name:'SessionExpiredPage',
         mounted(){
             setTimeout(() => {
                 router.push("/login");

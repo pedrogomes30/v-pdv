@@ -1,32 +1,39 @@
 <template>
-    <v-container style="display:block;position:absolute;top:-250px;" >
+    <v-container id="alert" >
         <v-alert
-        transition="scroll-y-transition"
-        v-show="alert.active"
-        
-        dense
-        dismissible
-        :type="alert.type"
-        >{{alert.message}}
-        <v-progress-linear
-        class="pa-0 ma-0"
-        color="white"
-        value="15"
-        reverse
-        indeterminate
-        ></v-progress-linear>
-        </v-alert>
+            v-show="alert.active"
+            dense
+            :type="alert.type"
+            transition="scale-transition"
+            dismissible
+            @click="removerAlert()"
+        >{{alert.message}}</v-alert>
     </v-container>
 </template>
-  
   <script>
     export default {
         name: 'App',
         computed:{
             alert(){
-                return this.$store.state.alert
+                return this.$store.state.errorHandle.alert
             }
         },
+        methods:{
+            removeAlert(){
+                console.log('removed')
+                this.$store.dispatch('AlertRemove')
+            }
+        }
     };
     
   </script>
+  <style>
+    #alert{
+        position: absolute;
+        align-self: center;
+        width: 40%;
+        padding: 0;
+        margin: 0;
+        background:  none;
+    }
+  </style>

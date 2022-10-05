@@ -2,7 +2,6 @@
     <div class="background d-flex justify-center align-center" >
         <LoadComponent :overlay="loading" />
         <v-card  
-            
             width="30%"
             elevation='24'
             class="pa-4 text-center ">
@@ -133,7 +132,8 @@ export default {
                     router.push("/start");
                 }
                 catch (e) {
-                    alert(e);
+                    console.log("SHOW RESULT",e)
+                    this.$store.dispatch('Alert',{type:'error',message:e})
                 }
                 this.loading = false;
             }

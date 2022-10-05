@@ -8,92 +8,52 @@
         hide-default-header
         @click:row="editPay"
         id="scroll-onPayment"
-        style="height: 30vh;width: 100%;padding-left:3px;padding-right:3px "
+        style="height: 29vh;width: 100%;padding-left:3px;padding-right:3px;"
         class="overflow-y-auto"
         >
-        <template v-slot:item="row">
-            <tr>
-                <td><v-icon size="15" color="blue" @click="editPay(row.item)" >fa fa-pencil</v-icon></td>
-                <td><v-icon >{{changeList(row.item.method_alias)}}</v-icon></td>
-                <td>{{row.item.method_alias}}</td>
-                <td>{{valueFormat(row.item.method_value)}}</td>
-                <td><v-icon size="15" color="red" @click="removePay(row.item)" >fa fa-xmark</v-icon></td>
-            </tr>
-        </template>
-    </v-data-table>
-    <v-menu
-    v-model="menu"
-    :close-on-content-click="false"
-    :nudge-width="200"
-    offset-x
-    >
-        <template v-slot:activator="{ on, attrs }">
-            <v-btn small fab>
-                <v-icon
-                color="green"
-                dark
-                size="25"
-                v-bind="attrs"
-                v-on="on"
-                >fa fa-plus
-                </v-icon>
-            </v-btn>
-        </template>
-        <v-card>
-            <v-list>
-            <v-list-item>
-                <v-list-item-avatar rouded color="var(--primary">
-                    <v-icon color="white"> fa fa-sack-dollar</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                <v-list-item-title>informar pagamento</v-list-item-title>
-                </v-list-item-content>                
-            </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list>
-            <v-select
-                label="Forma de pagamento"
-                hide-details="auto"
-                v-model='onPayment.method_alias'
-                item-text="method_alias"
-                item-value="method_alias"
-                :items="payment_method"
-                color="var(--primary)"
-                @input="changeIconSelect(onPayment.method_alias,true)"
-                :prepend-icon='payIcon'
-                class='pa-2'>
-            </v-select>
-            <h5 class='pl-3'>
-                <v-currency-field 
-                label="valor" 
-                clearable
-                prefix='R$'
-                color="var(--primary)"
-                class='pr-2'
-                prepend-icon='fa fa-dollar-sign'
-                @keyup.native.enter="newPayment(onPayment)"
-                v-model="onPayment.method_value"/>
-            </h5>
-            </v-list>
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                text
-                @click="menu = false"
-            >
-                Cancelar
-            </v-btn>
-            <v-btn
-                color="var(--primary)"
-                text
-                @click="newPayment(onPayment)"
-            >
-                salvar
-            </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-menu>
+            <template v-slot:item="row">
+                <tr>
+                    <td><v-icon size="15" color="blue" @click="editPay(row.item)" >fa fa-pencil</v-icon></td>
+                    <td><v-icon >{{changeList(row.item.method_alias)}}</v-icon></td>
+                    <td>{{row.item.method_alias}}</td>
+                    <td>{{valueFormat(row.item.method_value)}}</td>
+                    <td><v-icon size="15" color="red" @click="removePay(row.item)" >fa fa-xmark</v-icon></td>
+                </tr>
+            </template>
+        </v-data-table>
+        <v-divider></v-divider>
+    <v-row style="width:100%" class='px-3 pt-1'>
+        <v-select
+            label="Forma de pagamento"
+            hide-details="auto"
+            v-model='onPayment.method_alias'
+            item-text="method_alias"
+            item-value="method_alias"
+            :items="payment_method"
+            style="max-width:45%"
+            class="mr-3"
+            color="var(--primary)"
+            autofocus
+            @input="changeIconSelect(onPayment.method_alias,true)"
+            :prepend-icon='payIcon'>
+        </v-select>
+        <v-currency-field 
+        label="valor" 
+        clearable
+        prefix='R$'
+        color="var(--primary)"
+        style="max-width:40%;color:var(--primary)"
+        prepend-icon='fa fa-dollar-sign'
+        @keyup.native.enter="newPayment(onPayment)"
+        v-model="onPayment.method_value"/>
+        <v-btn
+            color="green"
+            width="10%"
+            class='ml-3 mt-3'
+            @click="newPayment(onPayment)"
+        ><v-icon color="white">fa fa-plus</v-icon>
+        </v-btn>
+    </v-row>
 </div>
 </template>
 

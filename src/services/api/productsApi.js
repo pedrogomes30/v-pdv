@@ -1,5 +1,6 @@
 import configs from './config'
 import Cookie from 'js-cookie'
+import alert from '../errorHandler'
 
 export async function getProducts (){
     var myHeaders = new Headers();
@@ -12,14 +13,14 @@ export async function getProducts (){
     
     const call = await fetch(`${configs.configs.BASE_URL}/product`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }
@@ -36,14 +37,14 @@ export async function setWrongPrice (data,id){
     
     const call = await fetch(`${configs.configs.BASE_URL}/product/${id}`, requestOptions)
     .then(response => {
-        if(!response.ok) throw new Error(response.statusText);
+        if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
     .then(result => {
         return result.data.data
     })
     .catch(error => {
-        throw new Error(error)
+        alert('error',error.message)
     });
     return call   
 }

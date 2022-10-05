@@ -1,28 +1,22 @@
 <template>
   <v-list-item>
-    <v-list-item-avatar rouded color="white">
+    <v-list-item-avatar rouded color="var(--backgroundLight)">
         <v-img src="../../assets/defaultUser.jpg" />  
     </v-list-item-avatar>
     <v-list-item-content>
-        <v-list-item-subtitle class="white--text">Vendedor
+        <v-list-item-subtitle class="">Vendedor
             <v-menu
               v-model="menuSalesman"
               :close-on-content-click="false"
               :nudge-width="200"
               >
               <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color='grey' 
-                    dark  
+                <v-icon 
+                    color="var(--primary)" 
+                    size='20'
                     v-bind="attrs" 
                     v-on="on"
-                    title="Adicionar um cliente"
-                    plain
-                    small 
-                    icon
-                  >
-                  <v-icon color="white" size='20'> mdi-pencil</v-icon>
-                  </v-btn>  
+                    title="Adicionar um vendedor"> mdi-pencil</v-icon>
               </template>
               <!-- FORM localizar cliente -->
               <v-card >
@@ -80,7 +74,7 @@
           </v-btn>
           <!-- fim -->
           </v-list-item-subtitle>
-        <v-list-item-title class="white--text" >{{typeof(sale_salesman.name) === 'undefined' ? '' : sale_salesman.name}}</v-list-item-title>
+        <v-list-item-title class="" >{{typeof(sale_salesman.name) === 'undefined' ? '' : sale_salesman.name}}</v-list-item-title>
     </v-list-item-content>       
   </v-list-item>
 </template>

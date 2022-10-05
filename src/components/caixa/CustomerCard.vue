@@ -1,10 +1,10 @@
 <template>
   <v-list-item>
-    <v-list-item-avatar rouded color="white">
+    <v-list-item-avatar rouded color="var(--backgroundLight)">
         <v-img src="../../assets/defaultUser.jpg" />  
     </v-list-item-avatar>
-    <v-list-item-content>
-        <v-list-item-subtitle class="white--text">Cliente
+    <v-list-item-content >
+        <v-list-item-subtitle >Cliente
             <v-menu
               v-model="menuCustomer"
               :close-on-content-click="false"
@@ -12,18 +12,13 @@
               >
               <template v-slot:activator="{ on, attrs }">
                   <v-icon v-if="checkCustomer()" color="red" size='20'> fa-solid fa-triangle-exclamation</v-icon> 
-                  <v-btn
-                    color='grey' 
-                    dark  
+                  <v-icon 
+                    color="var(--primary)" 
+                    size='20' 
                     v-bind="attrs" 
                     v-on="on"
                     title="Adicionar um cliente"
-                    plain
-                    small 
-                    icon
-                  >
-                  <v-icon color="white" size='20'> mdi-pencil</v-icon>
-                  </v-btn>  
+                    > mdi-pencil</v-icon>
               </template>
               <!-- FORM localizar cliente -->
               <v-card >
@@ -220,12 +215,12 @@
             <!--  -->
           </v-menu>
           <v-btn plain small icon v-if="btnRemoveCustomer" @click="cleanCustomer()">
-            <v-icon right color="white">fa fa-xmark</v-icon>
+            <v-icon right color="var(--primary)">fa fa-xmark</v-icon>
           </v-btn>
           <!-- fim -->
           </v-list-item-subtitle>
-        <v-list-item-title class="white--text">{{sale_customer.name}}</v-list-item-title>
-        <h6 class="white--text" v-if="typeof(sale_customer.store_partiner_name) !== 'undefined' || sale_customer.store_partiner_name !== ''"> {{sale_customer.store_partiner_name}}</h6>
+        <v-list-item-title >{{sale_customer.name}}</v-list-item-title>
+        <h6  v-if="typeof(sale_customer.store_partiner_name) !== 'undefined' || sale_customer.store_partiner_name !== ''"> {{sale_customer.store_partiner_name}}</h6>
     </v-list-item-content>       
     </v-list-item>      
 </template>

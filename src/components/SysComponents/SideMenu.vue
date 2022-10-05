@@ -1,6 +1,10 @@
 <template>
     <v-navigation-drawer
-      style="border-radius:5px;margin:0.3%;border-right: solid 1px var(--primary);"
+      style=
+      "border-radius:5px;
+      margin:0.3%;
+      border-right: solid 1px var(--primary);
+      height: 98vh;"
       v-model="drawer"
       :mini-variant="mini"      
       app

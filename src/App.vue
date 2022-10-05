@@ -1,16 +1,16 @@
 <template>
   <v-app>
-      <div v-if="noIsLoginPage()">
-          <SideMenu />
-      </div>
-    <v-main >
-        <router-view transition="scroll-x-transition"/>
-    </v-main>
+      <AlertComponent />
+      <SideMenu v-if="noIsLoginPage()"/>
+      <v-main transition="scroll-x-transition">
+          <router-view />
+      </v-main>
   </v-app>
 </template>
 
 <script>
-  import SideMenu from './components/sidebar/SideMenu.vue';
+  import SideMenu from './components/SysComponents/SideMenu.vue';
+import AlertComponent from './components/SysComponents/AlertComponent.vue';
 export default {
   name: "App",
   computed:{
@@ -18,7 +18,8 @@ export default {
   },
   components:{
     SideMenu,
-    }, 
+    AlertComponent
+}, 
   data: () => ({
     sidemenu:true,
   }),

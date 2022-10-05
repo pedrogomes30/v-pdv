@@ -6,7 +6,7 @@
     >
     <template v-slot:activator="{ on, attrs }">
         <v-btn 
-        height="14.5vh" 
+        height="100%" 
         width="52%"  
         color='green' 
         dark

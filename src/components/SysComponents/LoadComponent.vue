@@ -16,15 +16,5 @@ export default {
     props:{
         overlay: Boolean,
     },
-    data: () => ({
-    }),
-
-    watch: {
-    // overlay (val) {
-    //     val && setTimeout(() => {
-    //     this.overlay = false
-    //     }, 3000)
-    // },
-    },
 }
 </script>
