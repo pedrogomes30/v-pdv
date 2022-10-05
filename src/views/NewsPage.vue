@@ -127,7 +127,7 @@
 <script>
   import {getNews, saveComent, saveReaction} from '../services/api/newsApi'
   import { format } from 'date-fns'
-import LoadComponent from '@/components/SysComponents/LoadComponent.vue'
+  import LoadComponent from '@/components/SysComponents/LoadComponent.vue'
   
   export default {
     name: 'NewsPage',
@@ -164,8 +164,8 @@ import LoadComponent from '@/components/SysComponents/LoadComponent.vue'
           news_reaction:'like',
         }
         await saveReaction(new_like)
-        await getNews()
         this.loading = false
+        this.news =  await getNews()
       },
       dateFormat(dateString){
         dateString = new Date(dateString)
@@ -182,7 +182,7 @@ import LoadComponent from '@/components/SysComponents/LoadComponent.vue'
           }
           this.coment_cache[eachNews.id] = ''
           await saveComent(new_coment)
-          await getNews()
+          this.news =  await getNews()
         }
         this.loading = false
       }

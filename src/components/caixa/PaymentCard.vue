@@ -1,27 +1,43 @@
 <template>
-    <v-card >
-        <v-card-title>
-            <v-list-item-avatar rouded color="var(--primary">
-                <v-icon color="white"> fa fa-sack-dollar</v-icon>
-            </v-list-item-avatar>
-            Pagamentos
-        <v-spacer></v-spacer>
-        
+    <div height='100%' class="d-flex flex-column align-center justify-center">
         <!--  -->
-        <v-menu
-        v-model="menu"
-        :close-on-content-click="false"
-        :nudge-width="200"
-        offset-x
+        <v-data-table 
+        :headers="header" 
+        :items="payments"
+        hide-default-footer
+        hide-default-header
+        @click:row="editPay"
+        id="scroll-onPayment"
+        style="height: 30vh;width: 100%;padding-left:3px;padding-right:3px "
+        class="overflow-y-auto"
         >
+        <template v-slot:item="row">
+            <tr>
+                <td><v-icon size="15" color="blue" @click="editPay(row.item)" >fa fa-pencil</v-icon></td>
+                <td><v-icon >{{changeList(row.item.method_alias)}}</v-icon></td>
+                <td>{{row.item.method_alias}}</td>
+                <td>{{valueFormat(row.item.method_value)}}</td>
+                <td><v-icon size="15" color="red" @click="removePay(row.item)" >fa fa-xmark</v-icon></td>
+            </tr>
+        </template>
+    </v-data-table>
+    <v-menu
+    v-model="menu"
+    :close-on-content-click="false"
+    :nudge-width="200"
+    offset-x
+    >
         <template v-slot:activator="{ on, attrs }">
-            <v-icon
-            color="green"
-            dark
-            v-bind="attrs"
-            v-on="on"
-            >fa fa-plus
-            </v-icon>
+            <v-btn small fab>
+                <v-icon
+                color="green"
+                dark
+                size="25"
+                v-bind="attrs"
+                v-on="on"
+                >fa fa-plus
+                </v-icon>
+            </v-btn>
         </template>
         <v-card>
             <v-list>
@@ -56,6 +72,7 @@
                 color="var(--primary)"
                 class='pr-2'
                 prepend-icon='fa fa-dollar-sign'
+                @keyup.native.enter="newPayment(onPayment)"
                 v-model="onPayment.method_value"/>
             </h5>
             </v-list>
@@ -77,34 +94,11 @@
             </v-card-actions>
         </v-card>
     </v-menu>
-        <!--  -->
-        </v-card-title>
-        <v-data-table 
-            :headers="header" 
-            :items="payments"
-            hide-default-footer
-            hide-default-header
-            @click:row="editPay"
-            id="scroll-onPayment"
-            style="height: 25vh;padding-left:3px;padding-right:3px "
-            class="overflow-y-auto"
-        >
-            <template v-slot:item="row">
-                <tr>
-                    <td><v-icon size="15" color="blue" @click="editPay(row.item)" >fa fa-pencil</v-icon></td>
-                    <td><v-icon >{{changeList(row.item.method_alias)}}</v-icon></td>
-                    <td>{{row.item.method_alias}}</td>
-                    <td>{{valueFormat(row.item.method_value)}}</td>
-                    <td><v-icon size="15" color="red" @click="removePay(row.item)" >fa fa-xmark</v-icon></td>
-                </tr>
-            </template>
-        </v-data-table>
-        
-    </v-card>
+</div>
 </template>
 
 <script>
-// import {Money} from 'v-money'
+    // import {Money} from 'v-money'
 
 export default {
     name:'PagamentoCard',

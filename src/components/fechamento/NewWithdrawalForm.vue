@@ -45,6 +45,7 @@
               label="valor" 
               clearable
               prefix='R$'
+              id="price"
               color="var(--primary)"
               class='pr-2 pl-1'
               text-color="var(--primary)"
@@ -159,5 +160,7 @@ export default {
 </script>
 
 <style>
-
+  #price {
+      color:var(--primary);
+  }
 </style>

@@ -24,7 +24,11 @@ export default {
   }),
   methods:{
     noIsLoginPage(){
-     return this.$route.name === "login" || this.$route.name === "start"  ? false: true;
+     return this.$route.name === "login" || 
+            this.$route.name === "start" || 
+            this.$route.name === "NotFound" ||
+            this.$route.name === "expired"
+            ? false: true;
     }
   }
 };

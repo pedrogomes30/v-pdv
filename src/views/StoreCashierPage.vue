@@ -38,7 +38,7 @@
                                 </span> 
                             </v-btn>
                             <v-btn 
-                            type="submit" color="var(--primary)" class=' mr-2' @click="login()">
+                            type="submit" color="var(--primary)" class=' mr-2'>
                                 <v-icon color="white">fa-solid fa-house</v-icon>
                                 <span class="white--text pl-3 ">
                                     Inicio

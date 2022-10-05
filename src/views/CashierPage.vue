@@ -13,12 +13,7 @@
       </v-list-item>
     </v-col>  
     <v-spacer></v-spacer>
-    <v-col cols="cols-1" align-self="center">
-        <CustomerCard />
-    </v-col>
-    <v-col cols="cols-1" align-self="center">
-        <SalesmanCard />
-    </v-col>
+    
   </v-row>
     <!-- main card -->
     <v-row no-gutters dense>
@@ -48,8 +43,6 @@
 </template>
 <script>
 import ProductCard from '../components/caixa/ProductCard.vue'
-import CustomerCard from '../components/caixa/CustomerCard.vue'
-import SalesmanCard from '../components/caixa/SalesmanCard.vue'
 import TabCashierSubmenu from '../components/caixa/TabCashierSubmenu.vue'
 import DetailSaleCard from '../components/caixa/DetailSaleCard.vue'
 import TotalCard from '../components/caixa/TotalCard.vue'
@@ -70,8 +63,6 @@ export default {
   },
   components: {
       ProductCard,
-      CustomerCard,
-      SalesmanCard,
       TabCashierSubmenu,
       TotalCard,
       DetailSaleCard,

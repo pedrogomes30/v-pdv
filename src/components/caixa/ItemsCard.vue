@@ -1,72 +1,65 @@
 <template>
     <!-- productS DA SELECIONADOS DA VENDA -->
-        <v-card>
-            <v-card-title>
-                <v-list-item-avatar rouded color="var(--primary">
-                    <v-icon color="white"> fa fa-cart-shopping</v-icon>
-                </v-list-item-avatar>
-                Carrinho
-                <v-spacer></v-spacer>
-                <v-icon
-                    @click="cleanCart"
-                    color="red"
-                    title="esvaziar carrinho"
-                    size="15"
-                    >
-                    fa fa-trash
-                </v-icon>
-            </v-card-title>
-            <div>
-                <v-data-table
-                :headers="header"
-                :items="Items"
-                disable-filtering
-                fixed-header
-                calculate-widths
-                dense
-                hide-default-header
-                hide-default-footer
-                :items-per-page="-1"
-                id="scroll-cart"
-                style="height: 27vh;padding-left:3px;padding-right:3px "
-                class="overflow-y-auto"
-                >
-                <template v-slot:item="row">
-                    <tr v-if="row.item.id !== 0" >
-                        <td >
-                            <v-icon size="20" color="red" @click="removeItem(row)" class='ma-0 pa-0' >fa fa-xmark </v-icon>
-                        </td>
-                        <td > 
-                            {{row.item.sku}}<br>
-                            <b>{{row.item.description}}</b></td>
+        <div height='100%' class="d-flex flex-column align-center justify-center">
+            <v-data-table
+            :headers="header"
+            :items="Items"
+            disable-filtering
+            fixed-header
+            calculate-widths
+            dense
+            hide-default-header
+            hide-default-footer
+            :items-per-page="-1"
+            id="scroll-cart"
+            style="height:30vh;width:100%;padding-left:3px;padding-right:3px "
+            class="overflow-y-auto"
+            >
+            <template v-slot:item="row">
+                <tr v-if="row.item.id !== 0" >
+                    <td >
+                        <v-icon size="20" color="red" @click="removeItem(row)" class='ma-0 pa-0' >fa fa-xmark </v-icon>
+                    </td>
+                    <td > 
+                        {{row.item.sku}}<br>
+                        <b>{{row.item.description}}</b></td>
                         <td>
                             <v-container id="miniButtons" >
-                            <h5>{{valueFormat(row.item.value)}}</h5>
+                                <h5>{{valueFormat(row.item.value)}}</h5>
                                 <v-icon size="10" color="green" @click="qtdAdd(row)" class='mr-1'>fa fa-plus</v-icon>
                                 {{row.item.quantity}} 
                                 <v-icon size="10" color="red" @click="qtdSub(row)" class='ml-1'>fa fa-minus</v-icon>
                             </v-container>
-                        </td>
-                        <td>
-                            <div>
-                                <h5>
-                                    {{valueFormat(row.item.price * row.item.quantity)}}
-                                </h5>
-                                <div v-if='row.item.disconts !== undefined '>
-                                    <div v-for="discont in row.item.disconts" :key="discont.code">
-                                        <h5 style="color:red;" :title="getDescTitle(discont)">{{valueFormat(discont.price)}}-</h5>
-                                    </div>
+                    </td>
+                    <td>
+                        <div>
+                            <h5>
+                                {{valueFormat(row.item.price * row.item.quantity)}}
+                            </h5>
+                            <div v-if='row.item.disconts !== undefined '>
+                                <div v-for="discont in row.item.disconts" :key="discont.code">
+                                    <h5 style="color:red;" :title="getDescTitle(discont)">{{valueFormat(discont.price)}}-</h5>
                                 </div>
-                                <h4>
-                                    <b>{{valueFormat(row.item.total)}}</b>
-                                </h4>
                             </div>
-                        </td>                    
-                    </tr>
-                </template>
-                </v-data-table>  
-            </div>
-        </v-card>
+                            <h4>
+                                <b>{{valueFormat(row.item.total)}}</b>
+                            </h4>
+                        </div>
+                    </td>                    
+                </tr>
+            </template>
+        </v-data-table>  
+        <v-btn fab small>
+            <v-icon
+                @click="cleanCart"
+                color="red"
+                title="esvaziar carrinho"
+                size="25"
+                >
+                fa fa-trash
+            </v-icon>
+        </v-btn>
+    </div>
 </template>
 <script>
 export default {

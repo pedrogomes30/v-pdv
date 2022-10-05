@@ -1,92 +1,16 @@
 <template>
-  <v-card >
-        <v-card-title>
-            <v-list-item-avatar rouded color="var(--primary">
-                <v-icon color="white"> fa fa-tags</v-icon>
-            </v-list-item-avatar>
-            Cupons
-        <v-spacer></v-spacer>
-        <!-- MENU ADD -->
-        <v-menu
-            v-model="menu"
-            :close-on-content-click="false"
-            :nudge-width="200">
-            <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                color="green"
-                dark
-                v-bind="attrs"
-                v-on="on"
-                >fa fa-plus
-                </v-icon>
-            </template>
-            <v-card>
-                <v-list>
-                <v-list-item>
-                    <v-list-item-avatar rouded color="var(--primary">
-                        <v-icon color="white"> fa fa-tags</v-icon>
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                    <v-list-item-title>Incluir Cupons</v-list-item-title>
-                    </v-list-item-content> 
-                </v-list-item>
-                </v-list>
-                <v-divider></v-divider>
-                <v-list>
-                <v-text-field
-                    label="código do cupom"
-                    hide-details="auto"
-                    v-model="cupom.code"
-                    class='pa-2'
-                    color="var(--primary)"
-                    @change="code_validate"
-                    @focus="onFocuscode"
-                    :rules="rules.validcode"
-                    prepend-icon='fa fa-ticket'>                
-                </v-text-field>
-                <div v-if="!cupom.all_products">
-                    <v-select
-                        label="selecione o produto"
-                        hide-details="auto"
-                        item-text="sku"
-                        item-value="sku"
-                        color="var(--primary)"
-                        v-model='cupom.sku'
-                        :items="items"
-                        :hint="`sku: ${cupom.sku}`"
-                        prepend-icon='fa fa-box'
-                        class='pa-2'
-                        :rules="rules.produto"
-                        persistent-hint
-                        single-line
-                        >
-                </v-select>
-                </div>
-                <div class='menu'>
-                    <h4 class='pa-2'>obs:<br> {{cupom.description}}</h4>
-                    <h4 class='pa-2'>valor: <br>{{cupom.percent ? cupom.value+'%' : valueFormat(cupom.value)}}</h4>
-                </div>
-                </v-list>
-                <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn text @click="menu = false">Cancelar</v-btn>
-                <v-btn color="var(--primary)" text @click="addCupom()"> salvar </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-menu>
-        <!-- FIM -->
-        </v-card-title>        
-        <v-data-table 
-        :headers="header" 
-        :items="disconts"
-        hide-default-footer
-        hide-default-header
-        calculate-widths
-        id="scroll-discont"
-        style="height: 25vh;padding-left:3px;padding-right:3px"
-        class="overflow-y-auto">
-        <template v-slot:item="row">
-            <tr>
+  <div height='100%' class="d-flex flex-column align-center justify-center">
+      <v-data-table 
+      :headers="header" 
+      :items="disconts"
+      hide-default-footer
+      hide-default-header
+      calculate-widths
+      id="scroll-discont"
+      style="height: 30vh;width: 100%;padding-left:3px;padding-right:3px"
+      class="overflow-y-auto">
+      <template v-slot:item="row">
+        <tr>
             <td>
                 <v-icon size="15" color="var(--primary)">fa fa-ticket </v-icon>
             </td>
@@ -96,10 +20,82 @@
             <td>  
                 <v-icon size="10" color="red" @click="removeCupom(row.item)" >fa fa-xmark</v-icon>
             </td>
-            </tr>
+        </tr>
+    </template>
+</v-data-table>
+        <!-- MENU ADD -->
+        <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-width="200">
+        <template v-slot:activator="{ on, attrs }">
+            <v-btn fab small>
+                <v-icon
+                color="green"
+                dark
+                size="25"
+                v-bind="attrs"
+                v-on="on"
+                >fa fa-plus
+                </v-icon>
+            </v-btn>
         </template>
-        </v-data-table>
-    </v-card>
+        <v-card>
+            <v-list>
+            <v-list-item>
+                <v-list-item-avatar rouded color="var(--primary">
+                    <v-icon color="white"> fa fa-tags</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                <v-list-item-title>Incluir Cupons</v-list-item-title>
+                </v-list-item-content> 
+            </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list>
+            <v-text-field
+                label="código do cupom"
+                hide-details="auto"
+                v-model="cupom.code"
+                class='pa-2'
+                color="var(--primary)"
+                @change="code_validate"
+                @focus="onFocuscode"
+                :rules="rules.validcode"
+                prepend-icon='fa fa-ticket'>                
+            </v-text-field>
+            <div v-if="!cupom.all_products">
+                <v-select
+                    label="selecione o produto"
+                    hide-details="auto"
+                    item-text="sku"
+                    item-value="sku"
+                    color="var(--primary)"
+                    v-model='cupom.sku'
+                    :items="items"
+                    :hint="`sku: ${cupom.sku}`"
+                    prepend-icon='fa fa-box'
+                    class='pa-2'
+                    :rules="rules.produto"
+                    persistent-hint
+                    single-line
+                    >
+            </v-select>
+            </div>
+            <div class='menu'>
+                <h4 class='pa-2'>obs:<br> {{cupom.description}}</h4>
+                <h4 class='pa-2'>valor: <br>{{cupom.percent ? cupom.value+'%' : valueFormat(cupom.value)}}</h4>
+            </div>
+            </v-list>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="menu = false">Cancelar</v-btn>
+            <v-btn color="var(--primary)" text @click="addCupom()"> salvar </v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-menu>
+        <!-- FIM -->      
+    </div>
 </template>
 
 <script>

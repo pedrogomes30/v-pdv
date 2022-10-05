@@ -16,7 +16,6 @@ export async function getNews (){
         return response.json()
     })
     .then(result => {
-        console.log(result)
         return result.data.data
     })
     .catch(error => {
@@ -41,7 +40,6 @@ export async function saveComent (coment){
         return response.json()
     })
     .then(result => {
-        console.log(result)
         return result.data.data
     })
     .catch(error => {
@@ -65,7 +63,6 @@ export async function saveReaction (reaction){
         return response.json()
     })
     .then(result => {
-        console.log(result)
         return result.data.data
     })
     .catch(error => {

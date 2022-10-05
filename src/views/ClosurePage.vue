@@ -21,21 +21,24 @@
   </v-row>
   <!-- body -->
   <div  style="height:100%" id="exemplo">
-       <ManagerView />        
+       <!-- <ManagerView />         -->
+       <ClosureList />
   </div>
 </div>
 </template>
 
 <script>
-  import ManagerView from '../components/fechamento/ManagerView'
+  // import ManagerView from '../components/fechamento/ManagerView'
   import NewClosureForm from '../components/fechamento/NewClosureForm';
-  import NewWithdrawalForm from '../components/fechamento/NewWithdrawalForm';  
+  import NewWithdrawalForm from '../components/fechamento/NewWithdrawalForm';
+import ClosureList from '@/components/fechamento/ClosureList.vue';  
 export default {
     name: 'ClosurePage',
   components:{
-    ManagerView,
+    // ManagerView,
     NewClosureForm,
     NewWithdrawalForm,
+    ClosureList
 }
   }
 </script>

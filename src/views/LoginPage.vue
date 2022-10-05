@@ -1,7 +1,6 @@
 <template>
     <div class="background d-flex justify-center align-center" >
         <LoadComponent :overlay="loading" />
-        <AlertComponent :alert="{type:alert.type,message:alert.message,active:alert.active}" />
         <v-card  
             
             width="30%"
@@ -37,7 +36,7 @@
                             </span> 
                         </v-btn>
                         <v-btn 
-                        type="submit" color="var(--primary)" class=' mr-2' @click="login()">
+                        type="submit" color="var(--primary)" class=' mr-2'>
                             <v-icon color="white">fa fa-right-to-bracket</v-icon>
                             <span class="white--text pl-3 ">
                                 Logar-se!
@@ -94,7 +93,6 @@
 import {Authenticate} from '../services/api/authApi'
 import router from '@/router';
 import LoadComponent from '../components/SysComponents/LoadComponent.vue';
-import AlertComponent from '@/components/SysComponents/AlertComponent.vue';
 export default {
     name:'LoginPage',
     computed:{
@@ -131,7 +129,7 @@ export default {
             if (this.$refs.form.validate()) {
                 this.loading = true;
                 try {
-                    await Authenticate(this.userTemp);
+                    await Authenticate(this.userTemp);                    
                     router.push("/start");
                 }
                 catch (e) {
@@ -145,7 +143,7 @@ export default {
             this.rules.validarDocumento = ['serviço de recuperar e-mail ainda está indisponivel!']
         }
     },
-    components: { LoadComponent, AlertComponent },
+    components: { LoadComponent },
     beforeMount() {
         this.transition = true
     }

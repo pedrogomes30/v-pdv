@@ -1,12 +1,14 @@
 <template>
 <div class="text-center">
-    <v-overlay :value="overlay">
+    <v-overlay >
     <v-progress-circular
         indeterminate
         size="64"
-    ></v-progress-circular>
+    >
+    <v-icon size='50'>fa-regular fa-face-sad-cry</v-icon>
+    </v-progress-circular>
     <h2>
-        Seção inativa, Favor Relogar!
+        Seção inativa, Relogando...
     </h2>
     </v-overlay>
 </div>
@@ -14,17 +16,14 @@
 <script>
     import router from '@/router';
     export default {
-        props:{
-            overlay: Boolean,
-        },
+        
         data: () => ({
+            
         }),
-        watch: {
-        overlay (val) {
-            val && setTimeout(() => {
-                router.push("/");
+        mounted(){
+            setTimeout(() => {
+                router.push("/login");
             }, 1000)
-        },
-        },
+        }
     }
 </script>

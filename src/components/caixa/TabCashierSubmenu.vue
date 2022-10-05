@@ -3,9 +3,9 @@
       <v-tabs
         v-model="tabs"
         centered
-        id='tabNavMenu'
+        class="d-flex justify-center align-center"
       >
-        <v-tab>          
+        <v-tab color="var(--primary)" @keyup="tabs=tabs">          
             <v-icon color="var(--primary)"> fa fa-cart-shopping</v-icon>
             <v-spacer></v-spacer>
             Carrinho
@@ -20,9 +20,14 @@
             <v-spacer></v-spacer>
             Pagamentos
         </v-tab>
-      </v-tabs>
+        <v-tab>
+            <v-icon color="var(--primary)"> fa-solid fa-user-group</v-icon>
+            <v-spacer></v-spacer>
+            Cliente / Vendedor
+        </v-tab>
+      </v-tabs >
         <v-divider></v-divider>
-      <v-tabs-items v-model="tabs" >
+      <v-tabs-items v-model="tabs" style='min-height: 35vh;'>
       <v-tab-item>
         <ItemCard />
       </v-tab-item>
@@ -32,6 +37,11 @@
       <v-tab-item>
         <PaymentCard />
       </v-tab-item>
+      <v-tab-item >
+        <CustomerCard />
+        <v-spacer></v-spacer>
+        <SalesmanCard />
+      </v-tab-item>
     </v-tabs-items>
   </v-card>
 </template>
@@ -40,6 +50,8 @@
   import ItemCard from './ItemsCard.vue'
   import DiscontCard from './DiscontCard.vue'
   import PaymentCard from './PaymentCard.vue'
+import CustomerCard from './CustomerCard.vue'
+import SalesmanCard from './SalesmanCard.vue'
   export default {
     name:'TabCaixaCard',
     computed:{
@@ -53,17 +65,13 @@
       }
     },
     components:{
-        ItemCard,
-        DiscontCard,
-        PaymentCard,
-    }
+    ItemCard,
+    DiscontCard,
+    PaymentCard,
+    CustomerCard,
+    SalesmanCard
+}
   }
 </script>
 <style>
-#tabNavMenu{
-  border-radius: 3px;
-  max-height: 15%;
-}
-
-
 </style>

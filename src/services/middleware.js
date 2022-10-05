@@ -5,7 +5,7 @@ export default{
         const expires = Cookie.get('expires');
         var now = Math.round(new Date().getTime() / 1000)
         if(!token || expires <= now){
-            next('/login');
+            next('/expired'); 
         }
         next();
     },

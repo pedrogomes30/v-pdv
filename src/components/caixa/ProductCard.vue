@@ -1,6 +1,6 @@
 <template>
     <div>
-        <LoadComponent :overlay="loading" />
+        <LoadComponent :overlay='loading' />
         <!-- products -->
         <v-card elevation="0" id="productCard" >
             <v-card-title>
@@ -45,11 +45,10 @@
                     class="overflow-y-auto"
                     >
                     <template  v-slot:item="row" >
-                        <tr >
+                        <tr  @click='newItem(row.item)'>
                             <td>
                                 <v-icon 
                                     size="20" 
-                                    @click='newItem(row.item)'
                                     title='Enviar apra o carrinho'
                                     color="var(--primary)">
                                         fa fa-cart-plus 
@@ -66,13 +65,7 @@
                                 </h3>
                             </td>
                             <td>
-                                <v-icon 
-                                    size="18" 
-                                    title='Reportar diferença de preço'
-                                    color='red'
-                                    @click='priceReport(row.item)' 
-                                    >fa fa-hand-holding-dollar 
-                                </v-icon>
+                                <PriceReport :item="row.item"/>
                             </td>
                         </tr>
                     </template>
@@ -84,7 +77,8 @@
 
 <script>
 import {getProducts} from '../../services/api/productsApi'
-import LoadComponent from '../SysComponents/LoadComponent.vue';
+import LoadComponent from '../SysComponents/LoadComponent';
+import PriceReport from './PriceReport';
 export default {
     name: "ProductsCard",
     computed: {
@@ -99,6 +93,7 @@ export default {
         return {
             search: "",
             loading: false,
+            report:false,
             header: [
                 { text: "", align: "center", sortable: false, value: "" },
                 { text: "Sku / Descricao", align: "start", value: "description" },
@@ -131,10 +126,6 @@ export default {
             let exists = this.categorys.findIndex(x => x.id === categoria);
             return this.categorys[exists].color;
         },
-        priceReport(item) {
-            //TODO
-            console.log(item);
-        },
         async updateproducts(update) {
             try {
                 if (this.products.length <= 0 || update) {
@@ -153,7 +144,7 @@ export default {
     async beforeMount() {
         this.updateproducts(false);
     },
-    components: { LoadComponent }
+    components: { LoadComponent, PriceReport }
 }
 
 </script>
