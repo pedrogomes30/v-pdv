@@ -5,8 +5,7 @@
             dense
             :type="alert.type"
             transition="scale-transition"
-            dismissible
-            @click="removerAlert()"
+            @click="removeAlert()"
         >{{alert.message}}</v-alert>
     </v-container>
 </template>
@@ -20,7 +19,6 @@
         },
         methods:{
             removeAlert(){
-                console.log('removed')
                 this.$store.dispatch('AlertRemove')
             }
         }
@@ -29,10 +27,11 @@
   </script>
   <style>
     #alert{
+        z-index: 0;
         position: absolute;
         align-self: center;
+        padding: 10px;
         width: 40%;
-        padding: 0;
         margin: 0;
         background:  none;
     }

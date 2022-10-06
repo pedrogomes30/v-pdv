@@ -166,6 +166,7 @@
 <script>
 import generateSale from '../../services/SaleServices/createSale'
 import LoadComponent from '../SysComponents/LoadComponent.vue'
+import alert from '../../services/errorHandler'
 export default {
     name: "FinishSaleBt",
     computed: {
@@ -196,6 +197,7 @@ export default {
             await this.dispatchSale(newSale);
             this.active = false;
             this.loading = false;
+            alert('success','Venda registrada')
         },
         async dispatchSale(newSale) {
             await this.$store.dispatch("newSale", newSale);

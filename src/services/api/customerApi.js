@@ -7,8 +7,7 @@ export async function getCustomer (document){
     var raw = JSON.stringify({
         "document": document
     }); 
-    console.log(raw)
-    var requestOptions = {
+        var requestOptions = {
       method: 'PUT',
       headers: myHeaders,
       body:raw,

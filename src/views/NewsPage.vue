@@ -128,7 +128,7 @@
   import {getNews, saveComent, saveReaction} from '../services/api/newsApi'
   import { format } from 'date-fns'
   import LoadComponent from '@/components/SysComponents/LoadComponent.vue'
-  
+  import alert from '../services/errorHandler'
   export default {
     name: 'NewsPage',
     data:()=>({    
@@ -166,6 +166,7 @@
         await saveReaction(new_like)
         this.loading = false
         this.news =  await getNews()
+        alert('success','+1 curtir')
       },
       dateFormat(dateString){
         dateString = new Date(dateString)
@@ -183,6 +184,7 @@
           this.coment_cache[eachNews.id] = ''
           await saveComent(new_coment)
           this.news =  await getNews()
+          alert('success','comentário postado.')
         }
         this.loading = false
       }

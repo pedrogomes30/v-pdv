@@ -82,6 +82,7 @@
 <script>
 import {getCustomer} from '../../services/api/customerApi'
 import {checkDocument} from '../../services/checkCpfCnpj'
+import alert from '../../services/errorHandler'
 export default {
    name:'ClienteVendedorCard',
     computed:{
@@ -156,6 +157,7 @@ export default {
           this.$store.dispatch('addSalesman',newSalesman)
           this.btnRemoveSalesman = true
           this.menuSalesman = false
+          alert('success','Vendedor adicionado')
         },
         cleanCache(){
           this.salesmanCache = {
@@ -173,6 +175,7 @@ export default {
           this.$store.dispatch('removeSalesman',this.salesmanCache)
           this.cleanCache()
           this.btnRemoveSalesman = false
+          alert('warning','Vendedor removido')
         },
     },
     mounted(){

@@ -79,6 +79,7 @@
 import {getProducts} from '../../services/api/productsApi'
 import LoadComponent from '../SysComponents/LoadComponent';
 import PriceReport from './PriceReport';
+import alert from '../../services/errorHandler'
 export default {
     name: "ProductsCard",
     computed: {
@@ -106,6 +107,7 @@ export default {
     methods: {
         newItem(item) {
             this.$store.dispatch("addItem", item);
+            alert('info',`Produto ${item.description}adicionado.`)
         },
         searchProduct(search) {
             let exists = this.products.findIndex(x => x.sku === search);
@@ -134,10 +136,11 @@ export default {
                     console.log("PRODUTOS", newProducts);
                     this.$store.dispatch("updateProducts", newProducts);
                     this.loading = false;
+                    alert('success','Produtos atualizados.')
                 }
             }
             catch (e) {
-                alert(e);
+                alert('error',e.message)
             }
         }
     },

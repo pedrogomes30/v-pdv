@@ -35,6 +35,8 @@
             label="troca SEM sku do produto"
             color="var(--primary)"
             class='pa-2'
+            v-show='is_manager'
+            @click="cleanSku()"
             ></v-switch>
             <v-text-field
                 label="SKU do produto"
@@ -63,6 +65,7 @@
             <v-currency-field 
             label="valor" 
             clearable
+            id="price"
             prefix='R$'
             color="var(--primary)"
             class='pr-2'
@@ -91,43 +94,41 @@
 </template>
 
 <script>
+import alert from '../../services/errorHandler'
 export default {
     name:'ChangeCard',
     computed:{
-    sale(){
-        return this.$store.state.cashierStore
-        },
-        products(){
-        return this.$store.state.productStore.products
-        },
-    },
-    data:()=>({
+      is_manager(){
+        return this.$store.state.auth.cashier_session.is_manager
+      },
+      sale(){
+          return this.$store.state.cashierStore
+          },
+          products(){
+          return this.$store.state.productStore.products
+          },
+      },
+    data:()=>(
+      {
         changeMenu:false,
         changeBySku:false,
         productChange:{
-        with_client: "",
-        code: "#TROC",
-        description: "Cupom de troca do SKU: ",
-        value: 10,
-        all_products: 0,
-        acumulate: 0,
-        percent: 0,
-        quantity: 1,
-        sku:''
+          with_client: "",
+          code: "#TROC",
+          description: "Cupom de troca do SKU: ",
+          value: 0,
+          all_products: 0,
+          acumulate: 0,
+          percent: 0,
+          quantity: 1,
+          sku:''
         },
         justifyChange:[
         'danificado',
         'fora da validade',
         'desistência do cliente',
         ],
-        money: {
-        decimal: ',',
-        thousands: '.',
-        prefix: 'R$ ',
-        precision: 2,
-        masked: false
-        },
-        rules:{
+      rules:{
         validCodigo:[true],
         validSKU:[true],
         motivo:[val => (val || '').length > 0 || 'motivo obrigatório!'],
@@ -138,45 +139,49 @@ export default {
     }),
     methods:{
         changeProductsBySku(){
-      let itemIndex     = this.sale.items.findIndex(x => x.sku === this.productChange.sku);
-      console.log('in set sku',itemIndex)
-      //check items add first
-      if(itemIndex !== -1){
-        var result = (this.sale.items[itemIndex].total / this.sale.items[itemIndex].quantity)
-        console.log('troca calculo',this.sale.items[itemIndex].total,this.sale.items[itemIndex].quantity,result)
-        this.productChange.value = result
-        this.productChange.description = 'troca referente ao SKU: ' + this.sale.items[itemIndex].sku
-      }else{
-        this.rules.SKU = ['sku não encontrado no carrinho!']
-      }
-    },
-    newChange(){
-      if(this.productChange.value>0 && this.productChange.value<=10000){this.productChange.value = this.productChange.quantity * this.productChange.value
-        this.productChange.description = this.productChange.sku ===''?
+          let itemIndex     = this.sale.items.findIndex(x => x.sku === this.productChange.sku);
+          //check items add first
+          if(itemIndex !== -1){
+            var result = (this.sale.items[itemIndex].total / this.sale.items[itemIndex].quantity)
+            this.productChange.value = result
+            this.productChange.description = 'troca referente ao SKU: ' + this.sale.items[itemIndex].sku
+            alert('success','Desconto de troca adicionado ao carrinho.')
+          }else{
+            alert('error','SKU não encontrado no carrinho.')
+            this.rules.SKU = ['sku não encontrado no carrinho.']
+          }
+        },
+        cleanSku(){
+          this.productChange.sku = !this.changeBySku ? this.productChange.sku : ''
+        },
+        newChange(){
+          if(this.productChange.value>0 && this.productChange.value<=10000){this.productChange.value = this.productChange.quantity * this.productChange.value
+            this.productChange.description = this.productChange.sku ===''?
             'Cupom de troca ao produto não identificado. motivo:'+this.productChange.description:
             this.productChange.description
-        var newChange = Object.assign({}, this.productChange) 
-        this.$store.dispatch('addDisconts',newChange)
-        this.productChange = 
-        {
-          with_client: "",
-          code: "#TROC",
-          description: "Cupom de troca do SKU: ",
-          value: 0,
-          all_products: 0,
-          acumulate: 0,
-          percent: 0,
-          quantity: 1,
-          sku:''
-        }
-        this.changeMenu  = false
-        this.changeBySku = false
-      }else{
-        alert('valor de troca inválida')
+            var newChange = Object.assign({}, this.productChange) 
+            this.$store.dispatch('addDisconts',newChange)
+            this.productChange = 
+            {
+              with_client: "",
+              code: "#TROC",
+              description: "Cupom de troca do SKU: ",
+              value: 0,
+              all_products: 0,
+              acumulate: 0,
+              percent: 0,
+              quantity: 1,
+              sku:''
+            }
+            alert('success','Desconto de troca adicionado ao carrinho.')
+            this.changeMenu  = false
+            this.changeBySku = false
+          }else{
+            alert('error','valor de troca inválida')
+          }
       }
     }
-    }
-}
+  }
 </script>
 
 <style>

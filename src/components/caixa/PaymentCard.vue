@@ -22,44 +22,47 @@
             </template>
         </v-data-table>
         <v-divider></v-divider>
-    <v-row style="width:100%" class='px-3 pt-1'>
-        <v-select
-            label="Forma de pagamento"
-            hide-details="auto"
-            v-model='onPayment.method_alias'
-            item-text="method_alias"
-            item-value="method_alias"
-            :items="payment_method"
-            style="max-width:45%"
-            class="mr-3"
+        <v-form @submit.prevent="newPayment()" style="width:100%" class='px-3 pb-7 d-flex flex-row' >
+            <v-select
+                label="Forma de pagamento"
+                hide-details="auto"
+                v-model='onPayment.method_alias'
+                item-text="method_alias"
+                item-value="method_alias"
+                :items="payment_method"
+                style="max-width:45%"
+                class="mr-3"
+                color="var(--primary)"
+                id="price"
+                autofocus
+                @input="changeIconSelect(onPayment.method_alias,true)"
+                :prepend-icon='payIcon'>
+            </v-select>
+            <v-currency-field 
+            label="valor" 
+            clearable
+            prefix='R$'
+            id="price"
             color="var(--primary)"
-            autofocus
-            @input="changeIconSelect(onPayment.method_alias,true)"
-            :prepend-icon='payIcon'>
-        </v-select>
-        <v-currency-field 
-        label="valor" 
-        clearable
-        prefix='R$'
-        color="var(--primary)"
-        style="max-width:40%;color:var(--primary)"
-        prepend-icon='fa fa-dollar-sign'
-        @keyup.native.enter="newPayment(onPayment)"
-        v-model="onPayment.method_value"/>
-        <v-btn
-            color="green"
-            width="10%"
-            class='ml-3 mt-3'
-            @click="newPayment(onPayment)"
-        ><v-icon color="white">fa fa-plus</v-icon>
-        </v-btn>
-    </v-row>
-</div>
+            style="max-width:40%;color:var(--primary)"
+            prepend-icon='fa fa-dollar-sign'
+            @keyup.native.enter="newPayment(onPayment)"
+            v-model="onPayment.method_value"/>
+            <v-btn
+                type="submit"
+                color="green"
+                fab
+                small
+                class='ml-6 mt-3'
+                @click="newPayment(onPayment)"
+            ><v-icon color="white">fa fa-plus</v-icon>
+            </v-btn>
+        </v-form>
+    </div>
 </template>
 
 <script>
-    // import {Money} from 'v-money'
-
+import alert from '../../services/errorHandler'
 export default {
     name:'PagamentoCard',
     computed:{
@@ -131,6 +134,7 @@ export default {
                     onPayment.method_value  = value;
                     onPayment.method_date   = new Date().toLocaleDateString()
                     this.$store.dispatch('addPayment',onPayment)
+                    alert('success',`Pagamento ${onPayment.method_alias} no valor de ${this.valueFormat(onPayment.method_value)} adicionado`)
                     this.onPayment = {
                         method_id:'',
                         method_description:'',

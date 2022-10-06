@@ -19,17 +19,15 @@
                     <v-row no-gutters dense><v-icon size='15' class='pa-1' color="var(--primary)">fa fa-money-bill</v-icon>
                         Total pago <v-spacer></v-spacer>{{valueFormat(sale.payments_value)}}</v-row>
                     <v-divider></v-divider>
-                    <v-row no-gutters color='red' dark dense v-if="sale.change_value <0" id='restante'>
-                        restante 
-                        <v-spacer></v-spacer>
-                        <v-icon size='20' class='pa-1' color="red">fa-solid fa-down-long</v-icon>
-                         <b>{{valueFormat(sale.change_value)}}</b>
+                    <v-row no-gutters color='red' dark dense v-if="sale.change_value <0" class="text-h4 red--text d-flex flex-row-reverse">
+                        <v-icon size='35' class='pa-1 ml-3' color="red">fa-solid fa-down-long</v-icon> 
+                        <b class="pl-6">{{valueFormat(sale.change_value)}}</b>
+                        à pagar 
                     </v-row>
-                    <v-row no-gutters color='green' dark dense v-else id='troco'>
+                    <v-row no-gutters color='green' dark dense v-else class="text-h4 green--text d-flex flex-row-reverse">
+                        <v-icon size='35' class='pa-1 ml-3' color="green">fa-solid fa-up-long</v-icon>
+                        <b class="pl-6">{{valueFormat(sale.change_value)}}</b>
                         troco
-                        <v-spacer></v-spacer>
-                        <v-icon size='20' class='pa-1' color="green">fa-solid fa-up-long</v-icon>
-                            <b>{{valueFormat(sale.change_value)}}</b>
                     </v-row>
                 </div>
                 </v-card>
@@ -52,9 +50,6 @@ export default {
         valueFormat(value){
             return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         },
-        changeColors(){
-            this.colorPayment = this.sale.change_value>=0?"#51bd5c":'#d94343'
-        }
     }
 }
 </script>

@@ -253,6 +253,9 @@ import LoadComponent from '../SysComponents/LoadComponent.vue';
               console.log('methodo não encontrado')
           }
         },
+        focus(){
+            this.updateClosure()
+        }
     },
     async beforeMount() {
       await this.updateClosure();

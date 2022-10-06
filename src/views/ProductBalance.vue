@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+    ESTA PÁGINA AINDA NÂO FOI IMPLEMENTADA
   </div>
 </template>
 

@@ -56,5 +56,8 @@ a { text-decoration: none; }
   width: 98%;
   margin-left:1.5%;
 }
+#price {
+      color:var(--primary);
+  }
 
 </style>

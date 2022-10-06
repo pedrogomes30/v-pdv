@@ -6,7 +6,7 @@
         hide-default-footer
         hide-default-header
         calculate-widths
-        style="height: 23vh;width: 100%;padding-left:3px;padding-right:3px"
+        style="height: 27vh;width: 100%;padding-left:3px;padding-right:3px"
         class="overflow-y-auto">
             <template v-slot:item="row">
                 <tr>
@@ -22,57 +22,55 @@
                 </tr>
             </template>
         </v-data-table>
-        <v-form @submit.prevent="addCupom()" style="width:100%" class='px-3 pt-1' >
-            <v-row >
-                <v-text-field
-                    label="código do cupom"
-                    hide-details="auto"
-                    v-model="cupom.code"
-                    style="max-width:45%"
-                    class='pa-2'
-                    :hint="cupom.percent ? cupom.value+'%' : valueFormat(cupom.value)"
-                    autofocus
-                    color="var(--primary)"
-                    @change="code_validate"
-                    @focus="onFocuscode"
-                    :rules="rules.validcode"
-                    prepend-icon='fa fa-ticket'>                
-                </v-text-field>
-                <v-select
-                    label="selecione o produto"
-                    hide-details="auto"
-                    item-text="sku"
-                    item-value="sku"
-                    color="var(--primary)"
-                    :disabled="cupom.all_products !== 0"
-                    v-model='cupom.sku'
-                    :items="items"
-                    :hint="`sku: ${cupom.sku}`"
-                    prepend-icon='fa fa-box'
-                    style="max-width:40%"
-                    class='pa-2'
-                    :rules="rules.produto"
-                    persistent-hint
-                    single-line
-                    >
-                </v-select>
-                <v-btn
-                    type="submit"
-                    color="green"
-                    width="10%"
-                    class='ml-3 mt-3'
-                ><v-icon color="white">fa fa-plus</v-icon>
-                </v-btn>
-            </v-row>
-            <v-row no-gutters dense style="width:100%" class='px-3 pt-0 pb-0'>
-                <h5 >Obs: {{cupom.description}}</h5>
-            </v-row>
+        <v-form @submit.prevent="addCupom()" style="width:100%" class='px-3 pb-6 d-flex flex-row' >
+            <v-text-field
+                label="código do cupom"
+                hide-details="auto"
+                v-model="cupom.code"
+                style="max-width:45%"
+                class='pa-2'
+                :hint="cupom.description"
+                persistent-hint
+                autofocus
+                color="var(--primary)"
+                @change="code_validate"
+                @focus="onFocuscode"
+                :rules="rules.validcode"
+                prepend-icon='fa fa-ticket'>                
+            </v-text-field>
+            <v-select
+                label="selecione o produto"
+                hide-details="auto"
+                item-text="sku"
+                item-value="sku"
+                color="var(--primary)"
+                :disabled="cupom.all_products !== 0"
+                v-model='cupom.sku'
+                :items="items"
+                :hint="`sku: ${cupom.sku}`"
+                prepend-icon='fa fa-box'
+                style="max-width:40%"
+                class='pa-2'
+                :rules="rules.produto"
+                persistent-hint
+                single-line
+                >
+            </v-select>
+            <v-btn
+                type="submit"
+                color="green"
+                fab
+                small
+                class='ml-6 mt-3'
+            ><v-icon color="white">fa fa-plus</v-icon>
+            </v-btn>
         </v-form>
     </div>
 </template>
 
 <script>
 import {getCupom} from '../../services/api/cuponsApi'
+import alert from '../../services/errorHandler'
 export default {
     name:'CupomDescontoCard',
     computed:{
@@ -135,7 +133,7 @@ export default {
                     }
                 }
             }catch(e){
-                alert(e)
+               alert('error','Cupom inválido')
             }
         },
         addCupom(){
@@ -150,6 +148,7 @@ export default {
                         return false
                     }
                     this.$store.dispatch('addDisconts',newCupom)
+                    alert('success',`Cupom ${newCupom.code} adicionado ao carrinho`)
                 }else{
                     let noRepeat = this.disconts.findIndex(x => x.code === this.cupom.code);  
                     if(noRepeat !== -1){
@@ -162,6 +161,7 @@ export default {
                         return false
                     }
                     this.$store.dispatch('addDisconts',newCupom)
+                    alert('success',`Cupom ${newCupom.code} adicionado ao carrinho`)
                 }
                 this.clearCupom()
                 this.menu = false
@@ -172,6 +172,7 @@ export default {
         },
         removeCupom(cupom){
             this.$store.dispatch('removeDisconts',cupom)
+            alert('warning',`Cupom ${cupom.code} removido.`)
         },
         onFocuscode(){
             this.rules.validcode = [true]

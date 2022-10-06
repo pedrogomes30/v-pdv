@@ -421,8 +421,6 @@ const service ={
         if(state.discont_value > state.products_value){state.valid_sale = false; state.status=' valor de discont maior que o valor total da venda.'}
         if(state.change_value <0){state.valid_sale = false; state.status=' valor de pagamento menor que o valor total da venda.'}
         if(state.forceCustomer && state.customer.type !== state.forceCustomer){state.valid_sale = false; state.status=`necessário informar um ${state.forceCustomer} nesta venda.`}
-    
-        // console.log('VENDA ->',state)
     },
     // discontS ...
     addDiscontsToProducts(state){
@@ -438,7 +436,7 @@ const service ={
                 product.disconts = []
                 product.total = product.price * product.quantity
                 //loop disconts
-                state.disconts.forEach((discont,key)=>{
+                state.disconts.forEach((discont)=>{
                     //discont em todos os itens
                     if(discont.all_products){
                         let totalproduct = product.total
@@ -498,9 +496,6 @@ const service ={
                         }
                     }
                    state.forceCustomer = discont.with_client? discont.with_client : false
-                   console.log('produto', state.items[key])
-                //    if(total_disconts > 0){
-                //    }
                 })
             })
             this.total(state)

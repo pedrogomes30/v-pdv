@@ -11,7 +11,7 @@
               :nudge-width="200"
               >
               <template v-slot:activator="{ on, attrs }">
-                  <v-icon v-if="checkCustomer()" color="red" size='20'> fa-solid fa-triangle-exclamation</v-icon> 
+                  <v-icon v-if="checkCustomer()" color="red" size='20' :title="cashier.forceCustomer"> fa-solid fa-triangle-exclamation</v-icon> 
                   <v-icon 
                     color="var(--primary)" 
                     size='20' 
@@ -228,6 +228,7 @@
 import {getCustomer,setCustomer} from '../../services/api/customerApi'
 import {getAdressByCep} from  '../../services/api/viaCepApi'
 import {checkDocument} from '../../services/checkCpfCnpj'
+import alert from '../../services/errorHandler'
 export default {
     name:'ClienteVendedorCard',
     computed:{
@@ -311,12 +312,11 @@ export default {
                 this.newCustomer      = true
               }else{
                 this.customerCache    = customer.data.data
-                // this.addCustomer()
               }
               this.loading            = false
             }
           }catch(e){
-            alert(e)
+            alert('error',e.message)
           }
         },
         async saveCustomer(){
@@ -338,11 +338,9 @@ export default {
             }
           }
           this.customerCache.type = this.customer_partioner ? 'funcionarioParceiro' : 'cliente'
-          var newCustomer         = await setCustomer(customerCache)
-          if(newCustomer.data.error){
-            alert(newCustomer.data.data)
-          }
+          await setCustomer(customerCache)
           this.addCustomer()
+          alert('success','Cliente salvo.')
         },
         addCustomer(){
           var newCustomer         = Object.assign({}, this.customerCache)
@@ -351,6 +349,7 @@ export default {
           this.newCustomer        = false
           this.btnRemoveCustomer  = true
           this.menuCustomer       = false
+          alert('info','Cliente informado.')
         },
         cleanCache(){
           this.customerCache = {
@@ -376,6 +375,7 @@ export default {
           this.cleanCache()
           this.newCustomer = false
           this.btnRemoveCustomer = false
+          alert('warning','Cliente removido.')
         },
     },
     async mounted(){

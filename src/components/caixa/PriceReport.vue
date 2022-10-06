@@ -53,6 +53,7 @@
 </template>
 <script>
     import {setWrongPrice} from '../../services/api/productsApi'
+    import alert from '../../services/errorHandler'
 export default {
     name:"PriceReport",
     props:{
@@ -87,6 +88,7 @@ export default {
             }
             await setWrongPrice(item_reported,id)
             this.reportMenu = false
+            alert('success','Preço de produto reportado')
         }
     }
     
@@ -94,7 +96,5 @@ export default {
 </script>
 
 <style>
-    #price {
-        color:var(--primary);
-    }
+    
 </style>

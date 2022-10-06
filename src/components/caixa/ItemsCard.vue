@@ -62,6 +62,7 @@
     </div>
 </template>
 <script>
+import alert from '../../services/errorHandler'
 export default {
     name: 'productSelecionadoCard',
     computed:{
@@ -88,23 +89,21 @@ export default {
             product.item.quantity--
             if((product.item.quantity) <= 0){
                 this.$store.dispatch('removeItem',product.item)
+                alert('warning',`Produto ${product.item.description} removido.`)
             }else{
                 this.$store.dispatch('qtdItem',product.item)
             }
         },
         removeItem(product){
             this.$store.dispatch('removeItem',product.item)
+            alert('warning',`Produto ${product.item.description} removido.`)
         },
         cleanCart(){    
             this.$store.dispatch('cleanCart')
+            alert('warning',`Carrinho limpo.`)
         },
         valueFormat(value){
-            try{
-                return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-            }catch(exception){
-                console.log(exception)
-                return ''
-            }
+            return value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         },
         getDescTitle(discont){
             return discont.code+': '+discont.description

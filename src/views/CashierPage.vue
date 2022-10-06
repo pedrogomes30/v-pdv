@@ -48,6 +48,7 @@ import DetailSaleCard from '../components/caixa/DetailSaleCard.vue'
 import TotalCard from '../components/caixa/TotalCard.vue'
 import ObsCard from '../components/caixa/ObsCard.vue'
 import ChangeCard from '../components/caixa/ChangeCard.vue'
+import alert from '../services/errorHandler'
 
 export default {
   name: 'caixaPage',   
@@ -59,6 +60,7 @@ export default {
   methods:{    
     onCancelOrder(){
       this.$store.dispatch('cleanSale')
+      alert('warning','Sua venda foi limpada.')
     },
   },
   components: {
