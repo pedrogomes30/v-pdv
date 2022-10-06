@@ -1,4 +1,3 @@
-import configs from './config'
 import Cookie from 'js-cookie'
 import alert from '../errorHandler'
 
@@ -11,7 +10,7 @@ export async function getWithdrawal(){
       headers: myHeaders,
       redirect: 'follow'
     };    
-    const call = await fetch(`${configs.configs.BASE_URL}/withdrawal`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -32,7 +31,7 @@ export async function getWithdrawalAccount(){
       headers: myHeaders,
       redirect: 'follow'
     };    
-    const call = await fetch(`${configs.configs.BASE_URL}/withdrawal/accounts`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal/accounts`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -57,7 +56,7 @@ export async function saveWithdrawal(withdrawal){
       redirect: 'follow'
     };
     
-    const call = await fetch(`${configs.configs.BASE_URL}/withdrawal`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -80,7 +79,7 @@ export async function deleteWithdrawal(id){
       redirect: 'follow'
     };
     
-    const call = await fetch(`${configs.configs.BASE_URL}/withdrawal/${id}`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal/${id}`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()

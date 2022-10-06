@@ -1,5 +1,4 @@
 import Cookie from 'js-cookie'
-import configs from './config'
 import alert from '../errorHandler'
 
 
@@ -8,12 +7,12 @@ export async function Authenticate (user){
     var requestOptions = {
     method: 'GET',
     headers: {
-        "Authorization": configs.configs.BASIC_TOKEN,
+        "Authorization": process.env.VUE_APP_TOKEN,
         "Content-Type": "application/json"
     },
     redirect: 'follow'
     };
-    const call =  await fetch(`${configs.configs.BASE_URL}/auth/${user.email}/${user.password}`, requestOptions)
+    const call =  await fetch(`${process.env.VUE_APP_BACK_URL}/auth/${user.email}/${user.password}`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -39,7 +38,7 @@ export async function start (){
     },
     redirect: 'follow'
     };
-    const call =  await fetch(`${configs.configs.BASE_URL}/start`, requestOptions)
+    const call =  await fetch(`${process.env.VUE_APP_BACK_URL}/start`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -68,7 +67,7 @@ export async function setCashier(cashier_id){
         },
         redirect: 'follow'
     };
-    const call =  await fetch(`${configs.configs.BASE_URL}/start`, requestOptions)
+    const call =  await fetch(`${process.env.VUE_APP_BACK_URL}/start`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()

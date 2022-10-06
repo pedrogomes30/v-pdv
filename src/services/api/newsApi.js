@@ -1,4 +1,4 @@
-import configs from './config'
+
 import Cookie from 'js-cookie'
 import alert from '../errorHandler' 
 
@@ -13,7 +13,7 @@ export async function getNews (){
       redirect: 'follow'
     };
     
-    const call = await fetch(`${configs.configs.BASE_URL}/news`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/news`, requestOptions)
     .then(response => {
         if(!response.ok) {
             throw new Error(`${response.status} - ${response.statusText} `);
@@ -40,7 +40,7 @@ export async function saveComent (coment){
       body:JSON.stringify(coment)
     };
     
-    const call = await fetch(`${configs.configs.BASE_URL}/news/coment`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/news/coment`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status}- ${response.statusText}`);
         return response.json()
@@ -65,7 +65,7 @@ export async function saveReaction (reaction){
       body:JSON.stringify(reaction)
     };
     
-    const call = await fetch(`${configs.configs.BASE_URL}/news/reaction`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/news/reaction`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status}- ${response.statusText}`);
         return response.json()

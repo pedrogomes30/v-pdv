@@ -1,4 +1,3 @@
-import configs from './config'
 import Cookie from 'js-cookie'
 import alert from '../errorHandler'
 
@@ -15,7 +14,7 @@ export async function getCustomer (document){
       body:raw,
       redirect: 'follow'
     };    
-    const call = await fetch(`${configs.configs.BASE_URL}/customer`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/customer`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -41,7 +40,7 @@ export async function setCustomer (customer){
       body:raw,
       redirect: 'follow'
     };    
-    const call = await fetch(`${configs.configs.BASE_URL}/customer`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/customer`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(response.statusText);
         return response.json()

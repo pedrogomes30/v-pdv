@@ -1,4 +1,3 @@
-import configs from './config'
 import Cookie from 'js-cookie'
 import alert from '../errorHandler'
 
@@ -14,7 +13,7 @@ export async function setSale (sale){
         body:raw,
         redirect: 'follow'
     };    
-    const call = await fetch(`${configs.configs.BASE_URL}/sale`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/sale`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -40,7 +39,7 @@ export async function getSale (getObj){
         body:raw,
         redirect: 'follow'
     };    
-    const call = await fetch(`${configs.configs.BASE_URL}/sale`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/sale`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -63,7 +62,7 @@ export async function getCupoun (saleID){
         headers: myHeaders,
         redirect: 'follow'
     };    
-    const call = await fetch(`${configs.configs.BASE_URL}/sale/${saleID}`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/sale/${saleID}`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
