@@ -27,6 +27,8 @@
             fixed-header
             calculate-widths
             dense
+            no-data-text="Não há registros de venda"
+            no-results-text="resultado não encontrado"
             sortBy='sale_date'
             :sortDesc='true'
             hide-default-footer

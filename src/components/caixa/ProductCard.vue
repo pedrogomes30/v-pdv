@@ -39,7 +39,9 @@
                     :headers="header"
                     fixed-header
                     calculate-widths
-                    dense                
+                    dense          
+                    no-data-text="Não foi possivel carregar produtos."
+                    no-results-text="Produto não encontrado."      
                     :items-per-page="50"
                     style="height: 76vh;"
                     class="overflow-y-auto"
@@ -133,7 +135,6 @@ export default {
                 if (this.products.length <= 0 || update) {
                     this.loading = true;
                     var newProducts = await getProducts();
-                    console.log("PRODUTOS", newProducts);
                     this.$store.dispatch("updateProducts", newProducts);
                     this.loading = false;
                     alert('success','Produtos atualizados.')

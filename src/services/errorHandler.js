@@ -2,7 +2,6 @@ import Store from '../store/index'
 import router from '@/router'
 
 export default function alert(type='success',message){
-    console.log(message)
     switch(type){
         case 'success':
             break

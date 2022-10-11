@@ -1,32 +1,48 @@
 <template>
   <v-card >
-      <v-tabs
+    <v-slide-x-transition>
+    <v-tabs
         v-model="tabs"
         centered
         class="d-flex justify-center align-center"
       >
-        <v-tab color="var(--primary)" @keyup="tabs=tabs">          
-            <v-icon color="var(--primary)"> fa fa-cart-shopping</v-icon>
-            <v-spacer></v-spacer>
-            Carrinho
+      <v-hover v-model="menuHover['carrinho']" >
+        <v-tab color="var(--primary)" @keyup="tabs=tabs">   
+          <v-icon color="var(--primary)" size='30' class="pr-3"  > fa fa-cart-shopping</v-icon>
+          <v-slide-x-transition>
+            <span   v-show="menuHover['carrinho']" >Carrinho</span>    
+          </v-slide-x-transition>      
         </v-tab>
+      </v-hover> 
+      
+      <v-hover v-model="menuHover['descontos']" >
         <v-tab>
-            <v-icon color="var(--primary)"> fa fa-tags</v-icon>            
-            <v-spacer></v-spacer>
-            Descontos
+          <v-icon color="var(--primary)" size='30' class="pr-3" > fa fa-tags</v-icon>    
+          <v-slide-x-transition>
+            <span   v-show="menuHover['descontos']" >Descontos</span>    
+          </v-slide-x-transition> 
         </v-tab>
+      </v-hover>
+      <v-hover v-model="menuHover['pagamentos']" >
         <v-tab>
-            <v-icon color="var(--primary)"> fa fa-sack-dollar</v-icon>
-            <v-spacer></v-spacer>
-            Pagamentos
-        </v-tab>
-        <v-tab>
-            <v-icon color="var(--primary)"> fa-solid fa-user-group</v-icon>
-            <v-spacer></v-spacer>
-            Cliente / Vendedor
-        </v-tab>
+          <v-icon color="var(--primary)" size='30' class="pr-3" > fa fa-sack-dollar</v-icon>
+          <v-slide-x-transition>
+              <span   v-show="menuHover['pagamentos']" >Pagamentos</span>    
+            </v-slide-x-transition> 
+          </v-tab>
+        </v-hover>
+        
+        <v-hover v-model="menuHover['cliente']" >
+          <v-tab>
+            <v-icon color="var(--primary)" size='30' class="pr-3" > fa-solid fa-user-group</v-icon>
+            <v-slide-x-transition>
+              <span   v-show="menuHover['cliente']" >Cliente / Vendedor</span>    
+            </v-slide-x-transition> 
+          </v-tab>
+        </v-hover>
       </v-tabs >
-        <v-divider></v-divider>
+    </v-slide-x-transition>
+      <v-divider></v-divider>
       <v-tabs-items v-model="tabs" style='min-height: 36vh; max-height:36vh'>
       <v-tab-item>
         <ItemCard />
@@ -40,7 +56,8 @@
       <v-tab-item >
         <CustomerCard />
         <v-spacer></v-spacer>
-        <SalesmanCard />
+        <h3 class='pl-6'>Vendedor está temporariamente indisponível</h3>
+        <!-- <SalesmanCard /> -->
       </v-tab-item>
     </v-tabs-items>
   </v-card>
@@ -51,7 +68,7 @@
   import DiscontCard from './DiscontCard.vue'
   import PaymentCard from './PaymentCard.vue'
 import CustomerCard from './CustomerCard.vue'
-import SalesmanCard from './SalesmanCard.vue'
+// import SalesmanCard from './SalesmanCard.vue'
   export default {
     name:'TabCaixaCard',
     computed:{
@@ -61,7 +78,8 @@ import SalesmanCard from './SalesmanCard.vue'
     },
     data () {
       return {
-        tabs: null,       
+        tabs: null, 
+        menuHover:[],     
       }
     },
     mounted() {
@@ -93,7 +111,7 @@ import SalesmanCard from './SalesmanCard.vue'
     DiscontCard,
     PaymentCard,
     CustomerCard,
-    SalesmanCard
+    // SalesmanCard
 }
   }
 </script>

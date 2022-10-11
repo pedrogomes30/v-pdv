@@ -1,9 +1,6 @@
 <template>
-    <v-row  class="pt-5"  no-gutters dense>
+    <v-row  class="pt-5"  no-gutters dense >
         <LoadComponent :overlay="loading" />
-        <h2 class="white--text" v-if="error.error">
-            {{error.data}}
-        </h2>
         <v-sheet
             class="mx-auto"
             height="100%"
@@ -173,6 +170,7 @@ import { format } from 'date-fns';
 import {getClosure} from '../../services/api/closureApi';
 import {deleteWithdrawal} from '../../services/api/withdrawalApi';
 import LoadComponent from '../SysComponents/LoadComponent.vue';
+import alert from '@/services/errorHandler';
 
   export default {
     name: 'ClosureList',
@@ -208,9 +206,11 @@ import LoadComponent from '../SysComponents/LoadComponent.vue';
         async updateClosure(){
             this.loading      = true
             var callClosure   = await getClosure()
-            if(callClosure.error)
-                this.error    = callClosure
-            this.closures     = callClosure.data
+            if(typeof(callClosure)=== 'string')   
+                alert('error',callClosure)
+            else
+                this.closures     = callClosure.data
+
             this.loading      = false
         },
         setDate(day){
@@ -254,7 +254,7 @@ import LoadComponent from '../SysComponents/LoadComponent.vue';
           }
         },
         focus(){
-            this.updateClosure()
+            console.log(this.updateClosure())
         }
     },
     async beforeMount() {
