@@ -1,7 +1,7 @@
 <template>
 <div class='basePage'>
   <!-- cabeçalho -->
-  <v-row no-gutters dense style='max-height:20%'>
+  <v-row no-gutters dense style='max-height:20%;'>
     <v-col cols="auto" align-self="center" >
       <v-list-item>
         <v-list-item-avatar rouded color="var(--primary">
@@ -36,7 +36,7 @@
           <b>{{eachNews.resume}}</b>
         </v-card-subtitle>
         <v-card-text class="d-flex flex-row-reverse mt-0 pt-0">
-              {{dateFormat(eachNews.dt_news)}} - {{eachNews.author.user_name}}
+              {{dateFormat(eachNews.dt_news)}} - {{eachNews.author}}
           </v-card-text>
         <v-card-actions>
           <v-btn color="var(--primary)" icon @click='newLike(eachNews)'>
@@ -98,7 +98,7 @@
                   <v-icon>fa fa-quote-right</v-icon>
                 </v-card-text>
                 <v-card-text class="d-flex flex-row-reverse mt-0 pt-0">
-                    {{dateFormat(coment.dt_coment)}} - {{coment.author.user_name}} - {{coment.author.store_name}}
+                    {{dateFormat(coment.dt_coment)}} - {{coment.author}} - {{coment.author}}
                 </v-card-text>
               </div>
             </div>
