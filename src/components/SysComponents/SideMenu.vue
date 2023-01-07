@@ -47,6 +47,14 @@
                 <v-list-item-title ><b>Deslogar</b></v-list-item-title>
             </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="DBTEST()" >
+            <v-list-item-icon>
+                <b><v-icon title="testDB">fas fa-vials</v-icon></b>
+            </v-list-item-icon>
+            <v-list-item-content>
+                <v-list-item-title ><b>Deslogar</b></v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 </template>
@@ -99,6 +107,24 @@ export default {
       logoff(){
         this.$store.dispatch('logout')  
         router.push('/login')
+      },
+      async DBTEST(){
+        return new Promise((resolve, reject) => {
+        let request = window.indexedDB.open(process.env.VUE_APP_DB_NAME, process.env.VUE_APP_DB_VERSION);
+        request.onerror = e => {
+          console.log('Error opening db', e);
+          reject('Error');
+        };
+        request.onsuccess = e => {
+          resolve(e.target.result);
+        };
+        request.onupgradeneeded = e => {
+          console.log('onupgradeneeded');
+          let db = e.target.result;
+          let objectStore = db.createObjectStore("cats", { autoIncrement: true, keyPath:'id' });
+          return objectStore;
+        };
+        });
       }
     },
     

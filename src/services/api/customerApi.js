@@ -30,6 +30,7 @@ export async function getCustomer (document){
 export async function setCustomer (customer){
     var myHeaders = new Headers();
     myHeaders.append("Authorization","Bearer "+Cookie.get('._token') ); 
+    console.log(customer)
     var raw = JSON.stringify({
         customer
     }); 
