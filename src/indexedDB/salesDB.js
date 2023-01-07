@@ -1,11 +1,11 @@
-import DB from "./index"
+import DB  from "./index"
 
-const ENTITY = 'products'
+const ENTITY = 'sales'
 
 export default{
     async delete(entity) {
 
-		let db = await this.getDb();
+		let db = await DB.getDb(ENTITY);
 
 		return new Promise(resolve => {
 
@@ -18,9 +18,9 @@ export default{
 			store.delete(entity.id);
 		});	
 	},
-	async get(id=null) {
+	async get() {
 
-		let db = await this.getDb();
+		let db = await DB.getDb(ENTITY);
 
 		return new Promise(resolve => {
 
@@ -40,12 +40,12 @@ export default{
 				}
 			};
 
+
 		});
 	},
 
 	async save(entity) {
-
-		let db = await this.getDb();
+		let db = await DB.getDb(ENTITY);
 
 		return new Promise(resolve => {
 

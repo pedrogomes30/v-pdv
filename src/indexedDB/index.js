@@ -1,17 +1,26 @@
-const DB_NAME = process.env.DB_NAME
-const DB_VERSION = process.env.DB_VERSION;
+import Cookie from "js-cookie";
+import router from '@/router';
+
+const DB_NAME = process.env.VUE_APP_DB_NAME
+const DB_VERSION = process.env.VUE_APP_DB_VERSION;
 let DB;
 
-export default async function getDb(entity) {
-		return new Promise((resolve, reject) => {
 
+export default {
+	async  getDb(entity) {
+
+		return new Promise((resolve, reject) => {
 			if(DB) { return resolve(DB); }
-			console.log('OPENING DB', DB);
+				if (!window.indexedDB) {
+					window.alert('Seu navegador não suporta uma versão estável do IndexedDB. Alguns recursos não estarão disponíveis.')
+					Cookie.remove('._token')
+					Cookie.remove('expires')
+					router.push('')
+				}
 			let request = window.indexedDB.open(DB_NAME, DB_VERSION);
 			
 			request.onerror = e => {
-				console.log('Error opening db', e);
-				reject('Error');
+				reject('Error',e);
 			};
 	
 			request.onsuccess = e => {
@@ -20,9 +29,9 @@ export default async function getDb(entity) {
 			};
 			
 			request.onupgradeneeded = e => {
-				console.log('onupgradeneeded');
 				let db = e.target.result;
 				db.createObjectStore(entity, { autoIncrement: true, keyPath:'id' });
 			};
 		});
 	}
+}
