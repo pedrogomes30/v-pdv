@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { setSale } from '../api/saleApi'
+// import { setSale } from '../api/saleApi'
 
 
 //set a salenumber, store, cashier, date, employee, and send to backend a valid sale, and return it with backend id or not(error case)
@@ -29,19 +29,20 @@ export default async function generateSale(newSale,sales,auth){
         newSale.sale_date           = newSale.sale_date == '' ? format(new Date(), "yyyy-MM-dd HH:mm:ss") : newSale.sale_date
         newSale.number              = newSale.number == '' ? getNumber(newSale,sales,auth) : newSale.number
         //send to back
-        var result                  = await setSale(newSale)
-        if(result.data.error){
-            newSale.status      = 'Erro'
-            newSale.sys_obs     = result.data.data
-        }else{
-            newSale.id     = result.data.data.id
-            newSale.nfce   = result.data.data.nfce
-            newSale.status = 'Finalizada'
-        }
+        console.log(newSale);
+        // var result                  = await setSale(newSale)
+        // if(result.data.error){
+        //     newSale.status      = 'Erro'
+        //     newSale.sys_obs     = result.data.data
+        // }else{
+        //     newSale.id     = result.data.data.id
+        //     newSale.nfce   = result.data.data.nfce
+        //     newSale.status = 'Finalizada'
+        // }
         return newSale
     }catch(e){
         newSale.status.description      = 'Erro'
-        newSale.sys_obs     = e
+        newSale.sys_obs                 = e
         console.log("ERRO AO CRIAR VENDA", e)
         return newSale
     }

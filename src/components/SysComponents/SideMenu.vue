@@ -99,7 +99,8 @@ export default {
       logoff(){
         this.$store.dispatch('logout')  
         router.push('/login')
-      }
+      },
+     
     },
     
     

@@ -25,22 +25,22 @@ const state = {//ou venda
     invoice_coupon:'',
     invoice_xml:'',
     customer: {
-        document: "1",
-        name: "Cliente não identificado",
-        email: "",
-        phone: "",
-        type: "",
-        store_partiner_id: "",
-        store_partiner_name: ""
+        // document: "1",
+        // name: "Cliente não identificado",
+        // email: "",
+        // phone: "",
+        // type: "",
+        // store_partiner_id: "",
+        // store_partiner_name: ""
     },
     salesman: {
-        document: "2",
-        name: "Vendedor não identificado",
-        email: "",
-        phone: "",
-        type: "",
-        store_partiner_id: "",
-        store_partiner_name: ""
+        // document: "2",
+        // name: "Vendedor não identificado",
+        // email: "",
+        // phone: "",
+        // type: "",
+        // store_partiner_id: "",
+        // store_partiner_name: ""
     },
     payments: [
         // {
@@ -302,22 +302,22 @@ const mutations = {
             nfce_xml : ''
         }
         state.customer =  {
-            document:  "1",
-            name :  "Cliente não identificado",
-            email :  "",
-            phone :  "",
-            type :  "",
-            store_partiner_id :  "",
-            store_partiner_name :  ""
+            // document:  "1",
+            // name :  "Cliente não identificado",
+            // email :  "",
+            // phone :  "",
+            // type :  "",
+            // store_partiner_id :  "",
+            // store_partiner_name :  ""
         }
         state.salesman =  {
-            document  : "2",
-            name  : "Vendedor não identificado",
-            email :  "",
-            phone : "",
-            type :  "",
-            store_partiner_id :  "",
-            store_partiner_name :  "",
+            // document  : "2",
+            // name  : "Vendedor não identificado",
+            // email :  "",
+            // phone : "",
+            // type :  "",
+            // store_partiner_id :  "",
+            // store_partiner_name :  "",
         }
         state.payments =  []
         state.items = []

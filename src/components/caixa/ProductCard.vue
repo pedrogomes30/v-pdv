@@ -82,18 +82,21 @@ import {getProducts} from '../../services/api/productsApi'
 import LoadComponent from '../SysComponents/LoadComponent';
 import PriceReport from './PriceReport';
 import alert from '../../services/errorHandler'
+import productsDB from '../../indexedDB/productsDB'
+
 export default {
     name: "ProductsCard",
     computed: {
-        products() {
-            return this.$store.state.productStore.products;
-        },
+        // products() {
+        //     return this.$store.state.productStore.products;
+        // },
         categorys() {
             return this.$store.state.productStore.categorys;
         },
     },
     data: () => {
         return {
+            products:[],
             search: "",
             loading: false,
             report:false,
@@ -132,10 +135,12 @@ export default {
         },
         async updateproducts(update) {
             try {
+                this.products = await productsDB.get()
                 if (this.products.length <= 0 || update) {
                     this.loading = true;
                     var newProducts = await getProducts();
-                    this.$store.dispatch("updateProducts", newProducts);
+                    await this.$store.dispatch("updateProducts", newProducts);
+                    this.products = await productsDB.get()
                     this.loading = false;
                     alert('success','Produtos atualizados.')
                 }

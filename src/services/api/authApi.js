@@ -40,7 +40,6 @@ export async function start (){
     };
     const call =  await fetch(`${process.env.VUE_APP_BACK_URL}/start`, requestOptions)
     .then(response => {
-        console.log('url',process.env.VUE_APP_BACK_URL)
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
     })
