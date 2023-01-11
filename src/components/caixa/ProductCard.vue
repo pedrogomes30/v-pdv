@@ -56,10 +56,16 @@
                                         fa fa-cart-plus 
                                 </v-icon>
                             </td>
-                            <td class=''>{{row.item.sku}}<br><b>{{row.item.description}}</b></td>
                             <td class=''>
-                                <h5>{{row.item.provider.toLowerCase()}}</h5>
+                                {{row.item.sku}}
+                                <br>
+                                <b>{{row.item.description}}</b>
+                                <br/>
+                                <span >cest: {{row.item.cest = null  ? " ERRO " : row.item.cest}} ncm: {{ row.item.ncm }}</span>
+                            </td>
+                            <td class=''>
                                 <h4>{{nameCategory(row.item.category)}}</h4>
+                                <h5>{{row.item.provider.toLowerCase()}}</h5>
                             </td>
                             <td >
                                 <h3>

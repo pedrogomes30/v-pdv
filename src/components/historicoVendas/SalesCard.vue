@@ -57,8 +57,8 @@
                   <td>{{dateFormat(row.item.sale_date)}}</td>
                   <td>{{row.item.cashier.cashier_name}}</td>
                   <td>{{row.item.employee_cashier.user_name}}</td>
-                  <td>{{row.item.salesman.name}}</td>
-                  <td>{{row.item.customer.name}}</td>
+                  <td>{{getSalesman(row.item.salesman)}}</td>
+                  <td>{{getCustomer(row.item.customer)}}</td>
                   <td><v-chip 
                     :title="formatPaymentMethod(row.item) ? row.item.payment_method :'Forma de pagamento não disponível na data atual'"
                     class='ma-1'
@@ -113,8 +113,8 @@
                       <td>{{dateFormat(row.item.sale_date)}}</td>
                       <td>{{row.item.cashier.cashier_name}}</td>
                       <td>{{row.item.employee_cashier.user_name}}</td>
-                      <td>{{row.item.salesman.name}}</td>
-                      <td>{{row.item.customer.name}}</td>
+                      <td>{{getSalesman(row.item.salesman)}}</td>
+                      <td>{{getCustomer(row.item.customer)}}</td>
                       <td><v-chip 
                         :title="formatPaymentMethod(row.item) ? row.item.payment_method :'Forma de pagamento não disponível na data atual'"
                         color='var(--primary)'
@@ -216,6 +216,20 @@ export default {
             else {
                 return "A enviar";
             }
+        },
+        getSalesman(salesman){
+          if(salesman === null)
+          {
+            return null
+          }
+          return salesman.name
+        },
+        getCustomer(customer){
+          if(customer === null)
+          {
+            return null
+          }
+          return customer.name
         },
         setTitle(sale) {
             if (sale.sys_obs)
