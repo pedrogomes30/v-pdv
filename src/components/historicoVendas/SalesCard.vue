@@ -19,62 +19,6 @@
         </v-card-title>
         <v-card-text>
           <LoadComponent :overlay="loading" />
-      <v-data-table
-            v-if="to_sync_sales"
-            :items="to_sync_sales"
-            :search="search" 
-            :headers="header"
-            fixed-header
-            calculate-widths
-            dense
-            no-data-text="Não há registros de venda"
-            no-results-text="resultado não encontrado"
-            sortBy='sale_date'
-            :sortDesc='true'
-            hide-default-footer
-            @click:row="detailSale()"
-            :items-per-page="-1"
-            style="height: 30vh;padding-left:3px;padding-right:3px "
-            class="overflow-y-auto pb-0 mb-0"
-            >
-            <template v-slot:item="row">
-                <tr >
-                  <td>
-                    <v-btn elevation="3" icon color="red" class='ma-1' outlined title="Cancelar venda" >
-                      <v-icon size="20" >fa fa-xmark </v-icon>
-                    </v-btn>
-                    <v-btn elevation="3" icon color="green" class='ma-1' outlined title="imprimir Nfc-e" @click="openInvoice(row.item)" >
-                      <v-icon size="20" >fa fa-receipt </v-icon>
-                    </v-btn>
-                    <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="blue" class='ma-1' outlined title="Re-sincronizar" @click='reSendSale(row.item)' >
-                      <v-icon size="20" >fa fa-rotate</v-icon>
-                    </v-btn>
-                    <v-btn v-if="row.item.status==='Erro'" elevation="3" icon color="red" class='ma-1' outlined title="Informar bug na venda" >
-                      <v-icon size="20" >fa-solid fa-bug</v-icon>
-                    </v-btn>
-                  </td>
-                  <td>id:{{row.item.id}}<br><b>{{row.item.number}}</b></td>
-                  <td>{{dateFormat(row.item.sale_date)}}</td>
-                  <td>{{row.item.cashier.cashier_name}}</td>
-                  <td>{{row.item.employee_cashier.user_name}}</td>
-                  <td>{{getSalesman(row.item.salesman)}}</td>
-                  <td>{{getCustomer(row.item.customer)}}</td>
-                  <td><v-chip 
-                    :title="formatPaymentMethod(row.item) ? row.item.payment_method :'Forma de pagamento não disponível na data atual'"
-                    class='ma-1'
-                    color='var(--primary)'
-                    outlined>
-                    {{formatPaymentMethod(row.item) ? formatPaymentMethod(row.item) : '????????'}}</v-chip></td>
-                  <td>{{valueFormat(row.item.discont_value)}}</td>
-                  <td>{{valueFormat(row.item.total_value)}}</td>
-                  <td class="justify-center">
-                    <v-btn elevation="2" icon :title="setTitle(row.item)" :color="row.item.status.status_color" class='ma-1' outlined>
-                      <v-icon size="20">  {{row.item.status.status_icon}}</v-icon>
-                    </v-btn>
-                  </td>
-                </tr>
-            </template>
-            </v-data-table>  
           <v-data-table
                 :items="sales"
                 :search="search" 

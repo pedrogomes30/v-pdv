@@ -450,6 +450,7 @@ const service ={
                                 value           :discont.value,
                                 percent         :discont.percent
                             })
+                            console.log('CODE 1')
                             product.total -= discont_value
                         }
                         //em R$
@@ -464,6 +465,7 @@ const service ={
                                 value       :'',
                                 percent     :discont.percent
                             })
+                            console.log('CODE 2')
                             product.total -= discontPercent
                         }
                         //discont em um SKU especifico
@@ -474,12 +476,13 @@ const service ={
                             if(discont.percent){
                                 let discont_value   = (discont.value / 100) * totalproduct ;
                                 product.disconts.push({
-                                    code            :discont.cade,
+                                    code            :discont.code,
                                     description     :discont.description,
                                     price           :discont_value,
                                     value           :discont.value,
                                     percent         :discont.percent
                                 })
+                                console.log('CODE 3')
                                 product.total -= discont_value
                             }
                             //em R$
@@ -491,6 +494,7 @@ const service ={
                                     value           :'',
                                     percent         :discont.percent
                                 })
+                                console.log('CODE 4')
                                 product.total -= discont.value
                             }
                         }
