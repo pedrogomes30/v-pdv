@@ -176,8 +176,11 @@ import alert from '@/services/errorHandler';
     name: 'ClosureList',
     computed:{
         is_manager(){
-        return this.$store.state.auth.cashier_session.is_manager
-        },  
+            return this.$store.state.auth.cashier_session.is_manager
+        }, 
+        user(){
+            return this.$store.state.auth.cashier_session
+        } 
     },
     data () {
       return {
@@ -205,7 +208,8 @@ import alert from '@/services/errorHandler';
     methods: {
         async updateClosure(){
             this.loading      = true
-            var callClosure   = await getClosure()
+            var manager       = this.user.is_manager? true : false
+            var callClosure   = await getClosure(manager)
             if(typeof(callClosure)=== 'string')   
                 alert('error',callClosure)
             else

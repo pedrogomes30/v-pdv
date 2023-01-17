@@ -2,7 +2,7 @@ import Cookie from 'js-cookie'
 import alert from '../errorHandler'
 
 
-export async function getClosure(){
+export async function getClosure(manager){
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer "+Cookie.get('._token'));    
     var requestOptions = {
@@ -10,7 +10,7 @@ export async function getClosure(){
       headers: myHeaders,
       redirect: 'follow'
     };    
-    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/closure`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/closure/${manager}`, requestOptions) 
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()

@@ -107,6 +107,7 @@ export default {
         session() {
             return this.$store.state.auth.cashier_session;
         },
+        
     },
     data: () => {
         return {
