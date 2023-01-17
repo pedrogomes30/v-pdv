@@ -209,7 +209,8 @@ import alert from '@/services/errorHandler';
         async updateClosure(){
             this.loading      = true
             var manager       = this.user.is_manager? true : false
-            var callClosure   = await getClosure(manager)
+            var callClosure   = await getClosure(manager,this.store.store_id)
+            console.log(callClosure)
             if(typeof(callClosure)=== 'string')   
                 alert('error',callClosure)
             else
