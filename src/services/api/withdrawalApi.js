@@ -2,7 +2,7 @@ import Cookie from 'js-cookie'
 import alert from '../errorHandler'
 
 
-export async function getWithdrawal(){
+export async function getWithdrawal(manager,store){
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer "+Cookie.get('._token'));    
     var requestOptions = {
@@ -10,7 +10,7 @@ export async function getWithdrawal(){
       headers: myHeaders,
       redirect: 'follow'
     };    
-    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal?manager=${manager}&store=${store}`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()
@@ -31,7 +31,7 @@ export async function getWithdrawalAccount(){
       headers: myHeaders,
       redirect: 'follow'
     };    
-    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal/accounts`, requestOptions)
+    const call = await fetch(`${process.env.VUE_APP_BACK_URL}/withdrawal?accounts=1`, requestOptions)
     .then(response => {
         if(!response.ok) throw new Error(`${response.status} - ${response.statusText}`);
         return response.json()

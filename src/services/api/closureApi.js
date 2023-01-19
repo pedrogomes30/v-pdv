@@ -6,7 +6,7 @@ export async function getClosure(manager,store){
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer "+Cookie.get('._token'));    
     var requestOptions = {
-      method: 'GET',
+      method: 'GET', 
       headers: myHeaders,
       redirect: 'follow'
     };    

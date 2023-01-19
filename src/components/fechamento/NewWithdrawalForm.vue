@@ -153,7 +153,9 @@ export default {
     },
       async beforeMount() {
         this.loading = true
+
         this.accounts = await getWithdrawalAccount();
+        console.log('with accounts', this.accounts)
         this.loading = false
       },
 }
