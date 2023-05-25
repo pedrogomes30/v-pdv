@@ -1,0 +1,47 @@
+#app {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+  
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #2c3e50;
+}
+
+a{
+  color: var(--text-primary) ;
+  text-decoration: none;
+}
+
+:root{
+  --primary:#ED0280;
+  --secondary: #FF4FAD;
+  --accent:radial-gradient( #d40279 , #541A3B);
+  --backgroundLight: #ffc9fd;
+  --backgroundDark: #541A3B;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --text-primary: #a7a8a8;
+}
+
+.btn-primary{
+  background-color: var(--primary);
+  border:none;
+  color: var(--secondary);
+}
+.btn-primary .hover{
+  background-color: var(--primary);
+  border:none;
+  color: var(--secondary);
+  --bs-btn-hover-border-color: var(--secondary);
+}

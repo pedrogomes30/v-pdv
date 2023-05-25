@@ -1,26 +1,14 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <nav class="navbar bg-dark" data-bs-theme="dark">
+    <router-link to="/">Inicio</router-link>
+    <router-link to="/cashier">Caixa</router-link>
+    <router-link to="/closure_cashier">Fechamento</router-link>
+    <router-link to="/history">Historico</router-link>
+    <router-link to="/storage_balance">Balanço</router-link>
+    <router-link to="/product_request">Solicitar Produto</router-link>
+  </nav>
+  <router-view/>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
