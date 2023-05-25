@@ -1,30 +1,14 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <nav class="navbar bg-dark" data-bs-theme="dark">
+    <router-link to="/">Inicio</router-link>
+    <router-link to="/cashier">Caixa</router-link>
+    <router-link to="/closure_cashier">Fechamento</router-link>
+    <router-link to="/history">Historico</router-link>
+    <router-link to="/storage_balance">Balanço</router-link>
+    <router-link to="/product_request">Solicitar Produto</router-link>
   </nav>
   <router-view/>
 </template>
 
 <style>
-#app {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
