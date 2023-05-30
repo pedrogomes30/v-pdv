@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar bg-dark" data-bs-theme="dark">
+  <nav class="navbar bg-dark" >
     <router-link to="/">Inicio</router-link>
     <router-link to="/cashier">Caixa</router-link>
     <router-link to="/closure_cashier">Fechamento</router-link>

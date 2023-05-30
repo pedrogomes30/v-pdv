@@ -47,9 +47,9 @@
             </div>
           </form>
         </div>
-         
+          
       </div>
-      <button type="submit" class="btn btn-primary px-3">Logar</button>
+      <button type="submit" class="btn btn-primary px-3 custom-element">Logar</button>
     </div>
   </div>
 </template>
