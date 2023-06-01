@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <Load />
     <nav v-if="showNavbar" class="navbar bg-dark position-fixed w-100">
       <router-link to="/">Inicio</router-link>
       <router-link to="/cashier">Caixa</router-link>
@@ -10,14 +10,16 @@
     </nav>
     <Alert />
     <router-view/>
-  </div>
+
 </template>
 
 <script>
 import Alert from './components/systemComponents/AlertComponent.vue'
+import Load from './components/systemComponents/LoadComponent.vue'
 export default {
   components: {
-    Alert
+    Alert,
+    Load
   },
   data() {
     return {
