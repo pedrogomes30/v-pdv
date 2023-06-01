@@ -1,55 +1,41 @@
 <template>
   <div class='d-flex align-items-center justify-content-center login' >
-
-    <div class="card text-center bg-dark ">
+    <div class="card text-center bg-dark px-2 pb-2">
       <div class="card-header">
-        <ul class="nav nav-tabs  justify-content-center">
-          <li class="nav-item active">
-            <a class="nav-link text-color-gray" data-bs-toggle="tab" href="#tab-login">Autenticar</a>
-          </li>
-          <li class="nav-item" data-bs-toggle="tab" href="#tab-store-cashier">
-            <a class="nav-link text-light">Loja / caixa</a>
-          </li>
-        </ul>
+         <span class="nav-link text-color-gray"  >Authenticação</span>
       </div>
-      <div class="card-body tab-content"> 
 
-        <div class="tab-pane fade show active" id="tab-login">
-          <form class="nav-link ">
-            <div class="mb-3 pl-3">
-              <label for="inputEmail" class="form-label text-light">
-              <i class="bi bi-person-circle text-light "></i>
-                Usuário</label>
-              <input type="email" class="form-control pl-3" id="login" aria-describedby="emailHelp">
-            </div>
-            <div class="mb-3">
-              <label for="inputPassword" class="form-label text-light">
-                <i class="bi bi-hash text-light "></i>
-                Senha</label>
-              <input type="password" class="form-control" id="password">
-            </div>
-          </form>
+      <form v-if="step" class="nav-link">
+        <div class="mb-3 pl-3">
+          <label for="inputEmail" class="form-label text-light">
+          <i class="bi bi-person-circle text-light "></i>
+            Usuário</label>
+          <input type="email" class="form-control pl-3" id="login" aria-describedby="emailHelp">
         </div>
+        <div class="mb-3">
+          <label for="inputPassword" class="form-label text-light">
+            <i class="bi bi-hash text-light "></i>
+            Senha</label>
+          <input type="password" class="form-control" id="password">
+        </div>
+      </form>
 
-        <div class="tab-pane fade show " id="tab-store-cashier">
-          <form class="nav-link ">
-            <div class="mb-3">
-              <label for="inputStore" class="form-label text-light">
-                <i class="bi bi-shop"></i>
-                Loja</label>
-              <input type="text" class="form-control" disabled id="store" aria-describedby="emailHelp">
-            </div>
-            <div class="mb-3">
-              <label for="inputCashier" class="form-label text-light">
-                <i class="bi bi-calculator text-light "></i>
-                Caixa</label>
-              <input type="text" class="form-control" id="cashier">
-            </div>
-          </form>
+      <form v-else class="nav-link">
+        <div class="mb-3">
+          <label for="inputStore" class="form-label text-light">
+            <i class="bi bi-shop"></i>
+            Loja</label>
+          <input type="text" class="form-control" disabled id="store" aria-describedby="emailHelp">
         </div>
-         
-      </div>
-      <button type="submit" class="btn btn-primary px-3">Logar</button>
+        <div class="mb-3">
+          <label for="inputCashier" class="form-label text-light">
+            <i class="bi bi-calculator text-light "></i>
+            Caixa</label>
+          <input type="text" class="form-control" id="cashier">
+        </div>
+      </form>
+
+      <button type="submit" @click="login()" class="btn btn-primary px-3 custom-element">Logar</button>
     </div>
   </div>
 </template>
@@ -57,15 +43,47 @@
 <script>
 export default {
   name: 'LoginPage',
-
   components: {
     
   },
   data:()=>({
-    navitem: false,
+    step: false,
+    load: true,
+    alert:{
+      show: true,
+      type: 'error',
+      message:'test'
+    }
   }),
   methods: {
-   
+    async login() {
+      if (!this.step) {
+        this.loading = true;
+        try {
+          
+          // this.$global.showNavbar = !this.$global.showNavbar;
+          // this.$eventBus.emit('navbar-updated', this.$global.showNavbar);
+          // console.log(this.$global.showNavBar);
+
+          // this.$global.alert = this.alert;
+          // this.$eventBus.emit('alert-show', this.$global.alert);
+          // console.log(this.$global.alert);
+
+          // this.$global.load = this.load;
+          // this.$eventBus.emit('load', this.$global.load);
+          // console.log(this.$global.load);
+          // setTimeout(() => {
+          //   this.$global.load = false;
+          //   this.$eventBus.emit('load', this.$global.load);
+          // }, 3000);
+        }
+        catch (e) {
+          console.log(e)
+        }
+        this.loading = false;
+      }
+    },
+
     
   }
 
