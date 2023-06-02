@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
+import LoginView from '../views/system_views/LoginView.vue'
 import StoreCashierView from '../views/StoreCashierView.vue'
-import NotFound from '../views/NotFoundView.vue'
-import SessionExpired from '../views/SessionExpiredView.vue'
+import NotFound from '../views/system_views/NotFoundView.vue'
+import SessionExpired from '../views/system_views/SessionExpiredView.vue'
 import CashierView from '../views/CashierView.vue'
 import ClosureView from '../views/ClosureView.vue'
 import HistorySaleView from '../views/HistorySaleView.vue'
@@ -12,6 +12,7 @@ import HomeView from '../views/HomeView.vue'
 import Guard from './middleware'
 
 const routes = [
+  //sys page
   { 
     path: '/login',name: 'login',component: LoginView,
   },
@@ -19,14 +20,14 @@ const routes = [
     path: '/expired',name: 'SessionExpiredView',component: SessionExpired
   },
   { 
-    path: '',name: 'NotFound',component: NotFound,
+    path: '/:catchAll(.*)',name: 'NotFound',component: NotFound,
   },
   { 
     path: '/start',name: 'start',component: StoreCashierView,beforeEnter:Guard.auth
   },
   //pos pages
   { 
-    path: '/',name: 'home',component: HomeView,beforeEnter:Guard.auth
+    path: '',name: 'home',component: HomeView,beforeEnter:Guard.auth
   },
   { 
     path: '/cashier',name: 'cashier',component: CashierView,beforeEnter:Guard.auth
