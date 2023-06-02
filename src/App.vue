@@ -7,6 +7,7 @@
       <router-link to="/history">Historico</router-link>
       <router-link to="/storage_balance">Balanço</router-link>
       <router-link to="/product_request">Solicitar Produto</router-link>
+      <router-link to="/about">Informações</router-link>
     </nav>
     <Alert />
     <router-view/>
