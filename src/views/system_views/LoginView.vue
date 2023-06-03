@@ -10,7 +10,7 @@
           <label for="inputEmail" class="form-label text-light">
           <i class="bi bi-person-circle text-light "></i>
             Usuário</label>
-          <input type="email" class="form-control pl-3" id="login" v-model="tempUser.login" aria-describedby="emailHelp">
+          <input type="email" class="form-control pl-3" id="login" v-model="tempUser.user" aria-describedby="emailHelp">
         </div>
         <div class="mb-3">
           <label for="inputPassword" class="form-label text-light">
@@ -35,12 +35,13 @@
         </div>
       </form>
 
-      <button type="submit" @click="login()" class="btn btn-primary px-3 custom-element">Logar</button>
+      <button type="submit" @click="connect()" class="btn btn-primary px-3 custom-element">{{ step ? 'Entrar' : 'Avançar'}}</button>
     </div>
   </div>
 </template>
 
 <script>
+import { login } from '../../services/api/auth'
 export default {
   name: 'LoginPage',
   components: {
@@ -51,23 +52,23 @@ export default {
     load: true,
     alert:{
       show: true,
-      type: 'error',
+      type: 'info',
       message:'test'
     },
     tempUser:{
-      login:'',
+      user:'',
       pass:'',
       storage: '',
       cashier: ''
     }
   }),
   methods: {
-    async login() {
+    async connect() {
       this.$global.load = true;
       this.$eventBus.emit('load', this.$global.load);
       if (this.validate(this.step)) {
         try {  
-          console.log(this.tempUser)
+          login(this.tempUser.user, this.tempUser.pass);
           this.step = true      
         }
         catch (e) {
