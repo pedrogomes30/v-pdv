@@ -68,8 +68,8 @@ export default {
       this.$eventBus.emit('load', this.$global.load);
       if (this.validate(this.step)) {
         try {  
-          login(this.tempUser.user, this.tempUser.pass);
-          this.step = true      
+          await login(this.tempUser.user, this.tempUser.pass);
+          this.step = true       
         }
         catch (e) {
           this.$global.alert = {show:true,type:'error',message:e};
@@ -77,7 +77,7 @@ export default {
         }
       
       }else{
-        this.$global.alert = {show:true,type:'error',message:'formulário inválido'};
+        this.$global.alert = {show:true,type:'error',message:'formulário inválido !!'};
         this.$eventBus.emit('alert-show', this.$global.alert);    
       }
       this.$global.load = false;
@@ -86,7 +86,7 @@ export default {
     },
     validate(step){
       if(!step){
-        if(this.tempUser.login == '' || this.tempUser.login == null ) {return false}
+        if(this.tempUser.user == '' || this.tempUser.user == null ) {return false}
         if(this.tempUser.pass == ''  || this.tempUser.pass == null )  {return false}
       }else{
         if(this.tempUser.storage == '' || this.tempUser.storage == null ) {return false}
