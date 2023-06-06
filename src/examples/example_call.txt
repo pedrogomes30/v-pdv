@@ -1,12 +1,5 @@
-<template>
-  
-</template>
+MESSAGES EXAMPLES
 
-<script>
-export default {
-
-}
-</script>
 this.$global.showNavbar = !this.$global.showNavbar;
 this.$eventBus.emit('navbar-updated', this.$global.showNavbar);
 console.log(this.$global.showNavBar);
@@ -22,6 +15,3 @@ setTimeout(() => {
   this.$global.load = false;
   this.$eventBus.emit('load', this.$global.load);
 }, 3000);
-<style>
-
-</style>

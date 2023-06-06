@@ -1,15 +1,15 @@
 import axios from './index';
-import Cookie from 'js-cookie'
+import TokenService from '../token'
 
 export function login(username, password) {
-  return axios.get('/auth', { username, password })
+  return axios.get(`/auth/${username}/${password}`)
     .then(response => {
-      console.log('RESPONSE',response)
-        Cookie.set('-token',response.data.access)
-        return true;
+      TokenService.setToken(response.data.data.access);
+      return true;
     })
     .catch(error => {
-      throw new Error('Falha ao realizar o login' + error);
+      console.log('RESPONSE ERROR', error);
+      throw new Error(error);
     });
 }
 
