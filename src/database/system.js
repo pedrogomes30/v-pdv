@@ -3,7 +3,8 @@ import DB from "./index"
 const ENTITY = 'system';
 
 export default{
-async delete(entity) {
+
+	async delete(entity) {
 
 		let db = await DB.getDb(ENTITY);
 
@@ -18,6 +19,7 @@ async delete(entity) {
 			store.delete(entity.id);
 		});	
 	},
+
 	async get() {
 
 		let db = await DB.getDb(ENTITY);
@@ -44,41 +46,24 @@ async delete(entity) {
 		});
 	},
 
-	async saveConfigs(configs) {
-		let db = await DB.getDb('configs');
-		let store = db.transaction(['configs'], 'readwrite').objectStore('configs');
-	
+	async save(entity) {
+		let db = await DB.getDb(ENTITY);
+
 		return new Promise(resolve => {
-		let request = store.clear();
-	
-		request.onsuccess = () => {
-			let index = 0;
-			configs.forEach(config => {
-			config.index = index;
-			store.add(config);
-			index++;
-			});
-	
-			resolve();
-		};
+
+			let trans = db.transaction([ENTITY],'readwrite');
+			trans.oncomplete = () => {
+				resolve();
+			};
+
+			let store = trans.objectStore(ENTITY);
+			store.put(entity);
+
 		});
+	
 	},
-	
-	async getConfigByIndex(index) {
-		let db = await DB.getDb('configs');
-		let store = db.transaction(['configs'], 'readonly').objectStore('configs');
-		let indexStore = store.index('index');
-	
-		return new Promise(resolve => {
-		let request = indexStore.get(index);
-	
-		request.onsuccess = () => {
-			resolve(request.result);
-		};
-		});
-	},
-	
-	
+
+		
 	async clear() {
 		let db = await DB.getDb(ENTITY);
 		return new Promise(resolve => {
@@ -111,7 +96,6 @@ async delete(entity) {
 		};
 		});
 	}
-
 
 } 
 

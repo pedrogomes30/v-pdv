@@ -17,7 +17,6 @@ export function start() {
       return response.data.data.data;
     })
     .catch(error => {
-      console.log('RESPONSE ERROR', error);
       throw new Error(error);
     });
 }

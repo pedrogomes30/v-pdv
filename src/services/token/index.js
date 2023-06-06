@@ -11,8 +11,8 @@ const TokenService = {
     return token;
   },
 
-  setToken(token) {
-    Cookie.set('_token', token);
+  async setToken(token) {
+    await Cookie.set('_token', token);
   },
 
   removeToken() {
@@ -32,15 +32,12 @@ const TokenService = {
 
     const payload = tokenParts[1];
     const decodedPayload = atob(payload);
-
     try {
       const payloadData = JSON.parse(decodedPayload);
       const currentTime = Math.floor(Date.now() / 1000);
-
-      if (payloadData.exp && payloadData.exp < currentTime) {
+      if (payloadData.expires && payloadData.expires < currentTime) {
         return false;
       }
-
       return true;
     } catch (error) {
       return false;

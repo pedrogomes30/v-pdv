@@ -108,11 +108,7 @@ export default {
       await system.save(config)
       this.tempUser.storage = config.store.store_name
       this.cashiers = config.store.store_cashiers
-      console.log('test index',await system.getIndex('cashier_id'))
     },
-    goHome(){
-
-    }
   }
 
 }

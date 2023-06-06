@@ -8,7 +8,6 @@ export function login(username, password) {
       return true;
     })
     .catch(error => {
-      console.log('RESPONSE ERROR', error);
       throw new Error(error);
     });
 }
