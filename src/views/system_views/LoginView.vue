@@ -31,17 +31,23 @@
           <label for="inputCashier" class="form-label text-light">
             <i class="bi bi-calculator text-light "></i>
             Caixa</label>
-          <select type="text" class="form-control" v-model="tempUser.cashier" id="cashier"/>
+          <select class="form-select" v-model="tempUser.cashier" id="cashier">
+            <option value="">Selecione um caixa</option>
+            <option v-for="cashier in cashiers" :value="cashier.cashier_name" :key="cashier.cashier_id">{{ cashier.cashier_name }}</option>
+          </select>
         </div>
       </form>
 
-      <button type="submit" @click="connect()" class="btn btn-primary px-3 custom-element">{{ step ? 'Entrar' : 'Avançar'}}</button>
+      <button type="submit" @click="!step ? connect() : goHome()" class="btn btn-primary px-3 custom-element">{{ step ? 'Entrar' : 'Avançar'}}</button>
     </div>
   </div>
 </template>
 
 <script>
 import { login } from '../../services/api/auth'
+import { start } from '../../services/api/start'
+import system from '../../database/system'
+
 export default {
   name: 'LoginPage',
   components: {
@@ -60,16 +66,29 @@ export default {
       pass:'',
       storage: '',
       cashier: ''
-    }
+    },
+    cashiers:[]
   }),
   methods: {
+    validate(step){
+      if(!step){
+        if(this.tempUser.user == '' || this.tempUser.user == null ) {return false}
+        if(this.tempUser.pass == ''  || this.tempUser.pass == null )  {return false}
+      }else{
+        if(this.tempUser.storage == '' || this.tempUser.storage == null ) {return false}
+        if(this.tempUser.cashier == '' || this.tempUser.cashier == null ) {return false}
+      }
+      return true;
+    },
     async connect() {
       this.$global.load = true;
       this.$eventBus.emit('load', this.$global.load);
       if (this.validate(this.step)) {
         try {  
-          login(this.tempUser.user, this.tempUser.pass);
-          this.step = true      
+          await login(this.tempUser.user, this.tempUser.pass);
+          let config =  await start();
+          this.setConfigs(config);
+          this.step = true;    
         }
         catch (e) {
           this.$global.alert = {show:true,type:'error',message:e};
@@ -77,24 +96,19 @@ export default {
         }
       
       }else{
-        this.$global.alert = {show:true,type:'error',message:'formulário inválido'};
+        this.$global.alert = {show:true,type:'error',message:'formulário inválido !!'};
         this.$eventBus.emit('alert-show', this.$global.alert);    
       }
       this.$global.load = false;
       this.$eventBus.emit('load', false);
       
     },
-    validate(step){
-      if(!step){
-        if(this.tempUser.login == '' || this.tempUser.login == null ) {return false}
-        if(this.tempUser.pass == ''  || this.tempUser.pass == null )  {return false}
-      }else{
-        if(this.tempUser.storage == '' || this.tempUser.storage == null ) {return false}
-        if(this.tempUser.cashier == '' || this.tempUser.cashier == null ) {return false}
-      }
-      return true;
-    }
-    
+    async setConfigs(config){
+      await system.clear();
+      await system.save(config)
+      this.tempUser.storage = config.store.store_name
+      this.cashiers = config.store.store_cashiers
+    },
   }
 
 }
