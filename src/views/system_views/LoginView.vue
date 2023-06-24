@@ -45,7 +45,7 @@
 
 <script>
 import { login } from '../../services/api/auth'
-import { start } from '../../services/api/start'
+import { start, setCashier } from '../../services/api/start'
 import system from '../../database/system'
 
 export default {
@@ -102,6 +102,24 @@ export default {
       this.$global.load = false;
       this.$eventBus.emit('load', false);
       
+    },
+    async goHome(){
+      if (this.validate(this.step)) {
+        try {  
+          let data = await system.get();
+          let cashiers = data[0].store.store_cashiers;
+          let filteredCashiers = cashiers.filter(cashier => cashier.cashier_name === this.tempUser.cashier);
+          await setCashier(filteredCashiers[0].cashier_id)
+          data[0].cashier_id = filteredCashiers[0].cashier_id;
+          data[0].cashier_name = this.tempUser.cashier;
+          await system.clear();
+          await system.save(data)
+        } catch (e) {
+          this.$global.alert = {show:true,type:'error',message:e};
+          this.$eventBus.emit('alert-show', this.$global.alert);    
+        }
+      }
+
     },
     async setConfigs(config){
       await system.clear();
