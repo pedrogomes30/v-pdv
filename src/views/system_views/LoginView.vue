@@ -46,7 +46,9 @@
 <script>
 import { login } from '../../services/api/auth'
 import { start, setCashier } from '../../services/api/start'
+import router from '@/router';
 import system from '../../database/system'
+import TokenService from '../../services/token' 
 
 export default {
   name: 'LoginPage',
@@ -113,13 +115,15 @@ export default {
           data[0].cashier_id = filteredCashiers[0].cashier_id;
           data[0].cashier_name = this.tempUser.cashier;
           await system.clear();
-          await system.save(data)
+          await system.save(data);
+          router.push("/");
+          this.$global.showNavbar = true;
+          this.$eventBus.emit('navbar-updated', this.$global.showNavbar);
         } catch (e) {
           this.$global.alert = {show:true,type:'error',message:e};
           this.$eventBus.emit('alert-show', this.$global.alert);    
         }
       }
-
     },
     async setConfigs(config){
       await system.clear();
@@ -127,8 +131,17 @@ export default {
       this.tempUser.storage = config.store.store_name
       this.cashiers = config.store.store_cashiers
     },
-  }
-
+  },
+  beforeMount() {
+    if(TokenService.getToken()){
+      router.push("/");
+      this.$global.showNavbar = true;
+      this.$eventBus.emit('navbar-updated', this.$global.showNavbar);
+    }else{
+      this.$global.showNavbar = false;
+      this.$eventBus.emit('navbar-updated', this.$global.showNavbar);
+    }
+  },
 }
 </script>
 

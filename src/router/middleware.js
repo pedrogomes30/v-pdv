@@ -2,7 +2,7 @@ import TokenService from '../services/token'
 
 export default{
     auth(to, from, next){
-        if(!TokenService.isValid()){
+        if(!TokenService.getToken()){
             next('/expired'); 
         }
         next();
