@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .not-found-container {
   display: flex;
   flex-direction: column;
