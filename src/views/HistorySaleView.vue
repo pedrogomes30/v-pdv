@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class='base-content'>
         HISTORY VIEW
     </div>
 </template>

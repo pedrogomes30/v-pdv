@@ -1,5 +1,5 @@
 import Cookie from "js-cookie";
-import router from '@/router';
+import router from '@/services/router';
 
 const DB_NAME = process.env.VUE_APP_DB_NAME
 const DB_VERSION = process.env.VUE_APP_DB_VERSION;

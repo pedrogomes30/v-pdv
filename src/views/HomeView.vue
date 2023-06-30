@@ -1,11 +1,14 @@
 <template>
-  <div class="container">
-   
+  <div class="base-content">
+    CONTEUDO AQUI
   </div>
 </template>
 
-<script>
+<style>
 
+</style>
+
+<script>
 export default {
   name: 'HomeView',
   components: {

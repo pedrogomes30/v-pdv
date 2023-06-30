@@ -1,4 +1,4 @@
-import TokenService from '../services/token'
+import TokenService from '../token'
 
 export default{
     auth(to, from, next){

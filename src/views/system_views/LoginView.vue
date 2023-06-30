@@ -46,8 +46,8 @@
 <script>
 import { login } from '../../services/api/auth'
 import { start, setCashier } from '../../services/api/start'
-import router from '@/router';
-import system from '../../database/system'
+import router from '@/services/router';
+import system from '../../services/database/system'
 import TokenService from '../../services/token' 
 
 export default {
