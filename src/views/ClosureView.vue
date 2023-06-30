@@ -1,5 +1,7 @@
 <template>
-    <div>CLOSURE VIEW</div>
+    <div class='base-content'>
+        CLOSURE VIEW
+    </div>
 </template>
 
 <script>

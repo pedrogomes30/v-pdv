@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router';
+import router from './services/router';
 import mitt from 'mitt';
 import './registerServiceWorker';
 import './assets/styles.css';

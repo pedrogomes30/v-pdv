@@ -6,6 +6,22 @@
   </div>
 </template>
 
+<script>
+  import router from '@/services/router';
+  export default {
+    name:'SessionExpiredView',
+    mounted(){
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000)
+    },
+    beforeMount() {
+      this.$global.showNavbar = false;
+      this.$eventBus.emit('navbar-updated', this.$global.showNavbar);
+    },
+  }
+</script>
+
 <style>
 .session-expired-container {
   display: flex;
@@ -20,15 +36,3 @@
   margin-bottom: 1rem;
 }
 </style>
-
-<script>
-    import router from '@/router';
-    export default {
-        name:'SessionExpiredView',
-        mounted(){
-            setTimeout(() => {
-                router.push("/login");
-            }, 3000)
-        }
-    }
-</script>

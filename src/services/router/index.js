@@ -1,18 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/system_views/LoginView.vue'
-import StoreCashierView from '../views/StoreCashierView.vue'
-import NotFound from '../views/system_views/NotFoundView.vue'
-import SessionExpired from '../views/system_views/SessionExpiredView.vue'
-import CashierView from '../views/CashierView.vue'
-import ClosureView from '../views/ClosureView.vue'
-import HistorySaleView from '../views/HistorySaleView.vue'
-import ProductPickView from '../views/ProductPickView'
-import ProductBalance from '../views/ProductBalance.vue'
-import HomeView from '../views/HomeView.vue'
+import LoginView from '../../views/system_views/LoginView'
+import NotFound from '../../views/system_views/NotFoundView.vue'
+import SessionExpired from '../../views/system_views/SessionExpiredView.vue'
+import CashierView from '../../views/CashierView.vue'
+import ClosureView from '../../views/ClosureView.vue'
+import HistorySaleView from '../../views/HistorySaleView.vue'
+import ProductPickView from '../../views/ProductPickView'
+import ProductBalance from '../../views/ProductBalance.vue'
+import HomeView from '../../views/HomeView.vue'
 import Guard from './middleware'
 
 const routes = [
-  //sys page
+  //sys page/
   { 
     path: '/login',name: 'login',component: LoginView,
   },
@@ -21,9 +20,6 @@ const routes = [
   },
   { 
     path: '/:catchAll(.*)',name: 'NotFound',component: NotFound,
-  },
-  { 
-    path: '/start',name: 'start',component: StoreCashierView,beforeEnter:Guard.auth
   },
   //pos pages
   { 

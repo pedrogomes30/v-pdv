@@ -1,49 +1,47 @@
 <template>
   <Load />
-  <nav v-if="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark position-fixed w-100 nav">
+  <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav ">
     <router-link to="/" class="navbar-brand">
       <img class="logo-image" alt="Home" src="./assets/logo.png">
     </router-link>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
+      <ul class="navbar-nav ml-auto d-flex flex-row ">
+        <li class="nav-item" title='Caixa'>
           <router-link to="/cashier" class="nav-link">
             <i class="bi bi-calculator"></i>
-            Caixa
+            <a class=show-on-mobile>Caixa</a>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" title='Historico'>
           <router-link to="/history" class="nav-link">
             <i class="bi bi-clock-history"></i>
-            Historico
+            <a class=show-on-mobile>Historico</a>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" title='Fechamento'>
           <router-link to="/closure_cashier" class="nav-link">
             <i class="bi bi-cart-x"></i>
-            Fechamento
+            <a class=show-on-mobile>Fechamento</a>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" title='Balanço'>
           <router-link to="/storage_balance" class="nav-link">
             <i class="bi bi-calculator-fill"></i>
-            Balanço
+            <a class=show-on-mobile>Balanço</a>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" title='Solicitar Produto'>
           <router-link to="/product_request" class="nav-link">
             <i class="bi bi-box2-heart"></i>
-            Solicitar Produto
+            <a class=show-on-mobile>Solicitar Produto</a>            
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" title='Informações'>
           <router-link to="/about" class="nav-link">
             <i class="bi bi-info-circle"></i>
-            Informações
+            <a class=show-on-mobile>Informações</a>
           </router-link>
         </li>
       </ul>
-    </div>
     <div class="user-info ml-auto ">
       <div class="dropdown">
         <div class="btn btn-dark dropdown-toggle m-0 p-0" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="toggleDropdown">
@@ -67,13 +65,15 @@
     </div>
   </nav>
   <Alert />
-  <router-view />
+  <div class="content-main">
+    <router-view />
+  </div>
 </template>
 
 <script>
 import Alert from './components/systemComponents/AlertComponent.vue'
 import Load from './components/systemComponents/LoadComponent.vue'
-import system from './database/system'
+import system from './services/database/system'
 export default {
   components: {
     Alert,
@@ -91,12 +91,15 @@ export default {
     };
   },
   async created() {
-    let data = await system.get();
-    this.user.name = data[0][0].user_name;
-    this.user.store = data[0][0].store.store_name;
-    this.user.cashier = data[0][0].cashier_name;
-    this.user.photo = data[0][0].img;
     this.$eventBus.on('navbar-updated', this.updateNavbar);
+    let data = await system.get();
+    console.log(data);
+    if(data.lenght != 0){
+      this.user.name = data[0][0].user_name;
+      this.user.store = data[0][0].store.store_name;
+      this.user.cashier = data[0][0].cashier_name;
+      this.user.photo = data[0][0].img;
+    }
   },
   async beforeUnmount() {
     this.$eventBus.off('navbar-updated', this.updateNavbar);
@@ -124,12 +127,11 @@ export default {
 
 <style>
 .logo-image {
-  height: 40px; /* Ajuste a altura conforme necessário */
+  height: 40px;
 }
 .user-info {
   display: flex;
   align-items: center;
-  color: #fff;
 }
 
 .user-info img,
@@ -152,12 +154,35 @@ export default {
 }
 
 .dropdown-toggle::after {
-  display: none; /* Remover a seta do dropdown */
+  display: none; 
 }
 
-.nav{
-  padding-right: 10rem;
-  padding-left: 10rem;
+.nav {
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: 2rem;
+  margin-left: 2rem;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
+.content-main {
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.base-content {
+  background-color: var(--bs-gray-900);
+  border-radius: 10px;
+  margin-top:0.5rem;
+  padding:1rem;
+  height: 90vh; 
+  width: 100%; 
+}
+
+@media (max-width: 1024px) {
+  .show-on-mobile {
+    display: none;
+  }
+}
 </style>

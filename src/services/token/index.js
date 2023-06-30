@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie';
-import router from '../../router';
+import router from '../router';
 
 const TokenService = {
   getToken() {

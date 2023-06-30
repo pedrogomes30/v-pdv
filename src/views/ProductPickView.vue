@@ -1,5 +1,7 @@
 <template>
-    <div>PRODUCT PICK VIEW</div>
+    <div class='base-content'>
+        PRODUCT PICK VIEW
+    </div>
 </template>
 
 <script>
