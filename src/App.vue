@@ -1,67 +1,71 @@
 <template>
   <Load />
-  <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav ">
+  <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav p-0 px-2 ">
     <router-link to="/" class="navbar-brand">
       <img class="logo-image" alt="Home" src="./assets/logo.png">
     </router-link>
-      <ul class="navbar-nav ml-auto d-flex flex-row ">
-        <li class="nav-item" title='Caixa'>
+      <ul class="navbar-nav ml-auto d-flex flex-row nav-menu ">
+        <li class="nav-item px-2" title='Caixa'>
           <router-link to="/cashier" class="nav-link">
-            <i class="bi bi-calculator"></i>
+            <i class="bi bi-calculator px-2"></i>
             <a class=show-on-mobile>Caixa</a>
           </router-link>
         </li>
-        <li class="nav-item" title='Historico'>
+        <li class="nav-item px-2" title='Historico'>
           <router-link to="/history" class="nav-link">
-            <i class="bi bi-clock-history"></i>
+            <i class="bi bi-clock-history px-2"></i>
             <a class=show-on-mobile>Historico</a>
           </router-link>
         </li>
-        <li class="nav-item" title='Fechamento'>
+        <li class="nav-item px-2" title='Fechamento'>
           <router-link to="/closure_cashier" class="nav-link">
-            <i class="bi bi-cart-x"></i>
+            <i class="bi bi-cart-x px-2"></i>
             <a class=show-on-mobile>Fechamento</a>
           </router-link>
         </li>
-        <li class="nav-item" title='Balanço'>
+        <li class="nav-item px-2" title='Balanço'>
           <router-link to="/storage_balance" class="nav-link">
-            <i class="bi bi-calculator-fill"></i>
+            <i class="bi bi-calculator-fill px-2"></i>
             <a class=show-on-mobile>Balanço</a>
           </router-link>
         </li>
-        <li class="nav-item" title='Solicitar Produto'>
+        <li class="nav-item px-2" title='Solicitar Produto'>
           <router-link to="/product_request" class="nav-link">
-            <i class="bi bi-box2-heart"></i>
+            <i class="bi bi-box2-heart px-2"></i>
             <a class=show-on-mobile>Solicitar Produto</a>            
           </router-link>
         </li>
-        <li class="nav-item" title='Informações'>
+        <li class="nav-item px-2" title='Informações'>
           <router-link to="/about" class="nav-link">
-            <i class="bi bi-info-circle"></i>
+            <i class="bi bi-info-circle px-2"></i>
             <a class=show-on-mobile>Informações</a>
           </router-link>
         </li>
       </ul>
     <div class="user-info ml-auto ">
       <div class="dropdown">
-        <div class="btn btn-dark dropdown-toggle m-0 p-0" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="toggleDropdown">
+        <div class="btn btn-dark dropdown-toggle user-info" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="toggleDropdown">
           <div class="userinfo">
             <span class="text-sm">
               {{ user.name }}<br>
               <small>{{ user.store }} - {{ user.cashier }}</small>
             </span>
           </div>
+          <div class="info-img">
+            <img v-if="user.photo !== ''" class="rounded-circle user-photo " :src="user.photo" :alt="user.name">
+            <i v-else class="bi bi-person-circle "></i>
+          </div>
         </div>
         <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="userDropdown">
+          <!-- items for user profile menu -->
           <div class="dropdown-header">{{ user.name }}</div>
-          <div class="dropdown-item">{{ user.store }}</div>
-          <div class="dropdown-item">{{ user.cashier }}</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item disable">{{ user.store }}</div>
+          <div class="dropdown-item disable">{{ user.cashier }}</div>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Sair</a>
         </div>
       </div>
-      <img v-if="user.photo !== ''" class="rounded-circle user-photo " :src="user.photo" :alt="user.name">
-      <i v-else class="bi bi-person-circle "></i>
     </div>
   </nav>
   <Alert />
@@ -83,18 +87,17 @@ export default {
     return {
       showNavbar: true,
       user: {
-        name: 'John Doe', // Nome do usuário
-        store: 'Minha Loja', // Nome da loja
-        cashier: 'Caixa 1', // Número ou identificador do caixa
-        photo: '' // URL ou caminho da foto do usuário
+        name: 'John Doe', 
+        store: 'Minha Loja', 
+        cashier: 'Caixa 1', 
+        photo: '' 
       }
     };
   },
   async created() {
     this.$eventBus.on('navbar-updated', this.updateNavbar);
     let data = await system.get();
-    console.log(data);
-    if(data.lenght != 0){
+    if(data.length > 0){
       this.user.name = data[0][0].user_name;
       this.user.store = data[0][0].store.store_name;
       this.user.cashier = data[0][0].cashier_name;
@@ -134,6 +137,7 @@ export default {
   align-items: center;
 }
 
+
 .user-info img,
 .user-info i {
   margin-right: 5px;
@@ -147,10 +151,6 @@ export default {
 
 .user-info .userinfo span {
   font-size: 0.75rem;
-}
-
-.user-info .userinfo small {
-  font-size: 0.65rem;
 }
 
 .dropdown-toggle::after {
@@ -178,6 +178,12 @@ export default {
   padding:1rem;
   height: 90vh; 
   width: 100%; 
+}
+
+.nav-menu {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 1024px) {
