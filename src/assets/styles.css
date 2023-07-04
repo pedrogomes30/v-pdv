@@ -70,6 +70,7 @@ a{
     --bs-btn-hover-bg: var(--bs-primary);
     --bs-code-color: var(--bs-secondary);
     --bs-highlight-bg: var(--bs-gray-700);
+    --bs-focus-ring-color:var(--bs-primary);
     
     --bs-border-width: 1px;
     --bs-border-style: solid;
@@ -87,6 +88,7 @@ a{
     --bs-border-radius-pill: 50rem;
 }
 
+
 .btn-primary {
     --bs-btn-color: var(--bs-gray-400);
     --bs-btn-bg: var(--bs-primary);
@@ -94,7 +96,7 @@ a{
     --bs-btn-hover-color: var(--bs-black);
     --bs-btn-hover-bg: var(--bs-white) ;
     --bs-btn-hover-border-color: var(--bs-black);
-    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-focus-shadow-rgb: var(--bs-primary);
     --bs-btn-active-color: var(--bs-white);
     --bs-btn-active-bg: var(--bs-primary);
     --bs-btn-active-border-color: var(--bs-black);
@@ -113,5 +115,21 @@ a{
     --bs-nav-tabs-link-active-bg: #fff;
     --bs-nav-tabs-link-active-border-color: #dee2e6 #dee2e6 #fff;
     border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+}
+
+.card{
+  border: 1px solid var(--bs-black);
+}
+
+.card-header{
+  border-bottom: 1px solid var(--bs-black);
+}
+
+.dropdown-menu{
+  border: 1px solid var(--bs-black);
+}
+
+.dropdown-divider{
+  border-top: 1px solid var(--bs-black);
 }
 

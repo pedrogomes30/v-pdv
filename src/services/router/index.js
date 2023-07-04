@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../../views/system_views/LoginView'
+import AboutView from '../../views/system_views/AboutView'
 import NotFound from '../../views/system_views/NotFoundView.vue'
 import SessionExpired from '../../views/system_views/SessionExpiredView.vue'
 import CashierView from '../../views/CashierView.vue'
@@ -39,6 +40,9 @@ const routes = [
   },
   { 
     path: '/product_request',name: 'product_request',component: ProductPickView,beforeEnter:Guard.auth
+  },
+  { 
+    path: '/about',name: 'aboutPage',component: AboutView,beforeEnter:Guard.auth
   },
  
 ]

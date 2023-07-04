@@ -1,18 +1,33 @@
 <template>
   <div class="base-content">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="row h-100">
+      <div class="col-6">
+        <div class="product-list-wrapper">
+          <ProductList />
+        </div>
+      </div>
+      <div class="col-1 v-divider"></div>
+      <div class="col-5">
+        Conteúdo da coluna 3
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import ProductList from '@/components/ProductsComponents/ProductList.vue'
 
 export default {
   name: 'CashierView',
   components: {
-    HelloWorld
+    ProductList
   }
 }
 </script>
+
+<style scoped>
+.product-list-wrapper {
+  overflow-y: auto;
+}
+
+</style>

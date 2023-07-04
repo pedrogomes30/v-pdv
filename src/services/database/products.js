@@ -1,11 +1,12 @@
-import DB  from "./index"
+import DB from "./index"
 
-const ENTITY = 'products'
+const ENTITY = 'products';
 
 export default{
-    async delete(entity) {
 
-		let db = await DB.getDb(ENTITY);
+	async delete(entity) {
+
+		let db = await DB.getDb();
 
 		return new Promise(resolve => {
 
@@ -18,6 +19,7 @@ export default{
 			store.delete(entity.id);
 		});	
 	},
+
 	async get() {
 
 		let db = await DB.getDb(ENTITY);
@@ -59,6 +61,41 @@ export default{
 
 		});
 	
-	}    
+	},
+
+		
+	async clear() {
+		let db = await DB.getDb(ENTITY);
+		return new Promise(resolve => {
+			let trans = db.transaction([ENTITY], 'readwrite');
+			trans.oncomplete = () => {
+				resolve();
+			};
+			let store = trans.objectStore(ENTITY);
+			store.clear();
+		});
+	},
+
+	async getIndex(index) {
+		let db = await DB.getDb(ENTITY);
+	
+		return new Promise(resolve => {
+		let trans = db.transaction([ENTITY], 'readonly');
+		trans.oncomplete = () => {
+			resolve(config);
+		};
+	
+		let store = trans.objectStore(ENTITY);
+		let config;
+	
+		store.get(1).onsuccess = e => {
+			let result = e.target.result;
+			if (result && result.configs && result.configs.length > index) {
+			config = result.configs[index];
+			}
+		};
+		});
+	}
 
 } 
+

@@ -7,7 +7,7 @@ let DB;
 
 
 export default {
-	async  getDb(entity) {
+	async  getDb() {
 
 		return new Promise((resolve, reject) => {
 			if(DB) { return resolve(DB); }
@@ -29,8 +29,12 @@ export default {
 			
 			request.onupgradeneeded = e => {
 				let db = e.target.result;
-				db.createObjectStore(entity, { autoIncrement: true, keyPath:'id' });
+				db.createObjectStore('products', { autoIncrement: true, keyPath:'id' });
+				db.createObjectStore('sales', { autoIncrement: true, keyPath:'id' });
+				db.createObjectStore('system', { autoIncrement: true, keyPath:'id' });
+				db.createObjectStore('closures', { autoIncrement: true, keyPath:'id' });
 			};
 		});
-	}
+	},
+	
 }
