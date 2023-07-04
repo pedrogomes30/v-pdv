@@ -1,7 +1,7 @@
 <template>
   <Load />
   <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav p-0 px-2 ">
-    <router-link to="/" class="navbar-brand">
+    <router-link to="/" class="navbar-brand ">
       <img class="logo-image" alt="Home" src="./assets/logo.png">
     </router-link>
       <ul class="navbar-nav ml-auto d-flex flex-row nav-menu ">
@@ -128,7 +128,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .logo-image {
   height: 40px;
 }
@@ -136,7 +136,6 @@ export default {
   display: flex;
   align-items: center;
 }
-
 
 .user-info img,
 .user-info i {
@@ -164,20 +163,12 @@ export default {
   margin-left: 2rem;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  border: 1px solid black;
 }
 
 .content-main {
   padding-right: 2rem;
   padding-left: 2rem;
-}
-
-.base-content {
-  background-color: var(--bs-gray-900);
-  border-radius: 10px;
-  margin-top:0.5rem;
-  padding:1rem;
-  height: 90vh; 
-  width: 100%; 
 }
 
 .nav-menu {
@@ -186,9 +177,52 @@ export default {
   align-items: center;
 }
 
+.router-link-active:not([href="/"]) {
+  background: var(--bs-primary);
+  border-radius: 10px;
+  color: var(--bs-gray-200); 
+  transition: background-color 0.3s, font-size 0.3s;
+  border: 1px solid black;
+}
+
+
+.router-link-active a {
+  color: var(--bs-gray-200);
+  font-size: 1.1rem; 
+  padding-right:0.40rem;
+}
+
 @media (max-width: 1024px) {
   .show-on-mobile {
     display: none;
   }
 }
+
+</style>
+
+
+<style>
+/* NOT SCOPED */
+.base-content {
+  background-color: var(--bs-gray-900);
+  border-radius: 10px;
+  margin-top:0.5rem;
+  padding:1rem;
+  height: 90vh; 
+  width: 100%;
+  border: 1px solid black;
+}
+
+.v-divider {
+  border-left: 1px solid black;
+  height: 100%;
+  margin-left: -1px; 
+}
+
+.h-divider {
+  border-bottom: 1px solid black;
+  height: 100%;
+  margin-left: -1px; 
+}
+
 </style>

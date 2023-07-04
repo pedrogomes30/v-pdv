@@ -1,6 +1,6 @@
 import DB from "./index"
 
-const ENTITY = 'system';
+const ENTITY = 'closures';
 
 export default{
 
