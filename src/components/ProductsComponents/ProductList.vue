@@ -1,12 +1,12 @@
 <template>
-  <div class="product-list w-100">
+  <div class="product-list p-0">
     <!-- search -->
     <div class="search-container">
       <input
         type="text"
         v-model="searchQuery"
         placeholder="Pesquisar produtos..."
-        class="form-control w-75"
+        class="form-control "
       />
       <button @click="updateProducts" class="mx-1 btn btn-primary">
         <i class="bi bi-arrow-repeat px-2"></i>
@@ -14,7 +14,7 @@
     </div>
     <!-- category -->
     <div class="category-container">
-      <select v-model="selectedCategory" class="form-select w-75">
+      <select v-model="selectedCategory" class="form-select ">
         <option value="">Todas as categorias</option>
         <option v-for="category in categories" :value="category.id" :key="category.id">
           <span>
@@ -26,34 +26,32 @@
     </div>
     <div class="py-1 h-divider"></div>
     <!-- product list -->
-    <ul class="product-items">
-      <li v-for="product in filteredProducts" :key="product.id" class="product-item">
-        {{ product.name }}
-      </li>
-    </ul>
+    <div class="product-container">
+      <ul class="list-group pt-1">
+        <li v-for="product in filteredProducts" :key="product.id" class="list-group-item">
+          {{ product.description }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 
 <script>
-import product from "../../services/database/products";
+import products from "../../services/database/products";
 import {getProduct} from "../../services/api/products";
 export default {
   data() {
     return {
       searchQuery: '',
+      connection:true,
       selectedCategory: null,
       products: [],
       categories: [],
     };
   },
   async created(){
-    let productData = await product.get();
-    if(productData.lenght <0){
-      productData = await getProduct();
-      product.save(productData);
-    }
-    console.log(productData);
+    await this.updateProducts();
   },
   computed: {
     filteredProducts() {
@@ -64,22 +62,34 @@ export default {
       let filtered = this.products;
       if (query) {
         filtered = filtered.filter((product) =>
-          product.name.toLowerCase().includes(query)
+          product.description.toLowerCase().includes(query)
         );
       }
       if (this.selectedCategory) {
-        filtered = filtered.filter((product) => product.categoryId === this.selectedCategory);
+        filtered = filtered.filter((product) => product.category === this.selectedCategory);
       }
       return filtered;
     },
   },
   methods: {
-    updateProducts() {
-      // Lógica para atualizar a lista de produtos
-      // Exemplo de chamada de API ou manipulação de dados
-      // Aqui você pode adicionar sua própria lógica de atualização
-      console.log('Produtos atualizados');
-    },
+    async updateProducts(force = false) {
+      let productData = await products.get();
+      if(productData.length == 0 || force){
+        this.$global.load = true;
+        this.$eventBus.emit('load', this.$global.load);
+        if(force){
+          await products.clear();
+        }
+        productData = await getProduct();
+        console.log('TRY DB',productData);
+        await products.save(productData);
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+      }
+      this.categories = productData[0].category
+      this.products = productData[0].products
+      console.log(productData[0]);
+      },
     filterProducts(categoryId) {
       this.selectedCategory = categoryId;
     },
@@ -95,6 +105,8 @@ export default {
   background-color: var(--bs-dark);
   color: var(--bs-light);
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .search-container {
@@ -139,5 +151,14 @@ export default {
   border: var(--bs-gray-900);
 }
 
+.product-container {
+  flex-grow: 1;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.list-group {
+  margin-bottom: 0; /* Remover margem inferior para evitar espaço extra */
+}
 
 </style>

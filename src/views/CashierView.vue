@@ -1,6 +1,6 @@
 <template>
   <div class="base-content">
-    <div class="row h-100">
+    <div class="row h-100 row-wrapper">
       <div class="col-6">
         <div class="product-list-wrapper">
           <ProductList />
@@ -26,8 +26,9 @@ export default {
 </script>
 
 <style scoped>
-.product-list-wrapper {
+.row-wrapper {
   overflow-y: auto;
 }
+
 
 </style>

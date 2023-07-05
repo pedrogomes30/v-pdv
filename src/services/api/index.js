@@ -3,7 +3,7 @@ import TokenService from '../token'
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BACK_URL,
-  timeout: 5000,
+  timeout: 60000,
 });
 
 instance.interceptors.request.use(config => {  
