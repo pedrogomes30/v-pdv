@@ -13,7 +13,6 @@ export function getProduct() {
         if (response.data.error) {
           throw new Error(response.data.data);
         }
-        console.log("TESTE PRODUCTS", response);
         return response.data.data.data;
       })
       .catch(error => {
