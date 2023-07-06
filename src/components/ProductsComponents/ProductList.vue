@@ -13,7 +13,7 @@
       </button>
     </div>
     <!-- category -->
-    <div class="category-container">
+    <div class="category-container p-0">
       <select v-model="selectedCategory" class="form-select ">
         <option value="">Todas as categorias</option>
         <option v-for="category in categories" :value="category.id" :key="category.id">
@@ -24,12 +24,29 @@
         </option>
       </select>
     </div>
-    <div class="py-1 h-divider"></div>
     <!-- product list -->
-    <div class="product-container">
+    <div class="product-container pt-1">
       <ul class="list-group pt-1">
         <li v-for="product in filteredProducts" :key="product.id" class="list-group-item">
-          {{ product.description }}
+          <div class="row info-products-card p-0 m-0 d-flex align-items-center" @click="sendToCart(product)">
+            <div class="col-auto info-products-icon" >
+              <template v-if="product.website">
+                <!-- Se houver um link no campo "product.website", exibe a imagem -->
+                <img :src="product.website" alt="Product Image" class="product-image">
+              </template>
+              <template v-else>
+                <!-- Se o campo "product.website" estiver vazio, exibe o ícone -->
+                <i class="bi bi-box info-icon px-2"></i>
+              </template>
+            </div>
+            <div class="col info-products-details">
+              <div>{{ product.description }}</div>
+              <div>{{ product.sku }} - {{product.provider}} </div>
+            </div>
+            <div class="col-auto info-products-price">
+              <b><h5>R$ {{ listPrice(product.price) }}</h5></b>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
@@ -40,6 +57,8 @@
 <script>
 import products from "../../services/database/products";
 import {getProduct} from "../../services/api/products";
+import price from "../../services/price"
+
 export default {
   data() {
     return {
@@ -74,25 +93,36 @@ export default {
   methods: {
     async updateProducts(force = false) {
       let productData = await products.get();
-      if(productData.length == 0 || force){
+      if (productData.length === 0 || force) {
         this.$global.load = true;
         this.$eventBus.emit('load', this.$global.load);
-        if(force){
+        if (force) {
           await products.clear();
         }
         productData = await getProduct();
-        console.log('TRY DB',productData);
+        console.log('TRY DB', productData);
         await products.save(productData);
         this.$global.load = false;
         this.$eventBus.emit('load', this.$global.load);
       }
-      this.categories = productData[0].category
-      this.products = productData[0].products
-      console.log(productData[0]);
-      },
+
+      if (Array.isArray(productData)) {
+        this.categories = productData[0].category;
+        this.products = productData[0].products;
+      } else if (typeof productData === 'object') {
+        this.categories = productData.category;
+        this.products = productData.products;
+      }
+    },
+    listPrice(value){
+      return price.listPrice(value);
+    },
     filterProducts(categoryId) {
       this.selectedCategory = categoryId;
     },
+    sendToCart(product){
+      console.log('CLICK ON', product);
+    }
   },
   components: {
   },
@@ -107,6 +137,13 @@ export default {
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  font-size: 0.70rem;
+}
+
+.info-icon {
+  font-size: 1.20rem; 
+  color: var(--bs-primary);
 }
 
 .search-container {

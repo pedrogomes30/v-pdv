@@ -106,6 +106,7 @@ a{
     --bs-btn-disabled-border-color: var(--bs-black);
 }
 
+
 .nav-tabs {
     --bs-nav-tabs-border-width: 1px;
     --bs-nav-tabs-border-color: var(--bs-gray-600);
