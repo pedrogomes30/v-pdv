@@ -25,9 +25,9 @@
       </select>
     </div>
     <!-- product list -->
-    <div class="product-container pt-1">
-      <ul class="list-group pt-1">
-        <li v-for="product in filteredProducts" :key="product.id" class="list-group-item">
+    <div class="product-container my-3">
+      <ul class="list-group ">
+        <li v-for="product in filteredProducts" :key="product.id" class="list-group-item ">
           <div class="row info-products-card p-0 m-0 d-flex align-items-center" @click="sendToCart(product)">
             <div class="col-auto info-products-icon" >
               <template v-if="product.website">
@@ -50,6 +50,24 @@
         </li>
       </ul>
     </div>
+    <!-- pagination -->
+    <nav aria-label="Page navigation  p-0">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <a class="page-link" href="#" aria-label="Previous" @click="prevPage">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li v-for="pageNumber in totalPages" :key="pageNumber" class="page-item" :class="{ active: pageNumber === currentPage }">
+          <a class="page-link" href="#" @click="goToPage(pageNumber)">{{ pageNumber }}</a>
+        </li>
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <a class="page-link" href="#" aria-label="Next" @click="nextPage">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
@@ -108,10 +126,10 @@ export default {
 
       if (Array.isArray(productData)) {
         this.categories = productData[0].category;
-        this.products = productData[0].products;
+        this.products = [];//productData[0].products;
       } else if (typeof productData === 'object') {
         this.categories = productData.category;
-        this.products = productData.products;
+        this.products = [];//productData.products;
       }
     },
     listPrice(value){
@@ -176,7 +194,7 @@ export default {
 
 .product-item {
   padding: 0.5rem;
-  border-radius: 4px;
+  border: none;
   background-color: var(--bs-dark-2);
   margin-bottom: 0.5rem;
 }
@@ -188,14 +206,17 @@ export default {
   border: var(--bs-gray-900);
 }
 
+.list-group{
+  border:none;
+}
+
 .product-container {
   flex-grow: 1;
   max-height: 100%;
   overflow-y: auto;
+  border-radius: 10px;
+  border: 1px solid black;
 }
 
-.list-group {
-  margin-bottom: 0; /* Remover margem inferior para evitar espaço extra */
-}
 
 </style>
