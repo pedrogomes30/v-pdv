@@ -1,13 +1,13 @@
 <template>
   <div class="base-content">
     <div class="row h-100 p-0">
-      <div class="col-6 product-columns ">
+      <div class="col-6 ">
         <ProductList />
       </div>
-      <div class="col-6">
-        <CashierDetailsHandler /> 
-        <SaleResume />
-        <CashierActions />
+      <div class="col-6 h-100">
+        <CashierDetailsHandler class='detail-card'/> 
+        <SaleResume class='resume-card'/>
+        <CashierActions class='actions-card'/>
       </div>
     </div>
   </div>
@@ -34,5 +34,14 @@ export default {
 
 .product-columns{
   height: 100%;
+}
+.detail-card{
+  height: 60%;
+}
+.resume-card{
+  height: 30%;
+}
+.actions-card{
+  height: 10%;
 }
 </style>

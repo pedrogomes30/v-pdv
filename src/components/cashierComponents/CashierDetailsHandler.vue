@@ -68,18 +68,13 @@ export default {
   color: var(--bs-light);
   display: flex;
   flex-direction: column;
-  height: 60%;
   width: 100%;
-  /* font-size: 0.70rem; */
   border: 1px solid black;
   border-radius: 10px;
 }
 
-.info-menu {
-  border-bottom: solid 1px black;
-}
 
 .component-container {
-  margin-top: 20px;
+  height: 88%;
 }
 </style>

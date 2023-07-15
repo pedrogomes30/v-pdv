@@ -14,7 +14,7 @@
     </div>
     <!-- category -->
     <div class="category-container p-0">
-      <select v-model="selectedCategory" class="form-select ">
+      <select v-model="selectedCategory" class="form-select">
         <option value="">Todas as categorias</option>
         <option v-for="category in categories" :value="category.id" :key="category.id">
           <span>
@@ -51,7 +51,7 @@
       </ul>
     </div>
     <!-- pagination -->
-    <nav aria-label="Page navigation  p-0">
+    <!-- <nav aria-label="Page navigation  p-0">
       <ul class="pagination justify-content-center">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <a class="page-link" href="#" aria-label="Previous" @click="prevPage">
@@ -67,7 +67,7 @@
           </a>
         </li>
       </ul>
-    </nav>
+    </nav> -->
   </div>
 </template>
 
@@ -126,10 +126,10 @@ export default {
 
       if (Array.isArray(productData)) {
         this.categories = productData[0].category;
-        this.products = [];//productData[0].products;
+        productData[0].products;
       } else if (typeof productData === 'object') {
         this.categories = productData.category;
-        this.products = [];//productData.products;
+        productData.products;
       }
     },
     listPrice(value){
