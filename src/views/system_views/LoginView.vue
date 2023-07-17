@@ -31,7 +31,7 @@
           <label for="inputCashier" class="form-label text-light">
             <i class="bi bi-calculator text-light "></i>
             Caixa</label>
-          <select class=" " v-model="tempUser.cashier" id="cashier">
+          <select class="form-select" v-model="tempUser.cashier" id="cashier">
             <option value="">Selecione um caixa</option>
             <option v-for="cashier in cashiers" :value="cashier.cashier_name" :key="cashier.cashier_id">{{ cashier.cashier_name }}</option>
           </select>

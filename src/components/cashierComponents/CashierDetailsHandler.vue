@@ -27,7 +27,7 @@
       </div>
     </nav>
 
-    <div class="component-container">
+    <div class="component-container mb-2">
       <CartList v-if="activeComponent === 'carrinho'" />
       <CupomList v-if="activeComponent === 'cupom'" />
       <PaymentsList v-if="activeComponent === 'pagamento'" />
@@ -75,6 +75,8 @@ export default {
 
 
 .component-container {
-  height: 88%;
+  height: 85%;
+  border-radius: 10px;
+  border: 1px solid black;
 }
 </style>

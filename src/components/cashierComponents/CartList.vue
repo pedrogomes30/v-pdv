@@ -1,6 +1,6 @@
 <template>
     <div class="product-container ">
-        <ul class="list-group ">
+        <ul class="list-group">
             <li v-for="product in products" :key="product.id" class="list-group-item ">
             <div class="row info-products-card p-0 m-0 d-flex align-items-center" >
                 <div class="col-auto info-products-icon" >
@@ -18,7 +18,8 @@
                 <div>{{ product.sku }}</div>
                 </div>
                 <div class="col-auto info-products-price">
-                <b><h5>R$ {{ listPrice(product.price) }}</h5></b>
+                <h6>{{product.quantity}}x R$ {{ listPrice(product.price) }}</h6>
+                <b><h4>R$ {{ listPrice(product.price * product.quantity) }}</h4></b>
                 </div>
             </div>
             </li>
@@ -37,57 +38,78 @@ export default {
         connection:true,
         selectedCategory: null,
         products: [
-            {
-                description: 'Produto 1',
-                sku: 'SKU-001',
-                price: 9.99
-            },
-            {
-                description: 'Produto 2',
-                sku: 'SKU-002',
-                price: 19.99
-            },
-            {
-                description: 'Produto 3',
-                sku: 'SKU-003',
-                price: 29.99
-            },
-            {
-                description: 'Produto 4',
-                sku: 'SKU-004',
-                price: 39.99
-            },
-            {
-                description: 'Produto 5',
-                sku: 'SKU-005',
-                price: 49.99
-            },
-            {
-                description: 'Produto 6',
-                sku: 'SKU-006',
-                price: 59.99
-            },
-            {
-                description: 'Produto 7',
-                sku: 'SKU-007',
-                price: 69.99
-            },
-            {
-                description: 'Produto 8',
-                sku: 'SKU-008',
-                price: 79.99
-            },
-            {
-                description: 'Produto 9',
-                sku: 'SKU-009',
-                price: 89.99
-            },
-            {
-                description: 'Produto 10',
-                sku: 'SKU-010',
-                price: 99.99
-            }
-        ],
+        {
+            description: 'Produto 1',
+            sku: 'SKU-001',
+            price: 9.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 2',
+            sku: 'SKU-002',
+            price: 19.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 3',
+            sku: 'SKU-003',
+            price: 29.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 4',
+            sku: 'SKU-004',
+            price: 39.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 5',
+            sku: 'SKU-005',
+            price: 49.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 6',
+            sku: 'SKU-006',
+            price: 59.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 7',
+            sku: 'SKU-007',
+            price: 69.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 8',
+            sku: 'SKU-008',
+            price: 79.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 9',
+            sku: 'SKU-009',
+            price: 89.99,
+            quantity: 1,
+            discount: 0
+        },
+        {
+            description: 'Produto 10',
+            sku: 'SKU-010',
+            price: 99.99,
+            quantity: 1,
+            discount: 0
+        }
+    ],
+
         categories: [],
         };
     },
@@ -100,11 +122,16 @@ export default {
 </script>
 
 <style scoped>
+
 .product-container {
   flex-grow: 1;
   max-height: 100%;
   overflow-y: auto;
   border-radius: 10px;
-  border: 1px solid black;
+}
+
+.list-group-item{
+    border: none;
+    border-bottom: 1px solid black;
 }
 </style>
