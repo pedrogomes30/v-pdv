@@ -48,7 +48,7 @@
 
 <script>
 export default {
-  name: 'CashierView',
+  name: 'ProductPick',
   components: {}
 };
 </script>

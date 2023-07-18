@@ -1,30 +1,29 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import vuetify from './plugins/vuetify'
-import VueMask from 'v-mask';
-import VCurrencyField from 'v-currency-field'
-import { VTextField } from 'vuetify/lib'
+import "bootstrap/dist/css/bootstrap.css"
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './services/router';
+import mitt from 'mitt';
+import './registerServiceWorker';
+import './assets/styles.css';
 
-Vue.config.productionTip = false
+const app = createApp(App);
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
-}).$mount('#app')
+const global = {
+  load: false,
+  alert:{
+    show:false,
+    type:'error',
+    message:''
+  },
+  showNavBar:false,
+};
 
-Vue.component('v-text-field', VTextField)
-Vue.use(VueMask)
-Vue.use(VCurrencyField, { 
-	locale: 'pt-BR',
-	decimalLength: 2,
-	autoDecimalMode: true,
-	min: null,
-	max: null,
-	defaultValue: 0,
-    valueAsInteger: false,
-    allowNegative: true
-})
+const eventBus = mitt();
+
+app.config.globalProperties.$global = global;
+app.config.globalProperties.$eventBus = eventBus;
+
+app.use(router);
+
+app.mount('#app');
