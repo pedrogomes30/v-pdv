@@ -27,7 +27,7 @@
       </div>
     </nav>
 
-    <div class="component-container">
+    <div class="component-container mb-2">
       <CartList v-if="activeComponent === 'carrinho'" />
       <CupomList v-if="activeComponent === 'cupom'" />
       <PaymentsList v-if="activeComponent === 'pagamento'" />
@@ -68,18 +68,15 @@ export default {
   color: var(--bs-light);
   display: flex;
   flex-direction: column;
-  height: 60%;
   width: 100%;
-  /* font-size: 0.70rem; */
   border: 1px solid black;
   border-radius: 10px;
 }
 
-.info-menu {
-  border-bottom: solid 1px black;
-}
 
 .component-container {
-  margin-top: 20px;
+  height: 85%;
+  border-radius: 10px;
+  border: 1px solid black;
 }
 </style>

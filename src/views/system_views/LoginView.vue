@@ -17,7 +17,7 @@
             <i class="bi bi-hash text-light "></i>
             Senha</label>
           <input type="password" class="form-control" v-model="tempUser.pass" id="password">
-        </div>
+        </div>e
       </form>
 
       <form v-else class="nav-link">
@@ -27,7 +27,7 @@
             Loja</label>
           <input type="text" class="form-control" disabled id="store" v-model="tempUser.storage" aria-describedby="Loja">
         </div>
-        <div class="mb-3">
+        <div class="mb-3">  
           <label for="inputCashier" class="form-label text-light">
             <i class="bi bi-calculator text-light "></i>
             Caixa</label>
