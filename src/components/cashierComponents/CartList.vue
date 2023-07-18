@@ -17,6 +17,12 @@
                 <div>{{ product.description }}</div>
                 <div>{{ product.sku }}</div>
                 </div>
+                <div class="col-auto disconts">
+                    <div v-for="discont in product.disconts" :key="discont.code">
+                        <h6>{{discont.code}}</h6>
+                        <h6>{{discont.value}}</h6>
+                    </div>
+                </div>
                 <div class="col-auto info-products-price">
                 <h6>{{product.quantity}}x R$ {{ listPrice(product.price) }}</h6>
                 <b><h4>R$ {{ listPrice(product.price * product.quantity) }}</h4></b>
@@ -43,70 +49,92 @@ export default {
             sku: 'SKU-001',
             price: 9.99,
             quantity: 1,
-            discount: 0
+            discounts: [
+                {
+                    code: 'DESC10',
+                    value: 1.00,
+                    description: 'Desconto de 10%'
+                },
+                {
+                    code: 'DESC20',
+                    value: 2.00,
+                    description: 'Desconto de 20%'
+                }
+            ]
         },
         {
             description: 'Produto 2',
             sku: 'SKU-002',
             price: 19.99,
             quantity: 1,
-            discount: 0
+            discount: []
         },
         {
             description: 'Produto 3',
             sku: 'SKU-003',
             price: 29.99,
             quantity: 1,
-            discount: 0
+            discount: []
         },
         {
             description: 'Produto 4',
             sku: 'SKU-004',
             price: 39.99,
             quantity: 1,
-            discount: 0
+            discount: []
         },
         {
             description: 'Produto 5',
             sku: 'SKU-005',
             price: 49.99,
             quantity: 1,
-            discount: 0
+            discount: []
         },
         {
             description: 'Produto 6',
             sku: 'SKU-006',
             price: 59.99,
             quantity: 1,
-            discount: 0
+            discount: []
         },
         {
             description: 'Produto 7',
             sku: 'SKU-007',
             price: 69.99,
             quantity: 1,
-            discount: 0
+            discount: []
         },
         {
             description: 'Produto 8',
             sku: 'SKU-008',
             price: 79.99,
             quantity: 1,
-            discount: 0
+            discount: []
         },
         {
             description: 'Produto 9',
             sku: 'SKU-009',
             price: 89.99,
             quantity: 1,
-            discount: 0
+            discounts: [
+                {
+                    code: 'DESC15',
+                    value: 3.00,
+                    description: 'Desconto de 15%'
+                },
+                {
+                    code: 'DESC25',
+                    value: 4.00,
+                    description: 'Desconto de 25%'
+                }
+            ]
         },
         {
             description: 'Produto 10',
             sku: 'SKU-010',
             price: 99.99,
             quantity: 1,
-            discount: 0
+            discount: []
         }
     ],
 
