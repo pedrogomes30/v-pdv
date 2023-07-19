@@ -11,7 +11,7 @@
         <span class='show-on-mobile'>Troca de produto</span>
     </button>
     <button @click="updateProducts" class=" col-2 pr-1 btn btn-danger me-1" title='Limpa venda'>
-        <i class="bi bi-x-circle px-2"></i>
+        <i class="bi bi-cart-x px-2"></i>
         <br>
         <span class='show-on-mobile'>Limpa venda</span>
     </button>

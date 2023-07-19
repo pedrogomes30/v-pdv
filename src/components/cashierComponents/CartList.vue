@@ -25,7 +25,7 @@
                 </div>
                 <div class="col-auto info-products-price">
                 <h6>{{product.quantity}}x R$ {{ listPrice(product.price) }}</h6>
-                <b><h4>R$ {{ listPrice(product.price * product.quantity) }}</h4></b>
+                <b><h5>R$ {{ listPrice(product.price * product.quantity) }}</h5></b>
                 </div>
             </div>
             </li>
