@@ -36,10 +36,10 @@ export default {
   height: 100%;
 }
 .detail-card{
-  height: 60%;
+  height: 75%;
 }
 .resume-card{
-  height: 30%;
+  height: 15%;
 }
 .actions-card{
   height: 10%;

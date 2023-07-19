@@ -78,5 +78,6 @@ export default {
   height: 85%;
   border-radius: 10px;
   border: 1px solid black;
+  color:var(--bs-gray-200);
 }
 </style>

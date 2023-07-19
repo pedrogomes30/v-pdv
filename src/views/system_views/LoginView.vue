@@ -17,7 +17,7 @@
             <i class="bi bi-hash text-light "></i>
             Senha</label>
           <input type="password" class="form-control" v-model="tempUser.pass" id="password">
-        </div>e
+        </div>
       </form>
 
       <form v-else class="nav-link">
