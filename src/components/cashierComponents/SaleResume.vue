@@ -3,32 +3,34 @@
     <div class="total-item">
       <i class="bi bi-cart-fill"></i>
       <span>Total Produtos:</span>
-      <span>{{ totalProducts }}</span>
+      <span>{{ listPrice(totalProducts) }}</span>
     </div>
     <div class="total-item">
       <i class="bi bi-currency-dollar"></i>
       <span>Total Descontos:</span>
-      <span>{{ totalDisconts }}</span>
+      <span>{{ listPrice(totalDisconts) }}</span>
     </div>
     <div class="total-item">
       <i class="bi bi-currency-dollar"></i>
       <span>Total da Venda:</span>
-      <span>{{ totalSale }}</span>
+      <span>{{ listPrice(totalSale) }}</span>
     </div>
     <div class="total-item">
       <i class="bi bi-currency-dollar"></i>
       <span>Total Pago:</span>
-      <span>{{ totalPayments }}</span>
+      <span>{{ listPrice(totalPayments) }}</span>
     </div>
     <div class="total-item diff">
       <i class="bi bi-exclamation-triangle-fill"></i>
       <span>Diferença:</span>
-      <span :class="{ highlight: diference > 0 }" >{{ diference }}</span>
+      <span :class="{ highlight: diference > 0 }" >R$ {{ listPrice(diference) }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import price from "../../services/price";
+
 export default {
   name: 'CashierDetailsHandler',
   data() {
@@ -43,6 +45,11 @@ export default {
       diference:0.00
     };
   },
+  methods:{
+    listPrice(value){
+      return price.listPrice(value);
+    },
+  }
 };
 </script>
 

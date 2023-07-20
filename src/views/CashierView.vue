@@ -32,15 +32,14 @@ export default {
 
 <style scoped>
 
-.product-columns{
-  height: 100%;
-}
 .detail-card{
-  height: 75%;
+  height: 70%;
 }
+
 .resume-card{
-  height: 15%;
+  height: 20%;
 }
+
 .actions-card{
   height: 10%;
 }
