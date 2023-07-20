@@ -6,6 +6,7 @@ import router from './services/router';
 import mitt from 'mitt';
 import './registerServiceWorker';
 import './assets/styles.css';
+import store from './services/store'
 
 const app = createApp(App);
 
@@ -25,5 +26,5 @@ app.config.globalProperties.$global = global;
 app.config.globalProperties.$eventBus = eventBus;
 
 app.use(router);
-
+app.use(store); 
 app.mount('#app');
