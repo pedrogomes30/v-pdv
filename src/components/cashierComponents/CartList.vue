@@ -1,5 +1,5 @@
 <template>
-    <div class="product-container ">
+    <div class="cart-container ">
         <ul class="list-group">
             <li v-for="product in cartItems" :key="product.id" class="list-group-item ">
             <div class="row info-products-card p-0 m-0 d-flex align-items-center" >
@@ -52,7 +52,7 @@ export default {
 
 <style scoped>
 
-.product-container {
+.cart-container {
   flex-grow: 1;
   max-height: 100%;
   overflow-y: auto;

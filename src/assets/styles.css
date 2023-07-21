@@ -5,7 +5,7 @@ body {
   padding: 0;
   height: 100vh;
   overflow: hidden;
-  /* background-color: var(--bs-gray-800); */
+  background-color: var(--bs-gray-800);
 }
 
 a{

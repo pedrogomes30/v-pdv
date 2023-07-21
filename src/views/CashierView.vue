@@ -1,10 +1,10 @@
 <template>
   <div class="base-content">
-    <div class="row h-100 p-0">
-      <div class="col-6 ">
+    <div class="row  p-0">
+      <div class="col-6">
         <ProductList />
       </div>
-      <div class="col-6 h-100">
+      <div class="col-6 ">
         <CashierDetailsHandler class='detail-card'/> 
         <SaleResume class='resume-card'/>
         <CashierActions class='actions-card'/>
@@ -33,14 +33,12 @@ export default {
 <style scoped>
 
 .detail-card{
-  height: 70%;
+  height: 50vh;
 }
-
 .resume-card{
-  height: 20%;
+  height: 19vh;
 }
-
 .actions-card{
-  height: 10%;
+  height: 10vh;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <Load />
-  <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav p-0 px-2 ">
+  <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav p-0 px-2 default-menu">
     <router-link to="/" class="navbar-brand ">
       <img class="logo-image" alt="Home" src="./assets/logo.png">
     </router-link>
@@ -44,9 +44,9 @@
       </ul>
     <div class="user-info ml-auto ">
       <div class="dropdown">
-        <div class="btn btn-dark dropdown-toggle user-info" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="toggleDropdown">
+        <div class="btn  dropdown-toggle user-info" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="toggleDropdown">
           <div class="userinfo">
-            <span class="text-sm">
+            <span class="text-sm show-on-mobile">
               {{ user.name }}<br>
               <small>{{ user.store }} - {{ user.cashier }}</small>
             </span>
@@ -156,11 +156,13 @@ export default {
   display: none; 
 }
 
-.nav {
+.default-menu {
   padding-right: 1rem;
   padding-left: 1rem;
   margin-right: 2rem;
   margin-left: 2rem;
+  max-height: 10%;
+  height: 8vh;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   border: 1px solid black;
@@ -192,24 +194,23 @@ export default {
   padding-right:0.40rem;
 }
 
-@media (max-width: 1024px) {
-  .show-on-mobile {
-    display: none;
-  }
-}
 
 </style>
 
 
 <style>
 /* NOT SCOPED */
+@media (max-width: 1024px) {
+  .show-on-mobile {
+    display: none;
+  }
+}
 .base-content {
   background-color: var(--bs-gray-900);
   border-radius: 10px;
   margin-top:0.5rem;
   padding:1rem;
-  height: 90vh; 
-  width: 100%;
+  height: 90vh;
   border: 1px solid black;
 }
 
