@@ -5,22 +5,26 @@
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" @click="showComponent('carrinho')">
-              <i class="bi bi-cart-fill"></i> Carrinho
+              <i class="bi bi-cart-fill"></i> 
+               <a class=show-on-mobile>Carrinho</a>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="showComponent('cupom')">
-              <i class="bi bi-badge-ad-fill"></i> Cupom
+              <i class="bi bi-badge-ad-fill"></i> 
+              <a class=show-on-mobile>Cupom</a>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="showComponent('pagamento')">
-              <i class="bi bi-credit-card-2-front-fill"></i> Pagamento
+              <i class="bi bi-credit-card-2-front-fill"></i> 
+              <a class=show-on-mobile>Pagamento</a>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="showComponent('clienteVendedor')">
-              <i class="bi bi-people-fill"></i> Cliente/Vendedor
+              <i class="bi bi-people-fill"></i> 
+              <a class=show-on-mobile>Cliente/Vendedor</a>
             </a>
           </li>
         </ul>

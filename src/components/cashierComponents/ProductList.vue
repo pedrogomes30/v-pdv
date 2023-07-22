@@ -28,7 +28,7 @@
     <div class="product-container my-3">
       <ul class="list-group ">
         <li v-for="product in filteredProducts" :key="product.id" class="list-group-item ">
-          <div class="row info-products-card p-0 m-0 d-flex align-items-center" @click="sendToCart(product)">
+          <div class="row info-products-card p-0 m-0 d-flex align-items-center" @click="addToCart(product)">
             <div class="col-auto info-products-icon" >
               <template v-if="product.website">
                 <!-- Se houver um link no campo "product.website", exibe a imagem -->
@@ -50,24 +50,20 @@
         </li>
       </ul>
     </div>
-    <!-- pagination -->
-    <!-- <nav aria-label="Page navigation  p-0">
-      <ul class="pagination justify-content-center">
-        <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <a class="page-link" href="#" aria-label="Previous" @click="prevPage">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li v-for="pageNumber in totalPages" :key="pageNumber" class="page-item" :class="{ active: pageNumber === currentPage }">
-          <a class="page-link" href="#" @click="goToPage(pageNumber)">{{ pageNumber }}</a>
-        </li>
-        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-          <a class="page-link" href="#" aria-label="Next" @click="nextPage">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav> -->
+    <div class="d-flex justify-content-center align-items-center pagination-items p-0 m-0 ">
+      <button @click="prevPage" :disabled="currentPage === 1" class="btn btn-primary btn-sm">
+        <i class="bi bi-chevron-left px-2"></i>
+      </button>
+      <span v-for="page in getDisplayedPages()"
+        :key="page" 
+        class='px-1'
+        @click="goToPage(page)" 
+        :class="{ 'btn btn-primary rounded': page === currentPage, ' btn-sm': page !== currentPage }
+        ">{{ page }}</span>
+      <button @click="nextPage" :disabled="currentPage * productsPerPage >= products.length" class="btn btn-primary btn-sm ">
+        <i class="bi bi-chevron-right px-2"></i>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -76,6 +72,7 @@
 import products from "../../services/database/products";
 import {getProduct} from "../../services/api/products";
 import price from "../../services/price"
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -85,6 +82,8 @@ export default {
       selectedCategory: null,
       products: [],
       categories: [],
+      currentPage: 1,
+      productsPerPage: 100,
     };
   },
   async created(){
@@ -93,22 +92,31 @@ export default {
   computed: {
     filteredProducts() {
       const query = this.searchQuery.toLowerCase();
-      if (!query && !this.selectedCategory) {
-        return this.products;
-      }
       let filtered = this.products;
+
       if (query) {
         filtered = filtered.filter((product) =>
           product.description.toLowerCase().includes(query)
         );
       }
+
       if (this.selectedCategory) {
-        filtered = filtered.filter((product) => product.category === this.selectedCategory);
+        filtered = filtered.filter(
+          (product) => product.category === this.selectedCategory
+        );
       }
-      return filtered;
+
+      const startIndex = (this.currentPage - 1) * this.productsPerPage;
+      const endIndex = startIndex + this.productsPerPage;
+
+      return filtered.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.products.length / this.productsPerPage);
     },
   },
   methods: {
+    ...mapActions('cart', ['addToCart']),
     async updateProducts(force = false) {
       let productData = await products.get();
       if (productData.length === 0 || force) {
@@ -118,7 +126,6 @@ export default {
           await products.clear();
         }
         productData = await getProduct();
-        console.log('TRY DB', productData);
         await products.save(productData);
         this.$global.load = false;
         this.$eventBus.emit('load', this.$global.load);
@@ -126,12 +133,33 @@ export default {
 
       if (Array.isArray(productData)) {
         this.categories = productData[0].category;
-        productData[0].products;
+        this.products = productData[0].products;
       } else if (typeof productData === 'object') {
         this.categories = productData.category;
-        productData.products;
+        this.products = productData.products;
       }
     },
+    getDisplayedPages() {
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+    const displayCount = 10; // Número de páginas para exibir no intervalo
+    const half = Math.floor(displayCount / 2);
+
+    if (totalPages <= displayCount) {
+      // Se o total de páginas for menor ou igual ao número desejado, retornar todas as páginas
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    } else if (currentPage <= half) {
+      // Se a página atual estiver no início, retornar as primeiras "displayCount" páginas
+      return Array.from({ length: displayCount }, (_, i) => i + 1);
+    } else if (currentPage >= totalPages - half) {
+      // Se a página atual estiver no final, retornar as últimas "displayCount" páginas
+      return Array.from({ length: displayCount }, (_, i) => totalPages - displayCount + i + 1);
+    } else {
+      // Se a página atual estiver no meio, retornar as páginas centradas na página atual
+      const startPage = currentPage - half;
+      return Array.from({ length: displayCount }, (_, i) => startPage + i);
+    }
+  },
     listPrice(value){
       return price.listPrice(value);
     },
@@ -140,7 +168,17 @@ export default {
     },
     sendToCart(product){
       console.log('CLICK ON', product);
-    }
+    },
+    nextPage() {
+      this.currentPage++;
+    },
+    goToPage(page) {
+      this.currentPage = page;
+    },
+    prevPage() {
+      this.currentPage--;
+    },
+
   },
   components: {
   },
@@ -150,15 +188,18 @@ export default {
 
 <style scoped>
 .product-list {
-  background-color: var(--bs-dark);
   color: var(--bs-light);
   padding: 1rem;
   display: flex;
+  height: 94vh;
   flex-direction: column;
-  height: 100%;
   font-size: 0.70rem;
+  border:none;
 }
-
+.list-group-item{
+  border:none;
+  border-bottom: 1px solid black;
+}
 .info-icon {
   font-size: 1.20rem; 
   color: var(--bs-primary);
@@ -175,6 +216,10 @@ export default {
   border-radius: 4px;
   border: none;
   margin-right: 1rem;
+}
+
+.pagination-items{
+  background-color: transparent;
 }
 
 .update-button {
@@ -210,9 +255,13 @@ export default {
   border:none;
 }
 
+.rounded{
+  border-radius: 100%;
+}
 .product-container {
+  background: none;
   flex-grow: 1;
-  max-height: 100%;
+  max-height: 75%;
   overflow-y: auto;
   border-radius: 10px;
   border: 1px solid black;
