@@ -140,7 +140,7 @@ export default {
 .user-info img,
 .user-info i {
   margin-right: 5px;
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   padding-left: 1rem;
 }
 
@@ -163,6 +163,7 @@ export default {
   margin-left: 2rem;
   max-height: 10%;
   height: 8vh;
+  font-size: 1.2rem;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   border: 1px solid black;
