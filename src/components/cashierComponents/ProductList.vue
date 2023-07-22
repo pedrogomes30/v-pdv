@@ -28,7 +28,7 @@
     <div class="product-container my-3">
       <ul class="list-group ">
         <li v-for="product in filteredProducts" :key="product.id" class="list-group-item ">
-          <div class="row info-products-card p-0 m-0 d-flex align-items-center" @click="sendToCart(product)">
+          <div class="row info-products-card p-0 m-0 d-flex align-items-center" @click="addToCart(product)">
             <div class="col-auto info-products-icon" >
               <template v-if="product.website">
                 <!-- Se houver um link no campo "product.website", exibe a imagem -->
@@ -72,6 +72,7 @@
 import products from "../../services/database/products";
 import {getProduct} from "../../services/api/products";
 import price from "../../services/price"
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -115,6 +116,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('cart', ['addToCart']),
     async updateProducts(force = false) {
       let productData = await products.get();
       if (productData.length === 0 || force) {

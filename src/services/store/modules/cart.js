@@ -1,26 +1,6 @@
 const state = {
     items: [
-      {
-        category:0,
-        description:"PRODUTO EXEMPLO",
-        id:0,
-        price:9.99,
-        provider:"CEARA AUTOPEÇAS",
-        quantity:5,
-        sku:"64654654",
-        total:48.98,
-        value:0,
-        website:null,            
-        disconts:[
-          {
-            code:'',
-            price:0.0,
-            description:'',
-            value:'',
-            percent:0
-          }
-        ]
-      },
+      
     ], 
   };
   
@@ -32,35 +12,45 @@ const state = {
   
   const mutations = {
     addItem(state, product) {
-      // Adiciona um item ao carrinho
       state.items.push(product);
     },
-  
+
+    incrementQuantity(state, product) {
+      const existingProduct = state.items.find(item => item.sku === product.sku);
+      if (existingProduct) {
+        existingProduct.quantity++;
+      }
+    }, 
+    
     removeItem(state, product) {
-      // Remove um item do carrinho
       const index = state.items.findIndex(item => item.sku === product.sku);
       if (index !== -1) {
         state.items.splice(index, 1);
       }
     },
-  
+
     clearItems(state) {
-      // Limpa o carrinho
       state.items = [];
-    },
+    }
   };
   
   const actions = {
-    addToCart({ commit }, product) {
-      // Adiciona um item ao carrinho e chama a mutation "addItem"
+    addToCart({ state, commit }, product) {
       return new Promise(resolve => {
-        commit('addItem', product);
+        const existingProduct = state.items.find(item => item.sku === product.sku);
+
+        if (existingProduct) {
+          commit('incrementQuantity', existingProduct);
+        } else {
+          const productWithQuantity = { ...product, quantity: 1 };
+          commit('addItem', productWithQuantity);
+        }
+
         resolve();
       });
-    },
+    },    
   
     removeFromCart({ commit }, product) {
-      // Remove um item do carrinho e chama a mutation "removeItem"
       return new Promise(resolve => {
         commit('removeItem', product);
         resolve();
@@ -68,7 +58,6 @@ const state = {
     },
   
     clearCart({ commit }) {
-      // Limpa o carrinho e chama a mutation "clearItems"
       return new Promise(resolve => {
         commit('clearItems');
         resolve();

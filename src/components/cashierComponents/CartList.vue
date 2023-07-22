@@ -5,6 +5,7 @@
             <div class="row info-products-card p-0 m-0 d-flex align-items-center" >
                 <div class="col-auto info-products-icon" >
                     <i class="bi bi-box cart px-2"></i>
+                    <i class="bi bi-eraser text-danger px-2" @click="removeFromCart(product)"></i>
                 </div>
                 <div class="col info-products-details">
                 <div>{{ product.description }}</div>
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import price from "../../services/price"
 
 export default {
@@ -43,6 +44,7 @@ export default {
         };
     },
     methods:{
+        ...mapActions('cart',['removeFromCart']),
         listPrice(value){
             return price.listPrice(value);
         },
