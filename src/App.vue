@@ -7,7 +7,7 @@
       <ul class="navbar-nav ml-auto d-flex flex-row nav-menu ">
         <li class="nav-item px-2" title='Caixa'>
           <router-link to="/cashier" class="nav-link">
-            <i class="bi bi-calculator px-2"></i>
+            <i class="bi bi-cart px-2"></i>
             <a class=show-on-mobile>Caixa</a>
           </router-link>
         </li>

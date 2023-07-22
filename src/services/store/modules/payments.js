@@ -13,32 +13,57 @@ const state = {
   };
   
   const mutations = {
-    // Defina as mutations do módulo aqui
-    // Exemplo:
-    // SET_ITEM(state, payload) {
-    //   state.item = payload;
-    // },
-    // ADD_ITEM(state, payload) {
-    //   state.items.push(payload);
-    // },
-    // REMOVE_ITEM(state, index) {
-    //   state.items.splice(index, 1);
-    // },
-  };
+    addPayment(state, payment){
+          state.status = 'em pagamento'
+          let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
+          if(exists !== -1 ){
+              state.payments[exists].method_value = payment.method_value
+          }else{
+              state.payments.push(payment);
+          }
+          
+      },
+      removePayment(state, payment){
+          state.status = 'em pagamento'
+          let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
+          if(exists !== -1){
+              state.payments.splice(exists,1)
+          }else{
+              alert('impossivel remover este apgamento')
+          }
+          
+      },
+    };
   
   const actions = {
-    // Defina as actions do módulo aqui
-    // Exemplo:
-    // setItem({ commit }, item) {
-    //   commit('SET_ITEM', item);
-    // },
-    // addItem({ commit }, item) {
-    //   commit('ADD_ITEM', item);
-    // },
-    // removeItem({ commit }, index) {
-    //   commit('REMOVE_ITEM', index);
-    // },
-  };
+    addPayment({commit},pagamento){
+      return new Promise(resolve =>{
+        commit('addPayment',pagamento)
+        resolve(pagamento)
+      })
+    },
+
+    removePayment({commit},pagamento){
+      return new Promise(resolve =>{
+        commit('removePayment',pagamento)
+        resolve(pagamento)
+      })
+    },
+
+    addDisconts({commit},discont){
+      return new Promise(resolve =>{
+        commit('addDisconts',discont)
+        resolve(discont)
+      })
+    },
+
+    removeDisconts({commit},discont){
+        return new Promise(resolve =>{
+          commit('removeDisconts',discont)
+          resolve(discont)
+        })
+      },
+    };
   
   export default {
     // Defina outras configurações do módulo, se necessário

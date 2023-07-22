@@ -24,126 +24,23 @@ const state = {
     invoice_coupon:'',
     invoice_xml:'',
     customer: {
-        document: "1",
-        name: "Cliente não identificado",
-        email: "",
-        phone: "",
-        type: "",
-        store_partiner_id: "",
-        store_partiner_name: ""
+        // modulo person
     },
     salesman: {
-        document: "2",
-        name: "Vendedor não identificado",
-        email: "",
-        phone: "",
-        type: "",
-        store_partiner_id: "",
-        store_partiner_name: ""
+         // modulo person
     },
     payments: [
-        {
-            value:0.00,
-            payment_method_id: 1,
-            payment_date:'',
-        }
+        // modulo payment
     ],
     items:[
-        {
-            category:0,
-            description:"",
-            id:0,
-            price:0,
-            provider:"",
-            quantity:5,
-            sku:"",
-            total:0,
-            value:0,
-            website:null,            
-            disconts:[
-                {
-                    code:'',
-                    price:0.0,
-                    description:'',
-                    value:'',
-                    percent:0
-                }
-            ]
-        },
+        // modulo cart
     ],
     disconts: [
-        {
-            id: '',
-            with_client: "",
-            code: "",
-            description: "",
-            value: 10,
-            all_products: 0,
-            acumulate: false,
-            percent: true,
-            quantity: 0
-        }
+        // modulo discont
     ]
 };
 
 const actions = {
-    //CARRINHO ...
-    addItem({commit},product){
-        return new Promise(resolve =>{
-            commit('addItem',product)
-            resolve(product)
-        })
-    },
-    removeItem({commit},product){
-        return new Promise(resolve =>{
-            commit('removeItem',product)
-            resolve(product)
-        })
-    },
-    qtdItem({commit},product){
-        return new Promise(resolve =>{
-            commit('qtdItem',product)
-            resolve(product)
-        })
-    },    
-    quicksearch({commit},search){
-        return new Promise(resolve =>{
-            commit('quicksearch',search)
-            resolve(search)
-        })
-    },
-    cleanCart({commit}){
-        return new Promise(resolve =>{
-            commit('cleanCart')
-            resolve()
-        })
-    },
-    //PAGAMENTOS
-    addPayment({commit},pagamento){
-        return new Promise(resolve =>{
-            commit('addPayment',pagamento)
-            resolve(pagamento)
-        })
-    },
-    removePayment({commit},pagamento){
-        return new Promise(resolve =>{
-            commit('removePayment',pagamento)
-            resolve(pagamento)
-        })
-    },
-    //discontS
-    addDisconts({commit},discont){
-        return new Promise(resolve =>{
-            commit('addDisconts',discont)
-            resolve(discont)
-        })
-    },
-    removeDisconts({commit},discont){
-        return new Promise(resolve =>{
-            commit('removeDisconts',discont)
-            resolve(discont)
-        })
-    },
     // addObs
     addObs({commit},obs){
         return new Promise(resolve =>{
@@ -157,119 +54,9 @@ const actions = {
             commit('cleanSale',state)
             resolve()
         })
-    },
-    //cliente vendedor
-    addCustomer({commit},value){
-        return new Promise(resolve =>{
-            commit('addCustomer',value)
-            resolve()
-        })
-    },
-    removeCustomer({commit}){
-        return new Promise(resolve =>{
-            commit('removeCustomer')
-            resolve()
-        })
-    },
-    addSalesman({commit},value){
-        return new Promise(resolve =>{
-            commit('addSalesman',value)
-            resolve()
-        })
-    },
-    removeSalesman({commit}){
-        return new Promise(resolve =>{
-            commit('removeSalesman')
-            resolve()
-        })
-    },
-    forceCustomer({commit},userType){
-        return new Promise(resolve =>{
-            commit('forceCustomer',userType)
-            resolve(userType)
-        })
-    },
+    },   
 };
 const mutations = {
-    //CART ...
-    addItem(state, product){
-        state.status = 'seleção de products'
-        let exists = state.items.findIndex(x => x.sku === product.sku);
-        if(exists !== -1){
-            state.items[exists].quantity = state.items[exists].quantity+1
-        }else{
-            product.quantity        = 1
-            product.disconts        = []
-            product.value           = product.price
-            state.items.push(product)
-            state.qtd_items         = state.qtd_items +1
-        }
-        service.processItemValue(state);
-    },
-    removeItem(state,product){
-        state.status = 'seleção de products'
-        let exists = state.items.findIndex(x => x.sku === product.sku);
-        if(exists !== -1){
-            state.items.splice(exists,1)
-            state.qtd_items = state.qtd_items -1
-        }else{
-            alert('produto não pode ser removido')
-        }
-        service.processItemValue(state);
-    },
-    qtdItem(state, product){
-        state.status = 'seleção de products'
-        let exists = state.items.findIndex(x => x.sku === product.sku);
-        state.items[exists].quantity = product.quantity
-        service.processItemValue(state,exists);
-    },   
-    cleanCart(state){
-        state.status = 'sem venda'
-        state.items  = [],
-        service.total(state);
-    },   
-    // PAYMENTS...
-    addPayment(state, payment){
-        state.status = 'em pagamento'
-        let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
-        if(exists !== -1 ){
-            state.payments[exists].method_value = payment.method_value
-        }else{
-            state.payments.push(payment);
-        }
-        service.total(state);
-    },
-    removePayment(state, payment){
-        state.status = 'em pagamento'
-        let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
-        if(exists !== -1){
-            state.payments.splice(exists,1)
-        }else{
-            alert('impossivel remover este apgamento')
-        }
-        service.total(state);
-    },
-    //DISCONTS ...
-    addDisconts(state, discont){
-        state.status = 'em disconts'
-        state.disconts.push(discont);
-        state.forceCustomer = discont.with_client
-        service.addDiscontsToProducts(state);
-    },
-    removeDisconts (state, discont){
-        state.status = 'em disconts'
-        let exists = state.disconts.findIndex(x => x.id === discont.id);
-        if(exists !== -1){
-            state.disconts.splice(exists,1)
-        }else{
-            alert('impossivel remover discont')
-        }
-        if(discont.with_client){
-            service.removeForceCustomer(state)
-        }
-        service.addDiscontsToProducts(state)
-    },
-    //  OBSERVATION
     addObs(state, obs){
         state.obs = obs
     },
@@ -323,39 +110,7 @@ const mutations = {
         state.disconts = []
         service.total(state)
     },
-    //CLIENTE
-    addCustomer(state, customer){
-        state.customer = customer
-        service.total(state)
-    },
-    removeCustomer(state){
-        state.customer = {
-            document: "1",
-            name: "Cliente não identificado",
-            email: "",
-            phone: "",
-            type: "",
-            store_partiner_id: "",
-            store_partiner_name: ""
-        }
-        service.total(state)
-    },
-    addSalesman(state, salesman){
-        state.salesman = salesman
-        service.total(state)
-    },
-    removeSalesman(state){
-        state.salesman = {
-            document: "2",
-            name: "Vendedor não identificado",
-            email: "",
-            phone: "",
-            type: "",
-            store_partiner_id: "",
-            store_partiner_name: ""
-        }
-        service.total(state)
-    },
+    
 };
 const getters = {
     getItems(state){
@@ -363,25 +118,6 @@ const getters = {
     }
 };
 const service ={
-    /*
-        calculate total of a product ( quantity * value_unitary)
-    */
-    processItemValue(state,indice){
-        if(typeof(indice) !== 'undefined'){
-            if(typeof (state.items[indice].value) === 'undefined'){
-                alert('erro ao calcular total do produto')
-            }
-            state.items[indice].total = (state.items[indice].quantity * state.items[indice].value)
-        }else{
-            state.items.forEach((product)=>{
-                if(typeof(product.value) === 'undefined'){
-                    alert('erro ao calcular total do produto')
-                }
-                product.total = (product.quantity * product.value)
-            })
-        }
-    this.addDiscontsToProducts(state)
-    },
     total(state){
         state.products_value=0
         state.payments_value=0

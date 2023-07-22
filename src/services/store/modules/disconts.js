@@ -13,18 +13,21 @@ const state = {
   };
   
   const mutations = {
-    // Defina as mutations do módulo aqui
-    // Exemplo:
-    // SET_ITEM(state, payload) {
-    //   state.item = payload;
-    // },
-    // ADD_ITEM(state, payload) {
-    //   state.items.push(payload);
-    // },
-    // REMOVE_ITEM(state, index) {
-    //   state.items.splice(index, 1);
-    // },
-  };
+    addDisconts(state, discont){
+        state.status = 'em disconts'
+        state.disconts.push(discont);
+        state.forceCustomer = discont.with_client
+    },
+    removeDisconts (state, discont){
+        state.status = 'em disconts'
+        let exists = state.disconts.findIndex(x => x.id === discont.id);
+        if(exists !== -1){
+            state.disconts.splice(exists,1)
+        }else{
+            alert('impossivel remover discont')
+        }
+      },
+    };
   
   const actions = {
     // Defina as actions do módulo aqui

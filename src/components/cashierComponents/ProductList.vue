@@ -58,8 +58,9 @@
         :key="page" 
         class='px-1'
         @click="goToPage(page)" 
-        :class="{ 'btn btn-primary rounded': page === currentPage, ' btn-sm': page !== currentPage }
-        ">{{ page }}</span>
+        :class="{ 'btn btn-primary rounded': page === currentPage, ' btn-sm': page !== currentPage }">
+        {{ page }}
+      </span>
       <button @click="nextPage" :disabled="currentPage * productsPerPage >= products.length" class="btn btn-primary btn-sm ">
         <i class="bi bi-chevron-right px-2"></i>
       </button>

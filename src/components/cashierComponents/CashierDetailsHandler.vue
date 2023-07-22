@@ -29,6 +29,9 @@
           </li>
         </ul>
       </div>
+      <div class='pe-3'>
+        <i class="bi bi-cart-x clear text-danger" @click="clearCart" ></i>
+      </div>
     </nav>
 
     <div class="component-container mb-2">
@@ -45,6 +48,7 @@ import CartList from './CartList.vue';
 import CupomList from './CupomList.vue';
 import PaymentsList from './PaymentsList.vue';
 import CustomerSelerList from './CustomerSelerList.vue';
+import {  mapActions } from 'vuex';
 
 export default {
   name: 'CashierDetailsHandler',
@@ -62,7 +66,10 @@ export default {
   methods: {
     showComponent(componentName) {
       this.activeComponent = componentName;
-    }
+    },
+    ...mapActions(
+      'cart',['clearCart'],
+    ),
   }
 };
 </script>

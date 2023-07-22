@@ -1,7 +1,7 @@
 // Importe qualquer dependência necessária aqui, se aplicável
 
 const state = {
-    example:null
+    person:null
     // Defina o estado inicial do módulo aqui
     // Exemplo: item: null, items: []
   };
@@ -15,31 +15,68 @@ const state = {
   };
   
   const mutations = {
-    // Defina as mutations do módulo aqui
-    // Exemplo:
-    // SET_ITEM(state, payload) {
-    //   state.item = payload;
-    // },
-    // ADD_ITEM(state, payload) {
-    //   state.items.push(payload);
-    // },
-    // REMOVE_ITEM(state, index) {
-    //   state.items.splice(index, 1);
-    // },
+    //CLIENTE
+    addCustomer(state, customer){
+      state.customer = customer
+      },
+      removeCustomer(state){
+          state.customer = {
+              document: "1",
+              name: "Cliente não identificado",
+              email: "",
+              phone: "",
+              type: "",
+              store_partiner_id: "",
+              store_partiner_name: ""
+          }
+      },
+      addSalesman(state, salesman){
+          state.salesman = salesman
+      },
+      removeSalesman(state){
+          state.salesman = {
+              document: "2",
+              name: "Vendedor não identificado",
+              email: "",
+              phone: "",
+              type: "",
+              store_partiner_id: "",
+              store_partiner_name: ""
+          }
+      },
   };
   
   const actions = {
-    // Defina as actions do módulo aqui
-    // Exemplo:
-    // setItem({ commit }, item) {
-    //   commit('SET_ITEM', item);
-    // },
-    // addItem({ commit }, item) {
-    //   commit('ADD_ITEM', item);
-    // },
-    // removeItem({ commit }, index) {
-    //   commit('REMOVE_ITEM', index);
-    // },
+    addCustomer({commit},value){
+      return new Promise(resolve =>{
+          commit('addCustomer',value)
+          resolve()
+      })
+  },
+  removeCustomer({commit}){
+      return new Promise(resolve =>{
+          commit('removeCustomer')
+          resolve()
+      })
+  },
+  addSalesman({commit},value){
+      return new Promise(resolve =>{
+          commit('addSalesman',value)
+          resolve()
+      })
+  },
+  removeSalesman({commit}){
+      return new Promise(resolve =>{
+          commit('removeSalesman')
+          resolve()
+      })
+  },
+  forceCustomer({commit},userType){
+      return new Promise(resolve =>{
+          commit('forceCustomer',userType)
+          resolve(userType)
+      })
+  },
   };
   
   export default {
