@@ -201,7 +201,7 @@ export default {
 
 <style>
 /* NOT SCOPED */
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .show-on-mobile {
     display: none;
   }
