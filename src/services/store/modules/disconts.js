@@ -1,15 +1,11 @@
-// Importe qualquer dependência necessária aqui, se aplicável
-
 const state = {
-    // Defina o estado inicial do módulo aqui
-    // Exemplo: item: null, items: []
+    disconts: [],
   };
   
   const getters = {
-    // Defina os getters do módulo aqui
-    // Exemplo:
-    // getItem: state => state.item,
-    // getItems: state => state.items,
+    getItems(state) {
+      return state.disconts;
+    },
   };
   
   const mutations = {
@@ -22,25 +18,29 @@ const state = {
         state.status = 'em disconts'
         let exists = state.disconts.findIndex(x => x.id === discont.id);
         if(exists !== -1){
-            state.disconts.splice(exists,1)
+          state.disconts.splice(exists,1)
         }else{
-            alert('impossivel remover discont')
+          alert('impossivel remover discont')
         }
       },
-    };
+      clearDiscounts({ commit }) {
+        return new Promise(resolve => {
+          commit('clearDiscounts');
+          resolve();
+        });
+      },
+    }
   
   const actions = {
-    // Defina as actions do módulo aqui
-    // Exemplo:
-    // setItem({ commit }, item) {
-    //   commit('SET_ITEM', item);
-    // },
-    // addItem({ commit }, item) {
-    //   commit('ADD_ITEM', item);
-    // },
-    // removeItem({ commit }, index) {
-    //   commit('REMOVE_ITEM', index);
-    // },
+    addDisconts({ commit }, discont) {
+      commit('addDisconts', discont);
+    },
+    removeDisconts({ commit }, discont) {
+        commit('removeDisconts', discont);
+      },
+    clearDiscounts({ commit }) {
+      commit('clearDiscounts');
+    },
   };
   
   export default {

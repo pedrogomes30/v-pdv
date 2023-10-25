@@ -39,7 +39,7 @@
           :key="action.label" 
           :class="action.icon + ' ' +  action.iconColor" 
           class='px-2'
-          @click="action.action"
+          @click="handleAction(action)"
           :title="action.label"
         />
       </div>
@@ -65,7 +65,7 @@ export default {
   name: 'CashierDetailsHandler',
   components: {
     CartList,
-    CupomList,
+    CupomList,  
     PaymentsList,
     CustomerSelerList
   },
@@ -145,10 +145,43 @@ export default {
     showComponent(componentName) {
       this.activeComponent = componentName;
       this.activeAction = this.actions[this.activeComponent]
+      console.log(this.actions[this.activeComponent]);
+
     },
     ...mapActions(
       'cart',['clearCart'],
+      'disconts',['clearDiscounts'],
     ),
+     handleAction(action) {
+      switch(action.action){
+        case 'clearCart':
+          this.clearCart();
+          break;
+        case 'addCupon':
+          alert('Adicionar Cupom')
+          // this.addCupon();
+          break;
+        case 'clearCupons':
+          this.clearDiscounts();
+          break;
+        case 'addPayment':
+          alert('Adicionar Pagamento')
+          // this.addPayment();
+          break;
+        case 'clearPayments':
+          alert('Limpar Pagamentos')
+          // this.clearPayments();
+          break;
+        case 'clearCustomerSeller':
+          alert('Limpar Cliente/Vendedor')
+          // this.clearCustomerSeller();
+          break;
+        default:
+          console.log('Ação não encontrada')
+      }
+      console.log(action)
+      return false;
+    },
   }
 };
 </script>
@@ -173,18 +206,18 @@ export default {
   color:var(--bs-gray-200);
 }
 
-.selected:not([href="/"]) {
+.selected {
   background: var(--bs-primary);
   border-radius: 10px;
-  color: var(--bs-gray-200); 
+  color: var(--bs-gray-200);
   transition: background-color 0.3s, font-size 0.3s;
   border: 1px solid black;
 }
 
-
 .selected a {
   color: var(--bs-gray-200);
-  font-size: 1.1rem; 
-  padding-right:0.40rem;
+  font-size: 1.1rem;
+  padding-right: 0.40rem;
 }
+
 </style>

@@ -109,7 +109,7 @@ const state = {
       return new Promise(resolve => {
         commit('clearItems');
         resolve();
-      });
+      }); 
     },
 
     addDiscount({ commit }, { product, code, value }) {
