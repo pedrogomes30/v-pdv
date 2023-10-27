@@ -1,43 +1,61 @@
-// Importe qualquer dependência necessária aqui, se aplicável
-
 const state = {
-    // Defina o estado inicial do módulo aqui
-    // Exemplo: item: null, items: []
+    disconts: [],
   };
   
   const getters = {
-    // Defina os getters do módulo aqui
-    // Exemplo:
-    // getItem: state => state.item,
-    // getItems: state => state.items,
+    getItems(state) {
+      return state.disconts;
+      /*
+      "disconts": [
+            {
+                "id": 1,
+                "with_client": "",
+                "code": "#AVAR",
+                "description": "aplica 10% em um produto avariado",
+                "value": 10,
+                "all_products": 0,
+                "acumulate": 1,
+                "percent": 1,
+                "quantity": null,
+                "sku": "6927545997197"
+            }
+      */
+    },
   };
   
   const mutations = {
-    // Defina as mutations do módulo aqui
-    // Exemplo:
-    // SET_ITEM(state, payload) {
-    //   state.item = payload;
-    // },
-    // ADD_ITEM(state, payload) {
-    //   state.items.push(payload);
-    // },
-    // REMOVE_ITEM(state, index) {
-    //   state.items.splice(index, 1);
-    // },
-  };
+    addDisconts(state, discont){
+        state.status = 'em disconts'
+        state.disconts.push(discont);
+        state.forceCustomer = discont.with_client
+    },
+    removeDisconts (state, discont){
+        state.status = 'em disconts'
+        let exists = state.disconts.findIndex(x => x.id === discont.id);
+        if(exists !== -1){
+          state.disconts.splice(exists,1)
+        }else{
+          alert('impossivel remover discont')
+        }
+      },
+      clearDiscounts({ commit }) {
+        return new Promise(resolve => {
+          commit('clearDiscounts');
+          resolve();
+        });
+      },
+    }
   
   const actions = {
-    // Defina as actions do módulo aqui
-    // Exemplo:
-    // setItem({ commit }, item) {
-    //   commit('SET_ITEM', item);
-    // },
-    // addItem({ commit }, item) {
-    //   commit('ADD_ITEM', item);
-    // },
-    // removeItem({ commit }, index) {
-    //   commit('REMOVE_ITEM', index);
-    // },
+    addDisconts({ commit }, discont) {
+      commit('addDisconts', discont);
+    },
+    removeDisconts({ commit }, discont) {
+        commit('removeDisconts', discont);
+      },
+    clearDiscounts({ commit }) {
+      commit('clearDiscounts');
+    },
   };
   
   export default {

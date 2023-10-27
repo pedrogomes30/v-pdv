@@ -7,6 +7,8 @@
         v-model="searchQuery"
         placeholder="Pesquisar produtos..."
         class="form-control "
+        @keypress.enter="hotAddProduct()"
+        autofocus
       />
       <button @click="updateProducts" class="mx-1 btn btn-primary">
         <i class="bi bi-arrow-repeat px-2"></i>
@@ -58,8 +60,9 @@
         :key="page" 
         class='px-1'
         @click="goToPage(page)" 
-        :class="{ 'btn btn-primary rounded': page === currentPage, ' btn-sm': page !== currentPage }
-        ">{{ page }}</span>
+        :class="{ 'btn btn-primary rounded': page === currentPage, ' btn-sm': page !== currentPage }">
+        {{ page }}
+      </span>
       <button @click="nextPage" :disabled="currentPage * productsPerPage >= products.length" class="btn btn-primary btn-sm ">
         <i class="bi bi-chevron-right px-2"></i>
       </button>
@@ -93,16 +96,24 @@ export default {
     filteredProducts() {
       const query = this.searchQuery.toLowerCase();
       let filtered = this.products;
-
-      if (query) {
-        filtered = filtered.filter((product) =>
-          product.description.toLowerCase().includes(query)
-        );
+      if (!isNaN(this.searchQuery) && this.searchQuery.length === 13) {
+        return filtered.filter((product) => product.sku === this.searchQuery);
       }
 
+      //search by description
+      if (query) {
+        filtered = filtered.filter(
+          (product) =>{
+            if(null !== product.description){
+              return product.description.toLowerCase().includes(query)
+            }
+          }
+        );
+      }
+      //filter by category
       if (this.selectedCategory) {
         filtered = filtered.filter(
-          (product) => product.category === this.selectedCategory
+          (product) => product.categoria_id === this.selectedCategory
         );
       }
 
@@ -139,6 +150,16 @@ export default {
         this.products = productData.products;
       }
     },
+    hotAddProduct(){
+      let filtered = this.products;
+      if (!isNaN(this.searchQuery) && this.searchQuery.length === 13) {
+        let product =  filtered.filter((product) => product.sku === this.searchQuery);
+        console.log('hotAddProduct',product);
+        this.addToCart(product[0]);
+        this.searchQuery = '';
+        return false;
+      }
+    },
     getDisplayedPages() {
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
@@ -146,16 +167,12 @@ export default {
     const half = Math.floor(displayCount / 2);
 
     if (totalPages <= displayCount) {
-      // Se o total de páginas for menor ou igual ao número desejado, retornar todas as páginas
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     } else if (currentPage <= half) {
-      // Se a página atual estiver no início, retornar as primeiras "displayCount" páginas
       return Array.from({ length: displayCount }, (_, i) => i + 1);
     } else if (currentPage >= totalPages - half) {
-      // Se a página atual estiver no final, retornar as últimas "displayCount" páginas
       return Array.from({ length: displayCount }, (_, i) => totalPages - displayCount + i + 1);
     } else {
-      // Se a página atual estiver no meio, retornar as páginas centradas na página atual
       const startPage = currentPage - half;
       return Array.from({ length: displayCount }, (_, i) => startPage + i);
     }
@@ -165,6 +182,7 @@ export default {
     },
     filterProducts(categoryId) {
       this.selectedCategory = categoryId;
+      this.filteredProducts();
     },
     sendToCart(product){
       console.log('CLICK ON', product);

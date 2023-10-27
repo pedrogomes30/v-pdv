@@ -1,29 +1,40 @@
 <template>
     <div class="cart-container ">
         <ul class="list-group">
-            <li v-for="product in cartItems" :key="product.id" class="list-group-item ">
-            <div class="row info-products-card p-0 m-0 d-flex align-items-center" >
-                <div class="col-auto info-products-icon" >
-                    <i class="bi bi-box cart px-2"></i>
-                    <i class="bi bi-eraser text-danger px-2" @click="removeFromCart(product)"></i>
+            <li v-for="product in cartItems" :key="product.id" class="list-group-item p-2 m-0 ">
+            <div class="row info-products-card p-0 m-0 d-flex align-items-center justify-content-center" >
+
+                <div class="col-1 info-products-icon px-2" >
+                    <i class="bi bi-box cart "></i>
+                    <i class="bi bi-eraser text-danger " @click="removeFromCart(product)"></i>
                 </div>
-                <div class="col info-products-details">
-                <div>{{ product.description }}</div>
-                <div>{{ product.sku }}</div>
+
+                <div class=" info-products-details" :class= "product.disconts.length > 0 ? 'col-5' : 'col-6' " >
+                    {{ product.description }} <br>
+                    {{ product.sku }}
                 </div>
-                <div class="col-auto disconts">
+
+                <div v-if='product.disconts.length > 0 ' class="col-2 disconts">
                     <div v-for="discont in product.disconts" :key="discont.code">
                         <h6>{{discont.code}}</h6>
                         <h6>{{discont.value}}</h6>
                     </div>
                 </div>
-                <div class="col-auto info-products-price">
-                <h6>{{product.quantity}}x R$ {{ listPrice(product.price) }}</h6>
-                <b><h5>R$ {{ listPrice(product.price * product.quantity) }}</h5></b>
+
+                <div class="col-2 quantity">
+                    <span> R$ {{ listPrice(product.price) }} </span><br>
+                    <i class="bi bi-chevron-left " @click="decrementProductCart(product)"></i>
+                    {{product.quantity}} 
+                    <i class="bi bi-chevron-right " @click="incrementProductCart(product)"></i>
+                </div>
+
+                <div class="col-3 info-products-price ">                
+                    <b><h6>R$ {{ listPrice(product.total) }}</h6></b>
                 </div>
             </div>
             </li>
         </ul>
+        
     </div>
 </template>
 
@@ -38,13 +49,10 @@ export default {
             cartItems: state => state.items,
         }),
     },
-    data() {
-        return {
-            
-        };
-    },
     methods:{
-        ...mapActions('cart',['removeFromCart']),
+        ...mapActions(
+            'cart',['removeFromCart', 'decrementProductCart', 'incrementProductCart'],
+        ),
         listPrice(value){
             return price.listPrice(value);
         },
@@ -56,13 +64,18 @@ export default {
 
 .cart-container {
   flex-grow: 1;
-  max-height: 100%;
   overflow-y: auto;
   border-radius: 10px;
+  font-size: 0.7rem;
+  height: 100%;
 }
 
+.clear{
+    font-size: 1rem;
+}
 .list-group-item{
     border: none;
     border-bottom: 1px solid black;
 }
+
 </style>

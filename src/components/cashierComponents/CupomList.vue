@@ -21,21 +21,24 @@
 
 <script>
 import price from "../../services/price"
-
+import { mapState, mapActions } from 'vuex';
 export default {
     name:'CartList',
+    computed: {
+        ...mapState('disconts', {
+            cartItems: state => state.items,
+        }),
+        ...mapActions(
+            'disconts',['addDiscont','removeDiscont'],
+        ),
+    },
     data() {
         return {
         searchQuery: '',
         connection:true,
         selectedCategory: null,
         disconts: [
-            {
-                code: 'EXEM-2',
-                value: '3.00',
-                description: 'use for test discont system',
-                allProducts: false
-            },
+            
         ]
         };
     },
