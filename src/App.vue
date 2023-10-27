@@ -1,5 +1,7 @@
 <template>
   <Load />
+  <CupomForm />
+  <PaymentForm />
   <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav p-0 px-2 default-menu">
     <router-link to="/" class="navbar-brand ">
       <img class="logo-image" alt="Home" src="./assets/logo.png">
@@ -77,11 +79,15 @@
 <script>
 import Alert from './components/systemComponents/AlertComponent.vue'
 import Load from './components/systemComponents/LoadComponent.vue'
+import CupomForm from './components/cashierComponents/forms/CupomForm.vue'
+import PaymentForm from './components/cashierComponents/forms/PaymentForm.vue'
 import system from './services/database/system'
 export default {
   components: {
     Alert,
-    Load
+    Load,
+    CupomForm,
+    PaymentForm
   },
   data() {
     return {
@@ -225,6 +231,19 @@ export default {
   border-bottom: 1px solid black;
   height: 100%;
   margin-left: -1px; 
+}
+
+.form-center {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; 
 }
 
 </style>

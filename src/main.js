@@ -17,6 +17,16 @@ const global = {
     type:'error',
     message:''
   },
+  system:{
+    formStatus:{
+      cupomForm:false,
+      paymentForm:false,
+      customerform:false, 
+      sellerForm:false,
+      obsForm:false,
+      changeProductForm:false,
+    }
+  },
   showNavBar:false,
 };
 

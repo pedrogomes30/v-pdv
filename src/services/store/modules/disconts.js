@@ -5,6 +5,21 @@ const state = {
   const getters = {
     getItems(state) {
       return state.disconts;
+      /*
+      "disconts": [
+            {
+                "id": 1,
+                "with_client": "",
+                "code": "#AVAR",
+                "description": "aplica 10% em um produto avariado",
+                "value": 10,
+                "all_products": 0,
+                "acumulate": 1,
+                "percent": 1,
+                "quantity": null,
+                "sku": "6927545997197"
+            }
+      */
     },
   };
   

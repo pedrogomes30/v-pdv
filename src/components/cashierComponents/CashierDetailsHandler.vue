@@ -158,15 +158,15 @@ export default {
           this.clearCart();
           break;
         case 'addCupon':
-          alert('Adicionar Cupom')
-          // this.addCupon();
+          this.$global.system.formStatus.cupomForm = true;
+          this.$eventBus.emit('cupomForm', this.$global.system.formStatus.cupomForm);
           break;
         case 'clearCupons':
           this.clearDiscounts();
           break;
         case 'addPayment':
-          alert('Adicionar Pagamento')
-          // this.addPayment();
+          this.$global.system.formStatus.paymentForm = true;
+          this.$eventBus.emit('paymentForm', this.$global.system.formStatus.paymentForm);
           break;
         case 'clearPayments':
           alert('Limpar Pagamentos')
