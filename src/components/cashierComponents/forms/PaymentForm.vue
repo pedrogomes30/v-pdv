@@ -2,10 +2,18 @@
   <div v-if="form" class="form-center w-100 h-100" @click="closeForm">
     <form class='base-content ads-form' @click.stop>
       <div class="mb-3">
-        <label for="text" class="form-label">Digite o código cupom</label>
-        <input type="text" class="form-control" id="cod_cupom" aria-describedby="emailHelp">
-        <div id="text" class="form-text">Descontos só são validos mediante a um cupom!</div>
+        <label for="number" class="form-label">informe o valor abaixo (R$)</label>
+        <input type="number" class="form-control" id="cod_cupom" aria-describedby="emailHelp">
       </div>
+      <div class="mb-3">  
+          <label for="inputCashier" class="form-label text-light">
+            <i class="bi bi-calculator text-light "></i>
+            Forma de pagamento</label>
+          <select class="form-select" v-model="tempUser.cashier" id="cashier">
+            <option value="">selecione forma</option>
+            <option v-for="paymentSelect in paymentSelects" :value="cashier.cashier_name" :key="paymentSelect.id">{{ cashier.cashier_name }}</option>
+          </select>
+        </div>
       <div class="mb-3">
         <label class="form-label">{{description}}</label>
       </div>
@@ -26,6 +34,7 @@ export default {
     return {
       form: false,
       description:'',
+      paymentSelects:[],
     };
   },
   created() {
@@ -46,7 +55,10 @@ export default {
     closeForm(){
       this.$eventBus.emit('paymentForm', false);
     }
-  }
+  },
+  beforeMount() {
+    //get payment from 
+  },
 };
 </script>
 <style scoped>

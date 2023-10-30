@@ -3,29 +3,44 @@
     <form class='base-content ads-form' @click.stop>
       <div class="mb-3">
         <label for="text" class="form-label">Digite o código cupom</label>
-        <input type="text" class="form-control" id="cod_cupom" aria-describedby="emailHelp">
+        <input type="text" v-model="cupomSelected.code" class="form-control" id="cod_cupom" @blur="searchCupom()">
         <div id="text" class="form-text">Descontos só são validos mediante a um cupom!</div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">{{description}}</label>
+      <div v-if=cupomSelected.description class="mb-3">
+        <label class="form-label">{{cupomSelected.description}}</label>
       </div>
+
+      <div class="mb-3">
+        <label for="defaultCupons" class="form-label">Cupons padrões</label>
+        <div v-for="(cupon, index) in defaultCupons" :key="index" class="form-check">
+          <input class="form-check-input" type="radio" :id="`cupom-${index}`" :value="cupon" name="cupom" @click="setSelect(cupon)">
+          <label class="form-check-label" :for="`cupom-${index}`">
+            {{ cupon.code }} - {{ cupon.description }}
+          </label>
+        </div>
+      </div>
+
       <button @click="formAction" type="submit" class="btn btn-primary ">Adicionar</button>
     </form>
   </div>
 </template>
 
-
-
 <script>
+import system from '../../../services/database/system'
+// import getCupom from '../../../services/api/cupom'
+
 export default {
-  name:'CupomForm',
-  components: {
-    
-  },
+  name: 'CupomForm',
+  components: {},
   data() {
     return {
       form: false,
-      description:'',
+      description: '',
+      defaultCupons: [],
+      cupomSelected: {
+        code: '',
+        description: '',
+      },
     };
   },
   created() {
@@ -38,21 +53,38 @@ export default {
     setForm(value) {
       this.form = value;
     },
-    formAction(){
-      //form logic here
-
+    formAction() {
+      // form logic here
+      // add cupon to cart
       this.$eventBus.emit('cupomForm', false);
     },
-    closeForm(){
+    closeForm() {
       this.$eventBus.emit('cupomForm', false);
+    },
+    setSelect(selected) {
+      this.cupomSelected = selected;
+    },
+    async searchCupom() {
+      console.log('Função searchCupom acionada');
+      if(this.cupomSelected.code === ''){
+        return;
+      } 
+      // Lógica para buscar o cupom no indexedDB e na API
+      // this.cupomSelected = await getCupom(this.cupomSelected.code);
+      // console.log('Função getCupom acionada');
+    },
+  },
+  async beforeShow() {
+    let data = await system.get();
+    if (data.length > 0){
+      this.defaultCupons = data[0][0].cupoms;
     }
-  }
+    //get cupons from  indexedDB and set to defaultCupons
+  },
+
 };
 </script>
+
 <style scoped>
 
-
-.ads-form{
-  height: unset;  
-}
 </style>

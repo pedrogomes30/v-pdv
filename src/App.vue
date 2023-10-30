@@ -246,4 +246,7 @@ export default {
   z-index: 9999; 
 }
 
+.ads-form{
+  height: unset;  
+}
 </style>
