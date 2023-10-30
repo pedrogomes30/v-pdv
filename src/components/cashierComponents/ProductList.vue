@@ -154,7 +154,6 @@ export default {
       let filtered = this.products;
       if (!isNaN(this.searchQuery) && this.searchQuery.length === 13) {
         let product =  filtered.filter((product) => product.sku === this.searchQuery);
-        console.log('hotAddProduct',product);
         this.addToCart(product[0]);
         this.searchQuery = '';
         return false;

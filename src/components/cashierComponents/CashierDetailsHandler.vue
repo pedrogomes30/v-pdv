@@ -145,7 +145,6 @@ export default {
     showComponent(componentName) {
       this.activeComponent = componentName;
       this.activeAction = this.actions[this.activeComponent]
-      console.log(this.actions[this.activeComponent]);
 
     },
     ...mapActions(
@@ -179,7 +178,6 @@ export default {
         default:
           console.log('Ação não encontrada')
       }
-      console.log(action)
       return false;
     },
   }
