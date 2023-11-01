@@ -27,7 +27,8 @@
 
 <script>
 import system from '../../../services/database/system'
-// import getCupom from '../../../services/api/cupom'
+import { getCupom } from '../../../services/api/cupom'
+import { mapActions } from 'vuex';
 
 export default {
   name: 'CupomForm',
@@ -50,12 +51,11 @@ export default {
     this.$eventBus.off('cupomForm', this.setForm);
   },
   methods: {
+    ...mapActions('cupoms', ['addcupoms']),
     setForm(value) {
       this.form = value;
     },
     formAction() {
-      // form logic here
-      // add cupon to cart
       this.$eventBus.emit('cupomForm', false);
     },
     closeForm() {
@@ -65,23 +65,42 @@ export default {
       this.cupomSelected = selected;
     },
     async searchCupom() {
+      this.$global.load = true;
+      this.$eventBus.emit('load', this.$global.load);
+      this.apiLoad = true;
       console.log('Função searchCupom acionada');
-      if(this.cupomSelected.code === ''){
+      if (this.cupomSelected.code === '') {
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
         return;
-      } 
-      // Lógica para buscar o cupom no indexedDB e na API
-      // this.cupomSelected = await getCupom(this.cupomSelected.code);
-      // console.log('Função getCupom acionada');
+      }
+      try{
+        this.cupomSelected = await getCupom(this.cupomSelected.code);
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+        this.addcupoms(this.cupomSelected);
+        this.$global.alert = {show:true,type:'success',message:'Cupom adicionado com sucesso!'};
+        this.cupomSelected = {
+          code: '',
+          description: '',
+        };
+        // this.#global.cupomForm = false;
+        // this.$eventBus.emit('cupomForm', false);
+        //send cupom to current sale
+      }catch(err){
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+        this.$global.alert = {show:true,type:'error',message:err.message};
+        this.$eventBus.emit('alert-show', this.$global.alert);  
+      }
     },
   },
-  async beforeShow() {
+  async beforeMount() {
     let data = await system.get();
-    if (data.length > 0){
+    if (data.length > 0) {
       this.defaultCupons = data[0][0].cupoms;
     }
-    //get cupons from  indexedDB and set to defaultCupons
   },
-
 };
 </script>
 
