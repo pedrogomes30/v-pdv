@@ -1,27 +1,19 @@
-import TokenService from '../token'
+import TokenService from '../token';
 import axios from './index';
 
-export async function getCupom(cupomCode) {
+export function getCupom(cupomCode) {
     const token = TokenService.getToken(); 
   
     const headers = {
       Authorization: `Bearer ${token}`, 
     };
   
-    const data = {
-      code: cupomCode 
-    };
-  
-    return axios.get(`/cupom`, data, { headers })
+    return axios.get(`/cupom?code=${cupomCode}`, { headers })
       .then(response => {
-        if (response.data.error) {
-          throw new Error(response.data.data);
-        }
-        TokenService.setToken(response.data.data.access);
-        console.log("RESPONSE CUPOM",response)
-        return response;
+        return response.data.data;
       })
       .catch(error => {
-        throw new Error(error);
+        console.log(error);
+        throw new Error(error.response.data.data);
       });
-  }
+}

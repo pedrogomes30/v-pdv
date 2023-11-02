@@ -35,7 +35,7 @@ const state = {
     items:[
         // modulo cart
     ],
-    disconts: [
+    cupoms: [
         // modulo discont
     ]
 };

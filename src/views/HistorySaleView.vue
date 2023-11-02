@@ -24,7 +24,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
   text-align: center;
   padding: 2rem;
 }

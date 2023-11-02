@@ -1,17 +1,17 @@
 <template>
     <div class="discont-container ">
         <ul class="list-group">
-            <li v-for="discont in disconts" :key="discont.code" class="list-group-item ">
+            <li v-for="cupom in cupoms" :key="cupom.code" class="list-group-item ">
                 <div class="row info-products-card p-0 m-0 d-flex align-items-center" >
                     <div class="col-auto info-products-details">
                         <i class="bi bi-box cart px-2"></i>
                     </div>
                     <div class="col info-products-details">
-                        <div>{{ discont.description }}</div>
-                        <div>{{ discont.code }}</div>
+                        <div>{{ cupom.description }}</div>
+                        <div>{{ cupom.code }}</div>
                     </div>
                     <div class="col-auto info-products-price">
-                        <h6>- R$ {{ listPrice(discont.value) }}</h6>
+                        <h6>- R$ {{ listPrice(cupom.value) }}</h6>
                     </div>
                 </div>
             </li>
@@ -25,11 +25,11 @@ import { mapState, mapActions } from 'vuex';
 export default {
     name:'CartList',
     computed: {
-        ...mapState('disconts', {
-            cartItems: state => state.items,
+        ...mapState('cupoms', {
+            cupoms: state => state.cupoms,
         }),
         ...mapActions(
-            'disconts',['addDiscont','removeDiscont'],
+            'cupoms',['removeDiscont'],
         ),
     },
     data() {
@@ -37,9 +37,7 @@ export default {
         searchQuery: '',
         connection:true,
         selectedCategory: null,
-        disconts: [
-            
-        ]
+        
         };
     },
     methods:{

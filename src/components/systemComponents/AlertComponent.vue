@@ -77,7 +77,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   background-color: #f8f9fa;
-  z-index: 9999;
+  z-index: 9998;
   cursor: pointer;
   transition: opacity 0.3s ease;
 }

@@ -147,10 +147,10 @@ export default {
       this.activeAction = this.actions[this.activeComponent]
 
     },
-    ...mapActions(
-      'cart',['clearCart'],
-      'disconts',['clearDiscounts'],
-    ),
+     ...mapActions({
+      clearCart: 'cart/clearCart',
+      clearCupoms: 'cupoms/clearCupoms'
+    }),
      handleAction(action) {
       switch(action.action){
         case 'clearCart':
@@ -161,7 +161,7 @@ export default {
           this.$eventBus.emit('cupomForm', this.$global.system.formStatus.cupomForm);
           break;
         case 'clearCupons':
-          this.clearDiscounts();
+          this.clearCupoms();
           break;
         case 'addPayment':
           this.$global.system.formStatus.paymentForm = true;

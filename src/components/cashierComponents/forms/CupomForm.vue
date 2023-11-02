@@ -1,10 +1,10 @@
 <template>
   <div v-if="form" class="form-center w-100 h-100" @click="closeForm">
-    <form class='base-content ads-form' @click.stop>
+    <form class='base-content ads-form' @click.stop @submit.prevent="formAction">
       <div class="mb-3">
         <label for="text" class="form-label">Digite o código cupom</label>
-        <input type="text" v-model="cupomSelected.code" class="form-control" id="cod_cupom" @blur="searchCupom()">
-        <div id="text" class="form-text">Descontos só são validos mediante a um cupom!</div>
+        <input type="text" v-model="cupomSelected.code" class="form-control" id="cod_cupom" @blur="searchCupom">
+        <div id="text" class="form-text">Descontos só são válidos mediante a um cupom!</div>
       </div>
       <div v-if=cupomSelected.description class="mb-3">
         <label class="form-label">{{cupomSelected.description}}</label>
@@ -20,14 +20,15 @@
         </div>
       </div>
 
-      <button @click="formAction" type="submit" class="btn btn-primary ">Adicionar</button>
+      <button type="submit" class="btn btn-primary">Adicionar</button>
     </form>
   </div>
 </template>
 
 <script>
 import system from '../../../services/database/system'
-// import getCupom from '../../../services/api/cupom'
+import { getCupom } from '../../../services/api/cupom'
+import { mapActions } from 'vuex';
 
 export default {
   name: 'CupomForm',
@@ -50,12 +51,16 @@ export default {
     this.$eventBus.off('cupomForm', this.setForm);
   },
   methods: {
+    ...mapActions('cupoms', ['addCupom']),
     setForm(value) {
       this.form = value;
     },
     formAction() {
-      // form logic here
-      // add cupon to cart
+      this.addCupom(this.cupomSelected);
+      this.cupomSelected = {
+        code: '',
+        description: '',
+      };
       this.$eventBus.emit('cupomForm', false);
     },
     closeForm() {
@@ -65,23 +70,34 @@ export default {
       this.cupomSelected = selected;
     },
     async searchCupom() {
+      this.$global.load = true;
+      this.$eventBus.emit('load', this.$global.load);
+      this.apiLoad = true;
       console.log('Função searchCupom acionada');
-      if(this.cupomSelected.code === ''){
+      if (this.cupomSelected.code === '') {
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
         return;
-      } 
-      // Lógica para buscar o cupom no indexedDB e na API
-      // this.cupomSelected = await getCupom(this.cupomSelected.code);
-      // console.log('Função getCupom acionada');
+      }
+      try {
+        this.cupomSelected = await getCupom(this.cupomSelected.code);
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+        this.$global.alert = { show: true, type: 'success', message: 'Cupom adicionado com sucesso!' };
+      } catch (err) {
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+        this.$global.alert = { show: true, type: 'error', message: err.message };
+        this.$eventBus.emit('alert-show', this.$global.alert);
+      }
     },
   },
-  async beforeShow() {
+  async beforeMount() {
     let data = await system.get();
-    if (data.length > 0){
+    if (data.length > 0) {
       this.defaultCupons = data[0][0].cupoms;
     }
-    //get cupons from  indexedDB and set to defaultCupons
   },
-
 };
 </script>
 
