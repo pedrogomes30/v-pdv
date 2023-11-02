@@ -1,4 +1,6 @@
 import { createStore } from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
+
 
 import currentSale from './modules/currentSale';
 import cart from './modules/cart';
@@ -15,5 +17,12 @@ export default createStore({
         payments,
         person
     },
+    plugins: [
+        createPersistedState({
+          key: 'my-unique-key', // chave única para armazenamento local
+          paths: ['cart', 'cupoms'], // lista de módulos a serem persistidos
+          // outras opções
+        })
+      ]
   });
   

@@ -147,10 +147,10 @@ export default {
       this.activeAction = this.actions[this.activeComponent]
 
     },
-    ...mapActions(
-      'cart',['clearCart'],
-      'cupoms',['clearCupoms'],
-    ),
+     ...mapActions({
+      clearCart: 'cart/clearCart',
+      clearCupoms: 'cupoms/clearCupoms'
+    }),
      handleAction(action) {
       switch(action.action){
         case 'clearCart':

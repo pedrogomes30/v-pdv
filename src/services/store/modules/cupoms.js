@@ -1,19 +1,5 @@
 const state = {
-    cupoms: [{
-      active:1,
-      acumulate:1,
-      allproducts:1,
-      code:"AVAR",
-      default:1,
-      description:"aplica 10% em um produto avariado",
-      end_date:null,
-      label:"",
-      percent:1,
-      quantity:null,
-      start_date:null,
-      value:10,
-      with_validity:0
-    },
+    cupoms: [
     ],
   };
   
@@ -25,26 +11,36 @@ const state = {
   
   const mutations = {
     addcupoms(state, discont){
-        state.status = 'em cupoms'
-        state.cupoms.push(discont);
-        state.forceCustomer = discont.with_client
+      if(discont.acumulate === 1){
+        state.cupoms.push(discont)
+      }else if(state.cupoms.length > 0){
+        let exists = state.cupoms.findIndex(x => x.code === discont.code);
+        if(exists !== -1){
+          throw new Error('Cupom já adicionado')
+        }
+      }
+      switch(discont.label){
+        case 'client': state.forceCustomer = true; break;
+        case 'funcionario': state.forceEmployee = true; break;
+        case 'funcionarioParc': state.forceEmployeeParc = true; break;
+        default: break;
+      }
+      console.log('cupoms', state.cupoms)
+      
     },
     removecupoms (state, discont){
-        state.status = 'em cupoms'
-        let exists = state.cupoms.findIndex(x => x.id === discont.id);
-        if(exists !== -1){
-          state.cupoms.splice(exists,1)
-        }else{
-          alert('impossivel remover discont')
-        }
-      },
-      clearDiscounts({ commit }) {
-        return new Promise(resolve => {
-          commit('clearDiscounts');
-          resolve();
-        });
-      },
-    }
+      state.status = 'em cupoms'
+      let exists = state.cupoms.findIndex(x => x.id === discont.id);
+      if(exists !== -1){
+        state.cupoms.splice(exists,1)
+      }else{
+        alert('impossivel remover discont')
+      }
+    },
+    clearDiscounts(state) {
+      state.cupoms = [];
+    },
+  }
   
   const actions = {
     addCupom({ commit }, discont) {

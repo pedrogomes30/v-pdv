@@ -1,10 +1,10 @@
 <template>
   <div v-if="form" class="form-center w-100 h-100" @click="closeForm">
-    <form class='base-content ads-form' @click.stop>
+    <form class='base-content ads-form' @click.stop @submit.prevent="formAction">
       <div class="mb-3">
         <label for="text" class="form-label">Digite o código cupom</label>
-        <input type="text" v-model="cupomSelected.code" class="form-control" id="cod_cupom" @blur="searchCupom()">
-        <div id="text" class="form-text">Descontos só são validos mediante a um cupom!</div>
+        <input type="text" v-model="cupomSelected.code" class="form-control" id="cod_cupom" @blur="searchCupom">
+        <div id="text" class="form-text">Descontos só são válidos mediante a um cupom!</div>
       </div>
       <div v-if=cupomSelected.description class="mb-3">
         <label class="form-label">{{cupomSelected.description}}</label>
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <button @click="formAction" type="submit" class="btn btn-primary ">Adicionar</button>
+      <button type="submit" class="btn btn-primary">Adicionar</button>
     </form>
   </div>
 </template>
@@ -51,11 +51,16 @@ export default {
     this.$eventBus.off('cupomForm', this.setForm);
   },
   methods: {
-    ...mapActions('cupoms', ['addcupoms']),
+    ...mapActions('cupoms', ['addCupom']),
     setForm(value) {
       this.form = value;
     },
     formAction() {
+      this.addCupom(this.cupomSelected);
+      this.cupomSelected = {
+        code: '',
+        description: '',
+      };
       this.$eventBus.emit('cupomForm', false);
     },
     closeForm() {
@@ -74,24 +79,16 @@ export default {
         this.$eventBus.emit('load', this.$global.load);
         return;
       }
-      try{
+      try {
         this.cupomSelected = await getCupom(this.cupomSelected.code);
         this.$global.load = false;
         this.$eventBus.emit('load', this.$global.load);
-        this.addcupoms(this.cupomSelected);
-        this.$global.alert = {show:true,type:'success',message:'Cupom adicionado com sucesso!'};
-        this.cupomSelected = {
-          code: '',
-          description: '',
-        };
-        // this.#global.cupomForm = false;
-        // this.$eventBus.emit('cupomForm', false);
-        //send cupom to current sale
-      }catch(err){
+        this.$global.alert = { show: true, type: 'success', message: 'Cupom adicionado com sucesso!' };
+      } catch (err) {
         this.$global.load = false;
         this.$eventBus.emit('load', this.$global.load);
-        this.$global.alert = {show:true,type:'error',message:err.message};
-        this.$eventBus.emit('alert-show', this.$global.alert);  
+        this.$global.alert = { show: true, type: 'error', message: err.message };
+        this.$eventBus.emit('alert-show', this.$global.alert);
       }
     },
   },
