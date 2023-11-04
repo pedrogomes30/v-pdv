@@ -118,129 +118,17 @@ const getters = {
     }
 };
 const service ={
-    total(state){
-        state.products_value=0
-        state.payments_value=0
-        state.discont_value=0
-        state.total_value=0
-        state.change_value=0
-        state.qtd_items=0
-        state.qtd_payments=0
-        //products -- disconts
-        state.items.forEach(product => {
-            if(product.disconts.lenght !== 0){
-                product.disconts.forEach(discont => {
-                    state.discont_value += discont.price
-                })
-            }
-            state.total_value           += product.total
-            state.products_value        += product.quantity * product.price 
-            state.qtd_items++
-        })
-        //pagamento -- change_value
-        if(state.payments.length > 0){
-            state.payments.forEach(payment=>{
-                state.payments_value += payment.method_value
-                state.qtd_payments++ 
-            })
-        }
-        state.change_value = (state.payments_value - state.total_value)
-        state.change_value =+(state.change_value.toFixed(2))
-        //validar a venda
-        state.valid_sale = true
-        state.status = "Finalizada"
-        if(typeof(state.items) === 'undefined'){state.valid_sale = false; state.status=' Não há item nesta venda.'}
-        if(state.change_value >= 0 && state.payments_value === 0){state.valid_sale = false; state.status=' Não há pagamentos nesta venda.'}
-        if(state.total_value < 0 ){state.valid_sale = false; state.status=' venda com o total negativo.'}
-        if(state.products_value <=0){state.valid_sale = false; state.status=' venda com o total de products zerado.'}
-        if(state.discont_value > state.products_value){state.valid_sale = false; state.status=' valor de discont maior que o valor total da venda.'}
-        if(state.change_value <0){state.valid_sale = false; state.status=' valor de pagamento menor que o valor total da venda.'}
-        if(state.forceCustomer && state.customer.type !== state.forceCustomer){state.valid_sale = false; state.status=`necessário informar um ${state.forceCustomer} nesta venda.`}
+    recalculateSale(state){
+        console.log(state,'')
     },
-    // discontS ...
-    addDiscontsToProducts(state){
-        state.status = 'em disconts'
-        state.discont_value = 0 
-        var tempTotal = 0
-        state.items.forEach((product)=>{
-            tempTotal += product.total
-        })
-        if(typeof(state.disconts) !== 'undefined'){
-            //loop products
-            state.items.forEach((product)=>{
-                product.disconts = []
-                product.total = product.price * product.quantity
-                //loop disconts
-                state.disconts.forEach((discont)=>{
-                    //discont em todos os itens
-                    if(discont.all_products){
-                        let totalproduct = product.total
-                        //em %
-                        if(discont.percent){
-                            let discont_value   = (discont.value / 100) * totalproduct;
-                            product.disconts.push({
-                                code            :discont.code,
-                                description     :discont.description,
-                                price           :discont_value,
-                                value           :discont.value,
-                                percent         :discont.percent
-                            })
-                            product.total -= discont_value
-                        }
-                        //em R$
-                        else{
-                            //obter o total de products
-                            var percent_product = product.total/ tempTotal;
-                            var discontPercent = discont.valor * percent_product
-                            product.disconts.push({
-                                code        :discont.code,
-                                description :discont.description,
-                                price       :discontPercent,
-                                value       :'',
-                                percent     :discont.percent
-                            })
-                            product.total -= discontPercent
-                        }
-                        //discont em um SKU especifico
-                    }else{
-                        if(discont.sku === product.sku){
-                            let totalproduct = product.total
-                            //em %
-                            if(discont.percent){
-                                let discont_value   = (discont.value / 100) * totalproduct ;
-                                product.disconts.push({
-                                    code            :discont.code,
-                                    description     :discont.description,
-                                    price           :discont_value,
-                                    value           :discont.value,
-                                    percent         :discont.percent
-                                })
-                                product.total -= discont_value
-                            }
-                            //em R$
-                            else{
-                                product.disconts.push({
-                                    code            :discont.code,
-                                    price           :discont.value,
-                                    description     :discont.description,
-                                    value           :'',
-                                    percent         :discont.percent
-                                })
-                                product.total -= discont.value
-                            }
-                        }
-                    }
-                   state.forceCustomer = discont.with_client? discont.with_client : false
-                })
-            })
-            this.total(state)
-        }
-    },
-    removeForceCustomer(state){
-        state.forceCustomer = false
+    setForceLabel(state){
+        state.forceLabel = true
         service.total(state)
     },
-    
+    removeForceLabel(state){
+        state.forceLabel = false
+        service.total(state)
+    }    
 }
 export default {
   state,

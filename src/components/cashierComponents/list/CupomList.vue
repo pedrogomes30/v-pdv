@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import price from "../../services/price"
+import price from "../../../services/price"
 import { mapState, mapActions } from 'vuex';
 export default {
     name:'CartList',

@@ -72,9 +72,9 @@
 
 
 <script>
-import products from "../../services/database/products";
-import {getProduct} from "../../services/api/products";
-import price from "../../services/price"
+import products from "../../../services/database/products";
+import {getProduct} from "../../../services/api/products";
+import price from "../../../services/price"
 import { mapActions } from 'vuex';
 
 export default {

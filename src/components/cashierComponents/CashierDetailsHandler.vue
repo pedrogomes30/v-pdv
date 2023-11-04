@@ -55,10 +55,10 @@
 </template>
 
 <script>
-import CartList from './CartList.vue';
-import CupomList from './CupomList.vue';
-import PaymentsList from './PaymentsList.vue';
-import CustomerSelerList from './CustomerSelerList.vue';
+import CartList from './list/CartList.vue';
+import CupomList from './list/CupomList.vue';
+import PaymentsList from './list/PaymentsList.vue';
+import CustomerSelerList from './list/CustomerSelerList.vue';
 import {  mapActions } from 'vuex';
 
 export default {
@@ -149,7 +149,8 @@ export default {
     },
      ...mapActions({
       clearCart: 'cart/clearCart',
-      clearCupoms: 'cupoms/clearCupoms'
+      clearCupoms: 'cupoms/clearCupoms',
+      clearPayments:'payments/clearPayments',
     }),
      handleAction(action) {
       switch(action.action){
@@ -168,8 +169,7 @@ export default {
           this.$eventBus.emit('paymentForm', this.$global.system.formStatus.paymentForm);
           break;
         case 'clearPayments':
-          alert('Limpar Pagamentos')
-          // this.clearPayments();
+          this.clearPayments();
           break;
         case 'clearCustomerSeller':
           alert('Limpar Cliente/Vendedor')
