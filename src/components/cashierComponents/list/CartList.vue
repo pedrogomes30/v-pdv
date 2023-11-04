@@ -40,7 +40,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import price from "../../services/price"
+import price from "../../../services/price"
 
 export default {
     name:'CartList',

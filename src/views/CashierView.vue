@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import ProductList from '@/components/cashierComponents/ProductList.vue'
+import ProductList from '@/components/cashierComponents/list/ProductList.vue'
 import CashierDetailsHandler from '../components/cashierComponents/CashierDetailsHandler.vue'
 import SaleResume from '../components/cashierComponents/SaleResume.vue'
 import CashierActions from '../components/cashierComponents/CashierActions.vue'

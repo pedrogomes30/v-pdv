@@ -16,23 +16,29 @@
 </template>
 
 <script>
-import price from "../../services/price";
+import price from "../../../services/price";
+import { mapState, mapActions } from 'vuex';
 
 export default {
     name:'PaymentList',
+    computed: {
+        ...mapState('payments', {
+            payments: state => state.payments,
+        }),
+    },
     data() {
         return {
         searchQuery: '',
         connection:true,
         selectedCategory: null,
-        payments: [
+        methodIlustrator: [
             {
-                method: 'cartão crédito',
+                methodId: 1,
                 icon: 'bi bi-credit-card',
                 value: 0
             },
             {
-                method: 'cartão débito',
+                method: 2,
                 icon: 'bi bi-credit-card-2-back-fill',
                 value: 0
             },
@@ -53,6 +59,9 @@ export default {
         listPrice(value){
             return price.listPrice(value);
         },
+        ...mapActions(
+            'payments',['removePayment', 'addPayment'],
+        ),
     }
 }
 </script>

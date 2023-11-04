@@ -1,40 +1,47 @@
 <template>
   <div v-if="form" class="form-center w-100 h-100" @click="closeForm">
-    <form class='base-content ads-form' @click.stop>
+    <form class='base-content ads-form' @click.stop @submit.prevent="formAction">
       <div class="mb-3">
-        <label for="number" class="form-label">informe o valor abaixo (R$)</label>
-        <input type="number" class="form-control" id="cod_cupom" aria-describedby="emailHelp">
+        <label for="text" class="form-label">Digite o código cupom</label>
+        <input type="text" v-model="cupomSelected.code" class="form-control" id="cod_cupom" @blur="searchCupom">
+        <div id="text" class="form-text">Descontos só são válidos mediante a um cupom!</div>
       </div>
-      <div class="mb-3">  
-          <label for="inputCashier" class="form-label text-light">
-            <i class="bi bi-calculator text-light "></i>
-            Forma de pagamento</label>
-          <select class="form-select" v-model="tempUser.cashier" id="cashier">
-            <option value="">selecione forma</option>
-            <option v-for="paymentSelect in paymentSelects" :value="cashier.cashier_name" :key="paymentSelect.id">{{ cashier.cashier_name }}</option>
-          </select>
+      <div v-if=cupomSelected.description class="mb-3">
+        <label class="form-label">{{cupomSelected.description}}</label>
+      </div>
+
+      <div class="mb-3">
+        <label for="defaultCupons" class="form-label">Cupons padrões</label>
+        <div v-for="(cupon, index) in defaultCupons" :key="index" class="form-check">
+          <input class="form-check-input" type="radio" :id="`cupom-${index}`" :value="cupon" name="cupom" @click="setSelect(cupon)">
+          <label class="form-check-label" :for="`cupom-${index}`">
+            {{ cupon.code }} - {{ cupon.description }}
+          </label>
         </div>
-      <div class="mb-3">
-        <label class="form-label">{{description}}</label>
       </div>
-      <button @click="formAction" type="submit" class="btn btn-primary ">Adicionar</button>
+
+      <button type="submit" class="btn btn-primary">Adicionar</button>
     </form>
   </div>
 </template>
 
-
-
 <script>
+import system from '../../../services/database/system'
+import { getCupom } from '../../../services/api/cupom'
+import { mapActions } from 'vuex';
+
 export default {
-  name:'paymentForm',
-  components: {
-    
-  },
+  name: 'CupomForm',
+  components: {},
   data() {
     return {
       form: false,
-      description:'',
-      paymentSelects:[],
+      description: '',
+      defaultCupons: [],
+      cupomSelected: {
+        code: '',
+        description: '',
+      },
     };
   },
   created() {
@@ -44,27 +51,56 @@ export default {
     this.$eventBus.off('paymentForm', this.setForm);
   },
   methods: {
+    ...mapActions('cupoms', ['addCupom']),
     setForm(value) {
       this.form = value;
     },
-    formAction(){
-      //form logic here
-
-      this.$eventBus.emit('paymentForm', false);
+    formAction() {
+      this.addCupom(this.cupomSelected);
+      this.cupomSelected = {
+        code: '',
+        description: '',
+      };
+      this.$eventBus.emit('cupomForm', false);
     },
-    closeForm(){
-      this.$eventBus.emit('paymentForm', false);
-    }
+    closeForm() {
+      this.$eventBus.emit('cupomForm', false);
+    },
+    setSelect(selected) {
+      this.cupomSelected = selected;
+    },
+    async searchCupom() {
+      this.$global.load = true;
+      this.$eventBus.emit('load', this.$global.load);
+      this.apiLoad = true;
+      console.log('Função searchCupom acionada');
+      if (this.cupomSelected.code === '') {
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+        return;
+      }
+      try {
+        this.cupomSelected = await getCupom(this.cupomSelected.code);
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+        this.$global.alert = { show: true, type: 'success', message: 'Cupom adicionado com sucesso!' };
+      } catch (err) {
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
+        this.$global.alert = { show: true, type: 'error', message: err.message };
+        this.$eventBus.emit('alert-show', this.$global.alert);
+      }
+    },
   },
-  beforeMount() {
-    //get payment from 
+  async beforeMount() {
+    let data = await system.get();
+    if (data.length > 0) {
+      this.defaultCupons = data[0][0].cupoms;
+    }
   },
 };
 </script>
+
 <style scoped>
 
-
-.ads-form{
-  height: unset;  
-}
 </style>
