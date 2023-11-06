@@ -1,14 +1,9 @@
 // Importe qualquer dependência necessária aqui, se aplicável
 
-const state = [
-  {
-    method_alias:"Dinheiro",
-    method_description:"Dinheiro",
-    method_icon:"far fa-money-bill-alt",
-    method_id:2,
-    method_issue:1
-  }
-]
+const state = {
+  payments: 
+    []
+  };
   
   const getters = {
     getPayments(state) {

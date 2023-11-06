@@ -2,7 +2,7 @@
     <div class="discont-container ">
         <ul class="list-group">
             <li v-for="cupom in cupoms" :key="cupom.code" class="list-group-item ">
-                <div class="row info-products-card p-0 m-0 d-flex align-items-center" >
+                <div class="row info-products-card d-flex align-items-center" >
                     <div class="col-auto info-products-details">
                         <i class="bi bi-box cart px-2"></i>
                     </div>

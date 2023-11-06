@@ -246,6 +246,10 @@ export default {
   z-index: 100; 
 }
 
+.normalize-action{
+    font-size: initial;
+}
+
 .ads-form{
   height: unset;  
 }

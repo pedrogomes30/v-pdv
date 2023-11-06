@@ -1,13 +1,15 @@
 <template>
     <div class="discont-container ">
         <ul class="list-group">
-            <li v-for="payment in payments" :key="payment.method" class="list-group-item ">
-                <div class="row info-products-card p-0 m-0 d-flex align-items-center" >
+            <li v-for="payment in payments" :key="payment.method_alias" class="list-group-item ">
+                <div class="row info-products-card d-flex align-items-center" >
                     <div class="col info-products-details">
-                        <div><i :class="payment.icon" class='pe-2'></i>{{ payment.method }}</div>
+                        <i class="bi bi-eraser text-danger pe-2 normalize-action" @click="removePayment(payment)"></i>
+                        <i :class="payment.method_icon" class='pe-2 normalize-action'></i>
+                        {{ payment.method_alias }}
                     </div>
                     <div class="col-auto info-products-price">
-                        <h6>R$ {{ listPrice(payment.value) }}</h6>
+                        <h6>R$ {{ listPrice(payment.method_value) }}</h6>
                     </div>
                 </div>
             </li>

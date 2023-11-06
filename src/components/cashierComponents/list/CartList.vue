@@ -2,18 +2,11 @@
     <div class="cart-container ">
         <ul class="list-group">
             <li v-for="product in cartItems" :key="product.id" class="list-group-item p-2 m-0 ">
-            <div class="row info-products-card p-0 m-0 d-flex align-items-center justify-content-center" >
-
-                <div class="col-1 info-products-icon px-2" >
-                    <i class="bi bi-box cart "></i>
-                    <i class="bi bi-eraser text-danger " @click="removeFromCart(product)"></i>
-                </div>
-
-                <div class=" info-products-details" :class= "product.disconts.length > 0 ? 'col-5' : 'col-6' " >
-                    {{ product.description }} <br>
-                    {{ product.sku }}
-                </div>
-
+            <div class="info-products-card d-flex align-items-center justify-content-center" >
+                <i class="bi bi-eraser text-danger pe-2 normalize-action" @click="removeFromCart(product)"></i>
+                <i class="bi bi-box cart px-2 normalize-action"></i>
+                {{ product.description }} <br>
+                {{ product.sku }}
                 <div v-if='product.disconts.length > 0 ' class="col-2 disconts">
                     <div v-for="discont in product.disconts" :key="discont.code">
                         <h6>{{discont.code}}</h6>
@@ -70,9 +63,7 @@ export default {
   height: 100%;
 }
 
-.clear{
-    font-size: 1rem;
-}
+
 .list-group-item{
     border: none;
     border-bottom: 1px solid black;
