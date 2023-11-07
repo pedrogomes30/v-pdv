@@ -55,8 +55,7 @@ const state = {
   };
   
   export default {
-    // Defina outras configurações do módulo, se necessário
-    namespaced: true, // Defina como true para evitar conflitos com outros módulos
+    namespaced: true, 
     state,
     getters,
     mutations,

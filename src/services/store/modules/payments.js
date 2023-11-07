@@ -12,14 +12,16 @@ const state = {
   };
   
   const mutations = {
-    addPayment(state, payment){
+    addPayments(state, payment){
       state.status = 'em pagamento'
       let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
       if(exists !== -1 ){
-        state.payments[exists].method_value = payment.method_value
+        state.payments[exists].method_value = parseFloat(payment.method_value.replace(/\D/g, ''))/100;
       }else{
+        payment.method_value = parseFloat(payment.method_value.replace(/\D/g, ''))/100;
         state.payments.push(payment);
       }
+      console.log('addpayment',state.payments)
     },
     removePayment(state, payment){
       state.status = 'em pagamento'
@@ -38,7 +40,7 @@ const state = {
   const actions = {
     addPayment({commit},pagamento){
       return new Promise(resolve =>{
-        commit('addPayment',pagamento)
+        commit('addPayments',pagamento)
         resolve(pagamento)
       })
     },
@@ -58,8 +60,7 @@ const state = {
   };
 
   export default {
-    // Defina outras configurações do módulo, se necessário
-    namespaced: true, // Defina como true para evitar conflitos com outros módulos
+    namespaced: true,
     state,
     getters,
     mutations,
