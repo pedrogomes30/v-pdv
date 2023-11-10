@@ -19,9 +19,9 @@ export default createStore({
     },
     plugins: [
         createPersistedState({
-          key: 'my-unique-key', // chave única para armazenamento local
-          paths: ['cart', 'cupoms'], // lista de módulos a serem persistidos
-          // outras opções
+          key: 'currentExecution',
+          paths: 
+          ['cart', 'cupoms','payments','person','currentSale'], 
         })
       ]
   });

@@ -1,106 +1,102 @@
 <template>
   <div v-if="form" class="form-center w-100 h-100" @click="closeForm">
-    <form class='base-content ads-form' @click.stop @submit.prevent="formAction">
+    <div class="base-content ads-form text-light" @click.stop>
       <div class="mb-3">
-        <label for="text" class="form-label">Digite o código cupom</label>
-        <input type="text" v-model="cupomSelected.code" class="form-control" id="cod_cupom" @blur="searchCupom">
-        <div id="text" class="form-text">Descontos só são válidos mediante a um cupom!</div>
+        <i class="bi bi-calculator text-light pe-2"></i>
+        <label autofocus for="number" class="form-label">valor (R$)</label>
+        <input v-model="paymentSelect.method_value" class="form-control" v-currency />
       </div>
-      <div v-if=cupomSelected.description class="mb-3">
-        <label class="form-label">{{cupomSelected.description}}</label>
-      </div>
-
       <div class="mb-3">
-        <label for="defaultCupons" class="form-label">Cupons padrões</label>
-        <div v-for="(cupon, index) in defaultCupons" :key="index" class="form-check">
-          <input class="form-check-input" type="radio" :id="`cupom-${index}`" :value="cupon" name="cupom" @click="setSelect(cupon)">
-          <label class="form-check-label" :for="`cupom-${index}`">
-            {{ cupon.code }} - {{ cupon.description }}
-          </label>
-        </div>
+        <i class="bi bi-currency-dollar text-light pe-2"></i>
+        <label for="inputCashier" class="form-label text-light">Forma de pagamento</label>
+        <select class="form-select" v-model="selectedMethod" @change="setMethod" id="payment">
+          <option value="">selecione forma</option>
+          <option v-for="method in methods" :value="method.method_alias" :key="method.method_id">
+            {{ method.method_alias }}
+          </option>
+        </select>
       </div>
-
-      <button type="submit" class="btn btn-primary">Adicionar</button>
-    </form>
+      <button @click="formAction" class="btn btn-primary">Adicionar</button>
+    </div>
   </div>
 </template>
 
 <script>
-import system from '../../../services/database/system'
-import { getCupom } from '../../../services/api/cupom'
-import { mapActions } from 'vuex';
+import system from "../../../services/database/system";
+import { mapActions } from "vuex";
 
 export default {
-  name: 'CupomForm',
+  name: "PaymentForm",
   components: {},
   data() {
     return {
       form: false,
-      description: '',
-      defaultCupons: [],
-      cupomSelected: {
-        code: '',
-        description: '',
+      description: "",
+      methods: [],
+      paymentSelect: {
+        method_alias: "",
+        method_description: "",
+        method_icon: "",
+        method_id: 2,
+        method_issue: 1,
+        method_value: "",
+      },
+      selectedMethod: "",
+      money: {
+        decimal: ",",
+        thousands: ".",
+        prefix: "R$ ",
+        suffix: " #",
+        precision: 2,
+        masked: false,
       },
     };
   },
   created() {
-    this.$eventBus.on('paymentForm', this.setForm);
+    this.$eventBus.on("paymentForm", this.setForm);
   },
   beforeUnmount() {
-    this.$eventBus.off('paymentForm', this.setForm);
+    this.$eventBus.off("paymentForm", this.setForm);
   },
   methods: {
-    ...mapActions('cupoms', ['addCupom']),
+    ...mapActions("payments", ["addPayment"]),
     setForm(value) {
       this.form = value;
     },
     formAction() {
-      this.addCupom(this.cupomSelected);
-      this.cupomSelected = {
-        code: '',
-        description: '',
+      this.paymentSelect.method_alias = this.selectedMethod;
+      this.addPayment(this.paymentSelect);
+      this.paymentSelect = {
+        method_alias: "",
+        method_description: "",
+        method_icon: "",
+        method_id: 2,
+        method_issue: 1,
+        method_value: '',
       };
-      this.$eventBus.emit('cupomForm', false);
+      this.$eventBus.emit("paymentForm", false);
     },
     closeForm() {
-      this.$eventBus.emit('cupomForm', false);
-    },
-    setSelect(selected) {
-      this.cupomSelected = selected;
-    },
-    async searchCupom() {
-      this.$global.load = true;
-      this.$eventBus.emit('load', this.$global.load);
-      this.apiLoad = true;
-      console.log('Função searchCupom acionada');
-      if (this.cupomSelected.code === '') {
-        this.$global.load = false;
-        this.$eventBus.emit('load', this.$global.load);
-        return;
-      }
-      try {
-        this.cupomSelected = await getCupom(this.cupomSelected.code);
-        this.$global.load = false;
-        this.$eventBus.emit('load', this.$global.load);
-        this.$global.alert = { show: true, type: 'success', message: 'Cupom adicionado com sucesso!' };
-      } catch (err) {
-        this.$global.load = false;
-        this.$eventBus.emit('load', this.$global.load);
-        this.$global.alert = { show: true, type: 'error', message: err.message };
-        this.$eventBus.emit('alert-show', this.$global.alert);
-      }
+      this.$eventBus.emit("paymentForm", false);
     },
   },
   async beforeMount() {
     let data = await system.get();
     if (data.length > 0) {
-      this.defaultCupons = data[0][0].cupoms;
+      this.methods = data[0][0].payment_methods;
     }
+  },
+  watch: {
+    selectedMethod(newValue) {
+      let method = this.methods.find((method) => method.method_alias === newValue);
+      let value = this.paymentSelect.method_value;
+      value = value.replace(/\D/g, '');
+      value = (value / 100).toFixed(2);
+      method.method_value = `R$ ${value}`;
+      this.paymentSelect = method;
+    },
   },
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

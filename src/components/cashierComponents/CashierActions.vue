@@ -1,6 +1,6 @@
 <template>
   <div class="actions-info mt-1 ">
-    <button @click="updateProducts" class=" col-3 pr-1 btn action-btn" title='Observação'>
+    <button @click="showObsForm()" class=" col-3 pr-1 btn action-btn" title='Observação'>
         <i class="bi bi bi-info-square px-2"></i>
         <br>
         <span class='show-on-mobile'>Observação</span>
@@ -25,8 +25,13 @@
 
 <script>
 export default {
-  name: 'CashierDetailsHandler'
-// validar usar pinia
+  name: 'CashierDetailsHandler',
+  methods: {
+    showObsForm(){
+      this.$global.system.formStatus.obsForm = true;
+      this.$eventBus.emit('obsForm', this.$global.system.formStatus.obsForm);
+    }
+  }
 }
 </script>
 

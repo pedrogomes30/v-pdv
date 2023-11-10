@@ -2,14 +2,13 @@
     <div class="cart-container ">
         <ul class="list-group">
             <li v-for="product in cartItems" :key="product.id" class="list-group-item p-2 m-0 ">
-            <div class="row info-products-card p-0 m-0 d-flex align-items-center justify-content-center" >
-
-                <div class="col-1 info-products-icon px-2" >
-                    <i class="bi bi-box cart "></i>
-                    <i class="bi bi-eraser text-danger " @click="removeFromCart(product)"></i>
+            <div class="info-products-card d-flex align-items-center w-100 px-2" >
+                <div class="col-2">
+                    <i class="bi bi-eraser text-danger pe-2 normalize-action" @click="removeFromCart(product)"></i>
+                    <i class="bi bi-box cart px-2 normalize-action"></i>
                 </div>
 
-                <div class=" info-products-details" :class= "product.disconts.length > 0 ? 'col-5' : 'col-6' " >
+                <div class="col-7">
                     {{ product.description }} <br>
                     {{ product.sku }}
                 </div>
@@ -28,7 +27,7 @@
                     <i class="bi bi-chevron-right " @click="incrementProductCart(product)"></i>
                 </div>
 
-                <div class="col-3 info-products-price ">                
+                <div class="col-1 info-products-price ">                
                     <b><h6>R$ {{ listPrice(product.total) }}</h6></b>
                 </div>
             </div>
@@ -70,9 +69,7 @@ export default {
   height: 100%;
 }
 
-.clear{
-    font-size: 1rem;
-}
+
 .list-group-item{
     border: none;
     border-bottom: 1px solid black;

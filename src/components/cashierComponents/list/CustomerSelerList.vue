@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card ">
+    <!-- <div class="card " v-if="null !== customer">
       <div class="card-body row">
         <div class='col-auto d-flex align-items-center'>
             <i class="bi bi-person-circle per-icon "></i>
@@ -10,16 +10,16 @@
             Vendedor
             </h5>
             <p class="card-text">
-            <strong>Nome do Vendedor:</strong> {{ vendedor.nome }}
+            <strong>Nome do Vendedor:</strong> {{ salesman.name }}
             </p>
             <p class="card-text">
-            <strong>CPF do Vendedor:</strong> {{ vendedor.cpf }}
+            <strong>CPF do Vendedor:</strong> {{ salesman.document }}
             </p>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="card">
+    <div class="card"  v-if="null !== customer">
         <div class="card-body row">
             <div class='col-auto d-flex align-items-center'>
                 <i class="bi bi-person-circle per-icon "></i>
@@ -29,10 +29,10 @@
                         Cliente
                     </h5>
                     <p class="card-text">
-                        <strong>Nome do Cliente:</strong> {{ cliente.nome }}
+                        <strong>Nome do Cliente:</strong> {{ customer.name }}
                     </p>
                     <p class="card-text">
-                        <strong>CPF:</strong> {{ vendedor.cpf }}
+                        <strong>CPF:</strong> {{ customer.document }}
                     </p>
                 </div>
             </div>
@@ -41,19 +41,23 @@
 </template>
 
 <script>
-export default {
+import { mapState, mapActions } from 'vuex';
+
+export default {  
   name: 'CustomerSellerList',
+  computed: {
+        ...mapState('person', {
+            customer: state => state.customer,
+            salesman: state => state.salesman,
+        }),
+    },
   data() {
     return {
-      vendedor: {
-        nome: 'Nome do Vendedor',
-        cpf: 'CPF do Vendedor',
-      },
-      cliente: {
-        nome: 'Nome do Cliente',
-        cpf: 'CPF do Cliente',
-      },
+
     };
+  },
+  methods: {
+    ...mapActions('person', ['removeCustomer', 'removeSalesman']),
   },
 };
 </script>
