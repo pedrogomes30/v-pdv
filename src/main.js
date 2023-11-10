@@ -22,7 +22,7 @@ const global = {
     formStatus:{
       cupomForm:false,
       paymentForm:false,
-      customerform:false, 
+      customerForm:false, 
       sellerForm:false,
       obsForm:false,
       changeProductForm:false,

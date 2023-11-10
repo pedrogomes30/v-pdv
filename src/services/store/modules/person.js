@@ -1,82 +1,72 @@
 // Importe qualquer dependência necessária aqui, se aplicável
 
 const state = {
-    person:null
-    // Defina o estado inicial do módulo aqui
-    // Exemplo: item: null, items: []
+    customer:null
   };
   
   const getters = {
-    example:state=>state.example
-    // Defina os getters do módulo aqui
-    // Exemplo:
-    // getItem: state => state.item,
-    // getItems: state => state.items,
+    getCustomer:state=>state.customer,
+    getSalesman:state=>state.salesman
   };
   
   const mutations = {
-    //CLIENTE
+    //customer
     addCustomer(state, customer){
-      state.customer = customer
-      },
-      removeCustomer(state){
-          state.customer = {
-              document: "1",
-              name: "Cliente não identificado",
-              email: "",
-              phone: "",
-              type: "",
-              store_partiner_id: "",
-              store_partiner_name: ""
-          }
-      },
-      addSalesman(state, salesman){
-          state.salesman = salesman
-      },
-      removeSalesman(state){
-          state.salesman = {
-              document: "2",
-              name: "Vendedor não identificado",
-              email: "",
-              phone: "",
-              type: "",
-              store_partiner_id: "",
-              store_partiner_name: ""
-          }
-      },
+        console.log(customer);
+        state.customer = customer
+    },
+    removeCustomer(state){
+        state.customer = null;
+    },
+    //salesman
+    addSalesman(state, salesman){
+        state.salesman = salesman
+    },
+    removeSalesman(state){
+        state.salesman = null;
+    },
+    //remove all
+    clearAll(state){   
+        state.customer = null;
+        state.salesman = null;
+    }
   };
   
   const actions = {
+    //customer
     addCustomer({commit},value){
       return new Promise(resolve =>{
           commit('addCustomer',value)
           resolve()
       })
-  },
-  removeCustomer({commit}){
-      return new Promise(resolve =>{
-          commit('removeCustomer')
-          resolve()
-      })
-  },
-  addSalesman({commit},value){
-      return new Promise(resolve =>{
-          commit('addSalesman',value)
-          resolve()
-      })
-  },
-  removeSalesman({commit}){
-      return new Promise(resolve =>{
-          commit('removeSalesman')
-          resolve()
-      })
-  },
-  forceCustomer({commit},userType){
-      return new Promise(resolve =>{
-          commit('forceCustomer',userType)
-          resolve(userType)
-      })
-  },
+    },
+    removeCustomer({commit}){
+        return new Promise(resolve =>{
+            commit('removeCustomer')
+            resolve()
+        })
+    },
+    //salesman
+    addSalesman({commit},value){
+        return new Promise(resolve =>{
+            commit('addSalesman',value)
+            resolve()
+        })
+    },
+    removeSalesman({commit}){
+        return new Promise(resolve =>{
+            commit('removeSalesman')
+            resolve()
+        })
+    },
+    //remove all
+    clearCustomerSalesman({commit}){
+        console.log("<<CLEANING ALL>>")
+        return new Promise(resolve =>{
+            commit('clearAll')
+            resolve()
+        })
+    }
   };
   
   export default {

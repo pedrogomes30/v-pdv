@@ -120,16 +120,16 @@ export default {
         clienteVendedor: [
           {
             icon: 'bi bi-person  ',
-            action: 'clearCustomerSeller',
+            action: 'addCustomer',
             iconColor: 'text-success',
             label: 'Incluir Cliente'
           },
-          {
-            icon: 'bi bi-person-fill  ',
-            action: 'clearCustomerSeller',
-            iconColor: 'text-success',
-            label: 'Incluir Vendedor'
-          },
+          // {
+          //   icon: 'bi bi-person-fill  ',
+          //   action: 'addSalesman',
+          //   iconColor: 'text-success',
+          //   label: 'Incluir Vendedor'
+          // },
           {
             icon: 'bi bi-x-lg  ',
             action: 'clearCustomerSeller',
@@ -151,6 +151,7 @@ export default {
       clearCart: 'cart/clearCart',
       clearCupoms: 'cupoms/clearCupoms',
       clearPayments:'payments/clearPayments',
+      clearCustomerSeller: 'person/clearCustomerSalesman',
     }),
      handleAction(action) {
       switch(action.action){
@@ -172,8 +173,18 @@ export default {
           this.clearPayments();
           break;
         case 'clearCustomerSeller':
-          alert('Limpar Cliente/Vendedor')
-          // this.clearCustomerSeller();
+          console.log('clearCustomerSeller')
+          this.clearCustomerSeller();
+          break;
+        case 'addCustomer':
+          console.log('addCustomer')
+          this.$global.system.formStatus.customerForm = true;
+          this.$eventBus.emit('customerForm', this.$global.system.formStatus.customerForm);
+          break;
+        case 'addSalesman':
+          console.log('addSalesman')
+          this.$global.system.formStatus.salesmanForm = true;
+          this.$eventBus.emit('salesmanForm', this.$global.system.formStatus.salesmanForm);
           break;
         default:
           console.log('Ação não encontrada')
