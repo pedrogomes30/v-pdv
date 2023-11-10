@@ -1,43 +1,43 @@
 const state = {
-    change_value:0,
-    qtd_items:0,
-    qtd_payments:0,
-    forceCustomer:false,
-    payment_method:'',
-    valid_sale:false,
-    number: '',
-    id:'',
-    sale_date: '',
-    store: '',
-    cashier: '',
-    employee_cashier: '',
-    employee_sale: false,
-    obs: '',
-    sys_obs:'',
-    products_value: 0,
-    payments_value: 0,
-    discont_value: 0,
-    total_value: 0,
-    invoice:false,
-    invoice_serie:'',
-    invoice_number:'',
-    invoice_coupon:'',
-    invoice_xml:'',
-    customer: {
-        // modulo person
-    },
-    salesman: {
-         // modulo person
-    },
-    payments: [
-        // modulo payment
-    ],
-    items:[
-        // modulo cart
-    ],
-    cupoms: [
-        // modulo discont
-    ]
+    currentSale: {
+        change_value:0,
+        qtd_items:0,
+        qtd_payments:0,
+        forceCustomer:false,
+        payment_method:'',
+        valid_sale:false,
+        number: '',
+        id:'',
+        sale_date: '',
+        store: '',
+        cashier: '',
+        employee_cashier: '',
+        employee_sale: false,
+        obs: '',
+        products_value: 0,
+        payments_value: 0,
+        discont_value: 0,
+        total_value: 0,
+        invoice:false,
+        invoice_serie:'',
+        invoice_number:'',
+        invoice_coupon:'',
+        customer: {
+            // modulo person
+        },
+        salesman: {
+            // modulo person
+        },
+        payments: [
+            // modulo payment
+        ],
+        items:[
+            // modulo cart
+        ],
+        cupoms: [
+            // modulo discont
+        ]
+    }
 };
 
 const actions = {
@@ -48,6 +48,7 @@ const actions = {
             resolve(obs)
         })
     },
+    
     //LIMPAR VENDA
     cleanSale({commit}){
         return new Promise(resolve =>{
@@ -58,8 +59,8 @@ const actions = {
 };
 const mutations = {
     addObs(state, obs){
-        state.obs = obs
-    },
+        state.currentSale.obs = obs
+    },   
     // LIMPAR A VENDA
     cleanSale(state){
         state.change_value = 0
@@ -112,11 +113,13 @@ const mutations = {
     },
     
 };
+
 const getters = {
-    getItems(state){
-        return state.items
+    getObs(state) {
+      return state.sale.obs;
     }
 };
+
 const service ={
     recalculateSale(state){
         console.log(state,'')

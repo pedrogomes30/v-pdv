@@ -19,8 +19,9 @@ export default createStore({
     },
     plugins: [
         createPersistedState({
-          key: 'my-unique-key',
-          paths: ['cart', 'cupoms','payments','person'], 
+          key: 'currentExecution',
+          paths: 
+          ['cart', 'cupoms','payments','person','currentSale'], 
         })
       ]
   });
