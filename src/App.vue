@@ -5,6 +5,7 @@
   <CustomerForm/>
   <SellerForm/>
   <ObsForm/>
+  <ChangeProductForm/>
   <nav v-if="showNavbar" class="navbar navbar-dark bg-dark nav p-0 px-2 default-menu">
     <router-link to="/" class="navbar-brand ">
       <img class="logo-image" alt="Home" src="./assets/logo.png">
@@ -87,6 +88,7 @@ import ObsForm from './components/cashierComponents/forms/ObsForm.vue'
 import PaymentForm from './components/cashierComponents/forms/PaymentForm.vue'
 import CustomerForm from './components/cashierComponents/forms/CustomerForm.vue'
 import SellerForm from './components/cashierComponents/forms/CustomerForm.vue'
+import ChangeProductForm from './components/cashierComponents/forms/ChangeProductForm.vue'
 import system from './services/database/system'
 export default {
   components: {
@@ -97,6 +99,7 @@ export default {
     CustomerForm,
     SellerForm,
     ObsForm,
+    ChangeProductForm,
   },
   data() {
     return {
@@ -139,6 +142,10 @@ export default {
         }
       }
     },
+    activeChangeForm(){
+      this.$global.system.formStatus.changeProductForm = true;
+      this.$eventBus.emit('changeProductForm', this.$global.system.formStatus.changeProductForm);
+    }
   }
 };
 </script>

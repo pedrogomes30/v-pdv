@@ -29,7 +29,7 @@ export function setCustomer(person) {
         customer: person
       };
   
-    return axios.get(`/customer`, data, { headers })
+    return axios.put(`/customer`, data, { headers })
     .then(response => {
         return response.data.data;
     })

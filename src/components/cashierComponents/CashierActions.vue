@@ -5,7 +5,7 @@
         <br>
         <span class='show-on-mobile'>Observação</span>
     </button>
-    <button @click="updateProducts" class=" col-3 pr-1 btn action-btn mx-1" title='Troca de produto'>
+    <button @click="activeChangeForm()" class=" col-3 pr-1 btn action-btn mx-1" title='Troca de produto'>
         <i class="bi bi bi-box-seam-fill px-2"></i>
         <br>
         <span class='show-on-mobile'>Troca de produto</span>
@@ -30,6 +30,10 @@ export default {
     showObsForm(){
       this.$global.system.formStatus.obsForm = true;
       this.$eventBus.emit('obsForm', this.$global.system.formStatus.obsForm);
+    },
+    activeChangeForm() {
+      this.$global.system.formStatus.changeProductForm = true;
+      this.$eventBus.emit('changeProductForm', this.$global.system.formStatus.changeProductForm);
     }
   }
 }

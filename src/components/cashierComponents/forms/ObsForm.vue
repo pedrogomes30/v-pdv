@@ -1,8 +1,8 @@
 <template>
-  <div v-if="form" class="form-center w-100 h-100" @click="closeForm">
+  <div v-if="form" class="form-center " @click="closeForm">
     <form class='base-content ads-form' @click.stop @submit.prevent="formAction">
       <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="">Adicionar observação :</label>
+        <label for="obs" class="">Adicionar observação :</label>
         <textarea v-model="localObs" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Adicionar</button>
@@ -43,9 +43,7 @@ export default {
       this.form = value;
     },
     formAction() {
-      console.log(this.$store.state.currentSale.obs);
-
-      this.$store.commit('currentSale/addObs', this.localObs);
+      this.addObs(this.localObs);
       this.closeForm();
     },
     closeForm() {
