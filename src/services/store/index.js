@@ -3,7 +3,6 @@ import createPersistedState from 'vuex-persistedstate';
 
 
 import currentSale from './modules/currentSale';
-import cart from './modules/cart';
 import cupoms from './modules/cupoms';
 import payments from './modules/payments';
 import person from './modules/person';
@@ -12,7 +11,6 @@ import person from './modules/person';
 export default createStore({
     modules: {
         currentSale,
-        cart,
         cupoms,
         payments,
         person
@@ -21,7 +19,7 @@ export default createStore({
         createPersistedState({
           key: 'currentExecution',
           paths: 
-          ['cart', 'cupoms','payments','person','currentSale'], 
+          ['cupoms','payments','person','currentSale'], 
         })
       ]
   });

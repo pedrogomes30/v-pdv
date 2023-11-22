@@ -127,7 +127,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('cart', ['addToCart']),
+    ...mapActions('currentSale', ['addToCart']),
     async updateProducts(force = false) {
       let productData = await products.get();
       if (productData.length === 0 || force) {

@@ -44,13 +44,13 @@ import price from "../../../services/price"
 export default {
     name:'CartList',
     computed: {
-        ...mapState('cart', {
+        ...mapState('currentSale', {
             cartItems: state => state.items,
         }),
     },
     methods:{
         ...mapActions(
-            'cart',['removeFromCart', 'decrementProductCart', 'incrementProductCart'],
+            'currentSale',['removeFromCart', 'decrementProductCart', 'incrementProductCart'],
         ),
         listPrice(value){
             return price.listPrice(value);
