@@ -19,14 +19,14 @@ export function getCupom(cupomCode) {
       });
 }
 
-export function putCupom(cupom) {
+export function saveCupom(cupom) {
   const token = TokenService.getToken(); 
 
   const headers = {
     Authorization: `Bearer ${token}`, 
   };
 
-  return axios.put(`/cupom`, cupom, { headers })
+  return axios.post(`/cupom`, cupom, { headers })
   .then(response => {
       return response.data.data;
   })

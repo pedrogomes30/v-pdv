@@ -4,7 +4,7 @@
       <div class="mb-3">
         <i class="bi bi-person-vcard text-light pe-2"></i>
         <label autofocus for="number" class="form-label">{{edit ? 'Cpf /Cnpj' :'Procure por Cpf / Cnpj'}}</label>
-        <input v-model="person.document" class="form-control" @blur="searchCustomer" />
+        <input v-model="person.document" v-document class="form-control" @blur="searchCustomer" />
       </div>
       <div v-if="edit">
         <div class="mb-3">
@@ -41,7 +41,8 @@
 
 <script>
 import { mapActions } from "vuex";
-import { getCustomer, setCustomer } from '../../../services/api/person';
+import { getCustomer, setCustomer } from "@/services/api/person";
+import { typeDocument } from "@/services/valueFormat";
 
 export default {
   name: "CustomerForm",
@@ -75,12 +76,15 @@ export default {
       try{
         this.$global.load = true;
         this.$eventBus.emit('load', this.$global.load);
+        this.person.document = this.person.document.replace(/[^\d]+/g,'');
         let response = await setCustomer(this.person);
         this.addCustomer(response);
         this.$global.alert = {show:true,type:'info', message:'Cliente cadastrado com sucesso!'};
         this.$eventBus.emit('alert-show', this.$global.alert); 
         this.resetPerson();
         this.$eventBus.emit("customerForm", false);
+        this.$global.load = false;
+        this.$eventBus.emit('load', this.$global.load);
       }catch(err){
         this.$global.load = false;
         this.$eventBus.emit('load', this.$global.load);
@@ -110,6 +114,7 @@ export default {
         this.$global.load = true;
         this.$eventBus.emit('load', this.$global.load);
         this.person = await getCustomer(document);
+        this.person.document = typeDocument(this.person.document);
         this.$global.load = false;
         this.$eventBus.emit('load', this.$global.load);
       }catch(err){

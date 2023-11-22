@@ -36,7 +36,6 @@ const getters = {
 };
 
 const actions = {
-    // addObs
     addObs({commit},obs){
         return new Promise(resolve =>{
             commit('addObs',obs)
@@ -44,10 +43,11 @@ const actions = {
         })
     },
     
-    //LIMPAR VENDA
+
     cleanSale({commit}){
         return new Promise(resolve =>{
-            commit('cleanSale',state)
+            console.log('limpando venda')
+            commit('cleanThisSale',state);
             resolve()
         })
     },   
@@ -56,7 +56,8 @@ const mutations = {
     addObs(state, obs){
         state.obs = obs
     },
-    cleanSale(state) {
+    cleanThisSale(state) {
+        console.log('limpando venda 2+')
         state.change_value = 0;
         state.qtd_items = 0;
         state.qtd_payments = 0;
@@ -80,7 +81,9 @@ const mutations = {
         state.invoice_number = '';
         state.invoice_coupon = '';
         //ads
-        state.customer = {};
+        // calll customer clear
+        
+        // state.customer = {};
         state.salesman = {};
         state.payments = [];
         state.items = [];
