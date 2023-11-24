@@ -10,8 +10,11 @@
                         <div>{{ cupom.description }}</div>
                         <div>{{ cupom.code }}</div>
                     </div>
-                    <div class="col-auto info-products-price">
+                    <div v-if="!cupom.percent" class="col-auto info-products-price">
                         <h6>- R$ {{ listPrice(cupom.value) }}</h6>
+                    </div>
+                    <div v-else class="col-auto info-products-price">
+                        <h6>- {{ cupom.value }}%</h6>
                     </div>
                 </div>
             </li>
@@ -25,11 +28,11 @@ import { mapState, mapActions } from 'vuex';
 export default {
     name:'CartList',
     computed: {
-        ...mapState('cupoms', {
+        ...mapState('currentSale', {
             cupoms: state => state.cupoms,
         }),
         ...mapActions(
-            'cupoms',['removeDiscont'],
+            'currentSale',['removeDiscont'],
         ),
     },
     data() {

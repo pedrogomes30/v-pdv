@@ -147,13 +147,8 @@ export default {
       this.activeAction = this.actions[this.activeComponent]
 
     },
-     ...mapActions({
-      clearCart: 'cart/clearCart',
-      clearCupoms: 'cupoms/clearCupoms',
-      clearPayments:'payments/clearPayments',
-      clearCustomerSeller: 'person/clearCustomerSalesman',
-    }),
-     handleAction(action) {
+    ...mapActions('currentSale', ['clearCart','clearCupoms','clearPayments','clearCustomerSalesman']),
+    handleAction(action) {
       switch(action.action){
         case 'clearCart':
           this.clearCart();

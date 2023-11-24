@@ -1,12 +1,12 @@
 const state = {
-    change_value:0,
-    qtd_items:0,
-    qtd_payments:0,
-    forceCustomer:false,
-    payment_method:'',
-    valid_sale:false,
+    change_value: 0,
+    qtd_items: 0,
+    qtd_payments: 0,
+    forceCustomer: false,
+    payment_method: '',
+    valid_sale: false,
     number: '',
-    id:'',
+    id: '',
     sale_date: '',
     store: '',
     cashier: '',
@@ -17,17 +17,16 @@ const state = {
     payments_value: 0,
     discont_value: 0,
     total_value: 0,
-    invoice:false,
-    invoice_serie:'',
-    invoice_number:'',
-    invoice_coupon:'',
-    //ads
+    invoice: false,
+    invoice_serie: '',
+    invoice_number: '',
+    invoice_coupon: '',
     customer: {},
     salesman: {},
     payments: [],
-    items:[],
+    items: [],
     cupoms: []
-};
+}
 
 const getters = {
     getCurrentSale(state) {
@@ -36,10 +35,16 @@ const getters = {
     getItems(state) {
         return state.items;
     },
+    getCupoms(state) {
+        return state.cupoms;
+    },
+    getPayments(state) {
+        return state.payments;
+    },
 };
 
 const mutations = {
-    //cart submodule
+    //cart mutation submodule
     addItem(state, product) {
         product.total = service.calculateProductValues(product);
         state.items.push(product);
@@ -88,15 +93,74 @@ const mutations = {
             existingProduct.discounts = existingProduct.discounts.filter(discount => discount.code !== discountCode);
         }
     },
-    //customer submodule
 
+
+    //cupoons mutation submodule
+    addcupoms(state, discont){
+        if(discont.acumulate === 1){
+            state.cupoms.push(discont)
+        }else if(state.cupoms.length > 0){
+            let exists = state.cupoms.findIndex(x => x.code === discont.code);
+            if(exists !== -1){
+                throw new Error('Cupom já adicionado')
+            }else{
+                state.cupoms.push(discont)
+            }
+        }else{
+            state.cupoms.push(discont)
+        }
+        switch(discont.label){
+            case 'client': state.forceCustomer = true; break;
+            case 'funcionario': state.forceEmployee = true; break;
+            case 'funcionarioParc': state.forceEmployeeParc = true; break;
+            default: break;
+        }
+    },
+    removecupoms (state, discont){
+        state.status = 'em cupoms'
+        let exists = state.cupoms.findIndex(x => x.id === discont.id);
+        if(exists !== -1){
+            state.cupoms.splice(exists,1)
+        }else{
+            alert('impossivel remover discont')
+        }
+    },
+    clearDiscounts(state) {
+        state.cupoms = [];
+    },
+
+
+    //payment mutation submodule
+    addPayments(state, payment){
+        state.status = 'em pagamento'
+        let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
+        if(exists !== -1 ){
+            state.payments[exists].method_value = parseFloat(payment.method_value.replace(/\D/g, ''))/100;
+        }else{
+            payment.method_value = parseFloat(payment.method_value.replace(/\D/g, ''))/100;
+            state.payments.push(payment);
+        }
+        console.log('addpayment',state.payments)
+    },
+    removePayment(state, payment){
+        state.status = 'em pagamento'
+        let exists = state.payments.findIndex(x => x.method_id === payment.method_id);
+        if(exists !== -1){
+            state.payments.splice(exists,1)
+        }else{
+            alert('impossivel remover este apgamento')
+        }
+    },
+    clearMethods(state) {
+        state.payments = [];
+    },
+    //
 
 
     addObs(state, obs){
         state.obs = obs
     },
     cleanThisSale(state) {
-        console.log('limpando venda 2+')
         state.change_value = 0;
         state.qtd_items = 0;
         state.qtd_payments = 0;
@@ -119,10 +183,6 @@ const mutations = {
         state.invoice_serie = '';
         state.invoice_number = '';
         state.invoice_coupon = '';
-        //ads
-        // calll customer clear
-        
-        // state.customer = {};
         state.salesman = {};
         state.payments = [];
         state.items = [];
@@ -133,7 +193,7 @@ const mutations = {
 };
 
 const actions = {
-    //cart submodule
+    //cart action submodule
     addToCart({ state, commit }, product) {
         return new Promise(resolve => {
             const existingProduct = state.items.find(item => item.sku === product.sku);
@@ -144,7 +204,6 @@ const actions = {
                 const productWithQuantity = { ...product, quantity: 1, disconts:[], total:0 };
                 commit('addItem', productWithQuantity);
             }
-    
             resolve();
         });
     },
@@ -180,8 +239,38 @@ const actions = {
         commit('removeDiscountFromProduct', { product, discountCode });
     },
 
-    
 
+    //cupoons action submodule
+    addCupom({ commit }, discont) {
+        commit('addcupoms', discont);
+    },
+    removeCupom({ commit }, discont) {
+        commit('removecupoms', discont);
+    },
+    clearCupoms({ commit }) {
+        commit('clearDiscounts');
+    },
+      
+
+    //payment action submodule
+    addPayment({commit},pagamento){
+        return new Promise(resolve =>{
+            commit('addPayments',pagamento)
+            resolve(pagamento)
+        })
+    },
+    removePayment({commit},pagamento){
+        return new Promise(resolve =>{
+            commit('removePayment',pagamento)
+            resolve(pagamento)
+        })
+    },
+    clearPayments({commit}) {
+        return new Promise(resolve =>{
+            commit('clearMethods')
+            resolve()
+        })
+    },
 
     addObs({commit},obs){
         return new Promise(resolve =>{
@@ -192,7 +281,6 @@ const actions = {
     
     cleanSale({commit}){
         return new Promise(resolve =>{
-            console.log('limpando venda')
             commit('cleanThisSale',state);
             resolve()
         })
@@ -221,6 +309,8 @@ const service ={
         state.forceLabel = false
         service.total(state)
     },
+    
+    
 
 }
 export default {

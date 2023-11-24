@@ -24,7 +24,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
     name:'PaymentList',
     computed: {
-        ...mapState('payments', {
+        ...mapState('currentSale', {
             payments: state => state.payments,
         }),
     },
@@ -62,7 +62,7 @@ export default {
             return price.listPrice(value);
         },
         ...mapActions(
-            'payments',['removePayment', 'addPayment'],
+            'currentSale',['removePayment', 'addPayment'],
         ),
     }
 }

@@ -51,11 +51,16 @@ export default {
     this.$eventBus.off('cupomForm', this.setForm);
   },
   methods: {
-    ...mapActions('cupoms', ['addCupom']),
+    ...mapActions('currentSale', ['addCupom']),
     setForm(value) {
       this.form = value;
     },
-    formAction() {
+    async formAction() {
+      console.log(this.cupomSelected)
+      if(this.cupomSelected.value === undefined)
+      {
+        await this.searchCupom();
+      } 
       this.addCupom(this.cupomSelected);
       this.cupomSelected = {
         code: '',
