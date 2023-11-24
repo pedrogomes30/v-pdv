@@ -25,11 +25,7 @@ export function setCustomer(person) {
       Authorization: `Bearer ${token}`, 
     };
 
-    const data = {
-        customer: person
-      };
-  
-    return axios.get(`/customer`, data, { headers })
+    return axios.post(`/customer`, person, { headers })
     .then(response => {
         return response.data.data;
     })

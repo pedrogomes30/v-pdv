@@ -5,12 +5,12 @@
         <br>
         <span class='show-on-mobile'>Observação</span>
     </button>
-    <button @click="updateProducts" class=" col-3 pr-1 btn action-btn mx-1" title='Troca de produto'>
+    <button @click="activeChangeForm()" class=" col-3 pr-1 btn action-btn mx-1" title='Troca de produto'>
         <i class="bi bi bi-box-seam-fill px-2"></i>
         <br>
         <span class='show-on-mobile'>Troca de produto</span>
     </button>
-    <button @click="updateProducts" class=" col-2 pr-1 btn btn-danger me-1" title='Limpa venda'>
+    <button @click="cleanSale()" class=" col-2 pr-1 btn btn-danger me-1" title='Limpa venda'>
         <i class="bi bi-cart-x px-2"></i>
         <br>
         <span class='show-on-mobile'>Limpa venda</span>
@@ -24,13 +24,19 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: 'CashierDetailsHandler',
   methods: {
+    ...mapActions("currentSale", ["cleanSale"]),
     showObsForm(){
       this.$global.system.formStatus.obsForm = true;
       this.$eventBus.emit('obsForm', this.$global.system.formStatus.obsForm);
-    }
+    },
+    activeChangeForm() {
+      this.$global.system.formStatus.changeProductForm = true;
+      this.$eventBus.emit('changeProductForm', this.$global.system.formStatus.changeProductForm);
+    },
   }
 }
 </script>

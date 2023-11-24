@@ -59,7 +59,7 @@ export default {
     this.$eventBus.off("paymentForm", this.setForm);
   },
   methods: {
-    ...mapActions("payments", ["addPayment"]),
+    ...mapActions("currentSale", ["addPayment"]),
     setForm(value) {
       this.form = value;
     },
