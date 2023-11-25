@@ -64,20 +64,34 @@ export default {
       this.form = value;
     },
     formAction() {
+      console.log(this.paymentSelect.method_value)
+      if(this.paymentSelect.method_alias === '' || this.paymentSelect.method_value === '' || this.paymentSelect.method_value == "R$ 0.00") 
+      {
+        console.log('invalid value')
+        return;
+      }
       this.paymentSelect.method_alias = this.selectedMethod;
       this.addPayment(this.paymentSelect);
+      this.resetPayment();
+      this.$eventBus.emit("paymentForm", false);
+    },
+    closeForm() {
+      this.resetPayment();
+      this.$eventBus.emit("paymentForm", false);
+    },
+    resetPayment() {
       this.paymentSelect = {
         method_alias: "",
         method_description: "",
         method_icon: "",
         method_id: 2,
         method_issue: 1,
-        method_value: '',
+        method_value: "",
       };
-      this.$eventBus.emit("paymentForm", false);
+      this.selectedMethod = "";
     },
-    closeForm() {
-      this.$eventBus.emit("paymentForm", false);
+    setMethod() {
+      this.paymentSelect.method_alias = this.selectedMethod;
     },
   },
   async beforeMount() {
@@ -88,6 +102,7 @@ export default {
   },
   watch: {
     selectedMethod(newValue) {
+      if(this.paymentSelect.method_value == '') return;
       let method = this.methods.find((method) => method.method_alias === newValue);
       let value = this.paymentSelect.method_value;
       value = value.replace(/\D/g, '');

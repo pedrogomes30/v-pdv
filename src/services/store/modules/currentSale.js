@@ -95,7 +95,7 @@ const mutations = {
     },
 
 
-    //cupoons mutation submodule
+    //cupons mutation submodule
     addcupoms(state, discont){
         if(discont.acumulate === 1){
             state.cupoms.push(discont)
@@ -154,9 +154,24 @@ const mutations = {
     clearMethods(state) {
         state.payments = [];
     },
-    //
 
 
+    //person mutation 
+    addCustomer(state, customer){
+        console.log(customer);
+        state.customer = customer
+    },
+    removeCustomer(state){
+        state.customer = null;
+    },
+    //customer and salesman
+    clearPerson(state){   
+        state.customer = null;
+        state.salesman = null;
+    },
+
+
+    //sale mutation submodule
     addObs(state, obs){
         state.obs = obs
     },
@@ -187,9 +202,7 @@ const mutations = {
         state.payments = [];
         state.items = [];
         state.cupoms = [];
-    },
-
-    
+    },    
 };
 
 const actions = {
@@ -272,6 +285,28 @@ const actions = {
         })
     },
 
+
+    //person action submodule   
+    addCustomer({commit},value){
+        return new Promise(resolve =>{
+            commit('addCustomer',value)
+            resolve()
+        })
+    },
+    removeCustomer({commit}){
+        return new Promise(resolve =>{
+            commit('removeCustomer')
+            resolve()
+        })
+    },
+    clearCustomerSalesman({commit}){
+        return new Promise(resolve =>{
+            commit('clearPerson')
+            resolve()
+        })
+    },
+
+    //salle action submodule
     addObs({commit},obs){
         return new Promise(resolve =>{
             commit('addObs',obs)
