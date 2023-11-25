@@ -103,7 +103,6 @@ export default {
   watch: {
     selectedMethod(newValue) {
       if(this.paymentSelect.method_value == '') return;
-      
       let method = this.methods.find((method) => method.method_alias === newValue);
       let value = this.paymentSelect.method_value;
       value = value.replace(/\D/g, '');

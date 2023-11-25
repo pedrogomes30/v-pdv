@@ -53,7 +53,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { saveCupom } from '@/services/api/cupom'
+// import { saveCupom } from '@/services/api/cupom'
 import { format, addMonths } from 'date-fns';
 import { getProduct } from '@/services/api/products';
 
@@ -66,19 +66,20 @@ export default {
       form: false,
       noProductCode: false,
       changeCupom: {
+        label: "produto",
+        code: "PROD",
+        value: 0,
         active: 1,
-        acumulate: 1,
+        default: 1,
+        description: "aplica R${producValue} para troca de produto",
         allproducts: 1,
-        code: 'TROCA',
-        default: 0,
-        description: 'cupom de troca do produto:', //cupom de troca do produto:{{produto.sku}} {{product.name}}
-        label: "",
-        percent: 1,
+        percent: 0,
+        acumulate: 0,
         quantity: null,
-        start_date: '',//now YYYY-MM-DD HH:MM:SS
-        end_date: '',// now + 1 month
-        value: '',
-        with_validity: 1,
+        with_validity: 0,
+        start_date: null,
+        end_date: null,
+        customer_id: null
       },
       product:{
         brand: "",
@@ -114,15 +115,16 @@ export default {
       this.form = value;
     },
     formAction() {
-      if(this.changeCupom.price === undefined){
+      if(this.changeCupom.value === undefined){
+        console.log("sem preço");
         return;
       }
       this.changeCupom.quantity = this.quantity;
-      this.changeCupom.value = this.changeCupom.price * this.quantity;
-      this.changeCupom.start_date = format(new Date(this.changeCupom.start_date), 'yyyy-MM-dd HH:mm:ss');
-      this.changeCupom.end_date = null
-      this.changeCupom = saveCupom(this.changeCupom);
+      this.changeCupom.value = this.changeCupom.value * this.quantity;
+      // saveCupom(this.changeCupom);
+
       this.addCupom(this.changeCupom);
+      this.resetForm();
       this.closeForm();
     },
     closeForm() {
@@ -131,7 +133,7 @@ export default {
     async searchProduct() {
       try{
         if(this.product.sku == ''){
-          this.resetProduct();
+          this.resetForm();
           return;
         }
         this.$global.load = true;
@@ -139,7 +141,7 @@ export default {
         let result = await getProduct(this.product.sku);
         this.product = result[0];
         console.log("TESTE PRODUCT",this.product);
-        this.changeCupom.description = `cupom de troca do produto: ${this.product.sku} ${this.product.name}`;
+        this.changeCupom.description = `cupom de troca do produto: ${this.product.sku} ${this.product.description}`;
         this.changeCupom.value = this.product.price;
         this.noProductCode = false;
         this.$global.load = false;
@@ -149,10 +151,10 @@ export default {
         this.$eventBus.emit('alert-show', this.$global.alert); 
         this.$global.load = false;
         this.$eventBus.emit('load', this.$global.load); 
-        this.resetProduct();  
+        this.resetForm();  
       }
     },  
-    resetProduct() {
+    resetForm() {
       this.product = {
         brand: "",
         categoria_id: 0,
@@ -167,6 +169,22 @@ export default {
         sku: "",
         website: null,
       };
+      this.changeCupom = {
+        label: "produto",
+        code: "PROD",
+        value: 0,
+        active: 1,
+        default: 1,
+        description: "aplica R${producValue} para troca de produto",
+        allproducts: 1,
+        percent: 1,
+        acumulate: 0,
+        quantity: null,
+        with_validity: 0,
+        start_date: null,
+        end_date: null,
+        customer_id: null
+      }
     },
     setStartDate() {
       let now = new Date();
