@@ -46,18 +46,18 @@ import { mapState, mapActions } from 'vuex';
 export default {  
   name: 'CustomerSellerList',
   computed: {
-        ...mapState('person', {
-            customer: state => state.customer,
-            salesman: state => state.salesman,
-        }),
-    },
+    ...mapState('currentSale', {
+      customer: state => state.customer,
+      salesman: state => state.salesman,
+    }),
+  },
   data() {
     return {
 
     };
   },
   methods: {
-    ...mapActions('person', ['removeCustomer', 'removeSalesman']),
+    ...mapActions('currentSale', ['removeCustomer']),
   },
 };
 </script>

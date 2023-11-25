@@ -14,11 +14,11 @@
       </div>
       <!-- gettering product form -->
       <div v-if="'' != product.description" class="mb-3">
-        <i class="bi bi-person-vcard text-light pe-2"></i>
+        <i class="bi bi-list-nested text-light pe-2"></i>
         <label for="number" class="form-label">Descrição: {{ product.description }} </label>
       </div>
       <div v-if="'' != product.description" class="mb-3">
-        <i class="bi bi-person-vcard text-light pe-2"></i>
+        <i class="bi bi-upc text-light pe-2"></i>
         <label for="number" class="form-label">Sku: {{ product.sku }} </label>
       </div>
       <div v-if="'' != product.price" class="mb-3">
@@ -69,7 +69,7 @@ export default {
         active: 1,
         acumulate: 1,
         allproducts: 1,
-        code: '',
+        code: 'TROCA',
         default: 0,
         description: 'cupom de troca do produto:', //cupom de troca do produto:{{produto.sku}} {{product.name}}
         label: "",
@@ -109,11 +109,18 @@ export default {
   },
   
   methods: {
-    ...mapActions('cupom', ['addCupom']),
+    ...mapActions('currentSale', ['addCupom']),
     setForm(value) {
       this.form = value;
     },
     formAction() {
+      if(this.changeCupom.price === undefined){
+        return;
+      }
+      this.changeCupom.quantity = this.quantity;
+      this.changeCupom.value = this.changeCupom.price * this.quantity;
+      this.changeCupom.start_date = format(new Date(this.changeCupom.start_date), 'yyyy-MM-dd HH:mm:ss');
+      this.changeCupom.end_date = null
       this.changeCupom = saveCupom(this.changeCupom);
       this.addCupom(this.changeCupom);
       this.closeForm();

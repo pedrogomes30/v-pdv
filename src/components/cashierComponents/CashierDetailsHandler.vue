@@ -168,8 +168,8 @@ export default {
           this.clearPayments();
           break;
         case 'clearCustomerSeller':
-          console.log('clearCustomerSeller')
-          this.clearCustomerSeller();
+          console.log('clearCustomerSalesman')
+          this.clearCustomerSalesman();
           break;
         case 'addCustomer':
           console.log('addCustomer')

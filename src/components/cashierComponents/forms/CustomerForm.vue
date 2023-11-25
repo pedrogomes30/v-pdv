@@ -68,7 +68,7 @@ export default {
     this.$eventBus.off("customerForm", this.setForm);
   },
   methods: {
-    ...mapActions("person", ["addCustomer"]),
+    ...mapActions("currentSale", ["addCustomer"]),
     setForm(value) {
       this.form = value;
     },
