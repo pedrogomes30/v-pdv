@@ -14,10 +14,19 @@ export function typeDocument(value) {
 }
 
 export function typeCurrency(value) {
-    value = value.replace(/\D/g, '');
-    value = (value / 100).toFixed(2);
-    return `R$ ${value}`;
+  console.log('Input:', value);
+
+  value = value.replace(/\D/g, '');
+
+  while (value.length < 3) {
+      value = '0' + value;
+  }
+
+  value = (value / 100).toFixed(2);
+  return `R$ ${value}`;
 }
+
+
   
 export function typeEan(value) {
     value = value.replace(/\D/g, '');

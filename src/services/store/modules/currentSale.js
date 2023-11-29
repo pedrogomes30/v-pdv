@@ -48,6 +48,7 @@ const mutations = {
     addItem(state, product) {
         product.total = service.calculateProductValues(product);
         state.items.push(product);
+        state = service.recalculateSale(state);
     },
     incrementQuantity(state, product) {
         const existingProduct = state.items.find(item => item.sku === product.sku);
@@ -55,6 +56,7 @@ const mutations = {
             existingProduct.quantity++;
             existingProduct.total = service.calculateProductValues(existingProduct);
         }
+        state = service.recalculateSale(state);
     },
     decrementQuantity(state, product) {
         const existingProduct = state.items.find(item => item.sku === product.sku);
@@ -68,12 +70,14 @@ const mutations = {
                 }
             }
         }
+        state = service.recalculateSale(state);
     },
     removeItem(state, product) {
         const index = state.items.findIndex(item => item.sku === product.sku);
         if (index !== -1) {
             state.items.splice(index, 1);
         }
+        state = service.recalculateSale(state);
     },
     clearItems(state) {
         state.items = [];
@@ -86,12 +90,14 @@ const mutations = {
             }
             existingProduct.discounts.push(discount);
         }
+        state = service.recalculateSale(state);
     },
     removeDiscountFromProduct(state, { product, discountCode }) {
         const existingProduct = state.items.find(item => item.sku === product.sku);
         if (existingProduct && existingProduct.discounts) {
             existingProduct.discounts = existingProduct.discounts.filter(discount => discount.code !== discountCode);
         }
+        state = service.recalculateSale(state);
     },
 
 
@@ -115,6 +121,7 @@ const mutations = {
             case 'funcionarioParc': state.forceEmployeeParc = true; break;
             default: break;
         }
+        state = service.recalculateSale(state);
     },
     removecupoms (state, discont){
         state.status = 'em cupoms'
@@ -124,9 +131,11 @@ const mutations = {
         }else{
             alert('impossivel remover discont')
         }
+        state = service.recalculateSale(state);
     },
     clearDiscounts(state) {
         state.cupoms = [];
+        state = service.recalculateSale(state);
     },
 
 
@@ -140,7 +149,7 @@ const mutations = {
             payment.method_value = parseFloat(payment.method_value.replace(/\D/g, ''))/100;
             state.payments.push(payment);
         }
-        console.log('addpayment',state.payments)
+        state = service.recalculateSale(state);
     },
     removePayment(state, payment){
         state.status = 'em pagamento'
@@ -150,9 +159,11 @@ const mutations = {
         }else{
             alert('impossivel remover este apgamento')
         }
+        state = service.recalculateSale(state);
     },
     clearMethods(state) {
         state.payments = [];
+        state = service.recalculateSale(state);
     },
 
 
@@ -160,20 +171,24 @@ const mutations = {
     addCustomer(state, customer){
         console.log(customer);
         state.customer = customer
+        state = service.recalculateSale(state);
     },
     removeCustomer(state){
         state.customer = null;
+        state = service.recalculateSale(state);
     },
     //customer and salesman
     clearPerson(state){   
         state.customer = null;
         state.salesman = null;
+        state = service.recalculateSale(state);
     },
 
 
     //sale mutation submodule
     addObs(state, obs){
         state.obs = obs
+        state = service.recalculateSale(state);
     },
     cleanThisSale(state) {
         state.change_value = 0;
@@ -334,7 +349,7 @@ const service ={
         return itemTotal;
     },
     recalculateSale(state){
-        console.log(state,'')
+        console.log("TESTE RECALCULATE SALE", state)
     },
     setForceLabel(state){
         state.forceLabel = true

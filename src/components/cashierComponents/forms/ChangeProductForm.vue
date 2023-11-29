@@ -23,7 +23,7 @@
       </div>
       <div v-if="'' != product.price" class="mb-3">
         <i class="bi bi-currency-dollar text-light pe-2"></i>
-        <label for="number" class="form-label">Valor:</label>
+        <label for="number" class="form-label">Preço:</label>
         <input  v-model="product.price" class="form-control" v-currency />
       </div>
       <div v-if="'' != product.price" class="mb-3">
@@ -36,7 +36,8 @@
         <div class="mb-3">
           <i class="bi bi-currency-dollar text-light pe-2"></i>
           <label for="number" class="form-label">Preço: </label>
-          <input  v-model="changeCupom.price" class="form-control" v-currency  />
+          <input  v-model="changeCupom.value" class="form-control" v-currency />
+          <div>{{ 'R$ ' + changeCupom.value }}</div>
         </div>
         <div class="mb-3">
           <i class="bi bi-boxes text-light pe-2"></i>
@@ -54,7 +55,6 @@
 <script>
 import { mapActions } from 'vuex';
 // import { saveCupom } from '@/services/api/cupom'
-import { format, addMonths } from 'date-fns';
 import { getProduct } from '@/services/api/products';
 
 
@@ -71,7 +71,7 @@ export default {
         value: 0,
         active: 1,
         default: 1,
-        description: "aplica R${producValue} para troca de produto",
+        description: "aplica desconto troca de produto",
         allproducts: 1,
         percent: 0,
         acumulate: 0,
@@ -105,8 +105,7 @@ export default {
     this.$eventBus.off('changeProductForm', this.setForm);
   },
   beforeMount() {
-    this.setStartDate();
-    this.setEndDate();
+    this.resetForm();
   },
   
   methods: {
@@ -115,17 +114,36 @@ export default {
       this.form = value;
     },
     formAction() {
-      if(this.changeCupom.value === undefined){
+      if(this.changeCupom.value === undefined || this.changeCupom.value === null || this.changeCupom.value === 0 || this.changeCupom.value === ''){
         console.log("sem preço");
         return;
       }
+      console.log('changeCupomValue - pre',this.changeCupom.value );
+      if (isNaN(this.changeCupom.value)) {
+        this.changeCupom.value = this.changeCupom.value.replace(/[^\d.]/g, '');
+        console.log('changeCupomValue',this.changeCupom.value );
+        if (!this.changeCupom.value) {
+          console.log("valor inválido");
+          return;
+        } 
+        this.changeCupom.value = parseFloat(this.changeCupom.value);
+        if (isNaN(this.changeCupom.value)) {
+          console.log("valor inválido");
+          return;
+        }
+      }
       this.changeCupom.quantity = this.quantity;
-      this.changeCupom.value = this.changeCupom.value * this.quantity;
-      // saveCupom(this.changeCupom);
-
-      this.addCupom(this.changeCupom);
-      this.resetForm();
-      this.closeForm();
+      this.changeCupom.value = (this.changeCupom.value*10) * this.quantity;
+      console.log('changeCupomValue - final',this.changeCupom.value );
+      //TODO send cupon to backend for cupom another day use
+      try{
+        this.addCupom(this.changeCupom);
+        this.resetForm();
+        this.closeForm();
+      }catch(err){
+        this.$global.alert = {show:true,type:'error', message:err.message};
+        this.$eventBus.emit('alert-show', this.$global.alert); 
+      }
     },
     closeForm() {
       this.$eventBus.emit('changeProductForm', false);
@@ -175,25 +193,21 @@ export default {
         value: 0,
         active: 1,
         default: 1,
-        description: "aplica R${producValue} para troca de produto",
+        description: "aplica desconto troca de produto",
         allproducts: 1,
-        percent: 1,
+        percent: 0,
         acumulate: 0,
         quantity: null,
         with_validity: 0,
         start_date: null,
         end_date: null,
         customer_id: null
-      }
+      };
+      this.form = false
+      this.noProductCode = false
     },
-    setStartDate() {
-      let now = new Date();
-      this.changeCupom.start_date = format(now, 'yyyy-MM-dd HH:mm:ss');
-    },
-    setEndDate() {
-      let now = new Date();
-      let endDate = addMonths(now, 1);
-      this.changeCupom.end_date = format(endDate, 'yyyy-MM-dd HH:mm:ss');
+    formatPrice(price) {
+      return parseFloat(price);
     },
   },
 };
