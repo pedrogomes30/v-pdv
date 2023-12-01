@@ -11,12 +11,13 @@
                 <div class="col-7">
                     {{ product.description }} <br>
                     {{ product.sku }}
-                </div>
-
-                <div v-if='product.disconts.length > 0 ' class="col-2 disconts">
-                    <div v-for="discont in product.disconts" :key="discont.code">
-                        <h6>{{discont.code}}</h6>
-                        <h6>{{discont.value}}</h6>
+                    <div v-if='product.disconts.length > 0 ' class="col-2 disconts ">
+                        <div v-for="discont in product.disconts" :key="discont.code">
+                            <div :title= "discont.description" class="badge bg-dark">
+                                <span>{{discont.code}}</span>
+                                <span> R$ {{discont.value}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -39,7 +40,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import price from "../../../services/price"
+import price from "@/services/price" 
 
 export default {
     name:'CartList',
