@@ -116,7 +116,7 @@ export default {
           data[0].cashier_name = this.tempUser.cashier;
           await system.clear();
           await system.save(data);
-          router.push("/");
+          router.push("/cashier");
           this.$global.showNavbar = true;
           this.$eventBus.emit('navbar-updated', this.$global.showNavbar);
         } catch (e) {

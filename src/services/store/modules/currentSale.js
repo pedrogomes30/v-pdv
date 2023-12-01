@@ -1,17 +1,13 @@
+
 const state = {
-    change_value: 0,
     qtd_items: 0,
     qtd_payments: 0,
-    forceCustomer: false,
+    forceLabel: null,
     payment_method: '',
     valid_sale: false,
     number: '',
     id: '',
     sale_date: '',
-    store: '',
-    cashier: '',
-    employee_cashier: '',
-    employee_sale: false,
     obs: '',
     products_value: 0,
     payments_value: 0,
@@ -48,6 +44,7 @@ const mutations = {
     addItem(state, product) {
         product.total = service.calculateProductValues(product);
         state.items.push(product);
+        service.recalculateSale(state);
     },
     incrementQuantity(state, product) {
         const existingProduct = state.items.find(item => item.sku === product.sku);
@@ -55,6 +52,8 @@ const mutations = {
             existingProduct.quantity++;
             existingProduct.total = service.calculateProductValues(existingProduct);
         }
+        
+        service.recalculateSale(state);
     },
     decrementQuantity(state, product) {
         const existingProduct = state.items.find(item => item.sku === product.sku);
@@ -68,30 +67,34 @@ const mutations = {
                 }
             }
         }
+        service.recalculateSale(state);
     },
     removeItem(state, product) {
         const index = state.items.findIndex(item => item.sku === product.sku);
         if (index !== -1) {
             state.items.splice(index, 1);
         }
+        service.recalculateSale(state);
     },
     clearItems(state) {
         state.items = [];
     },
-    addDiscountToProduct(state, { product, discount }) {
+    adddiscontToProduct(state, { product, discont }) {
         const existingProduct = state.items.find(item => item.sku === product.sku);
         if (existingProduct) {
-            if (!existingProduct.discounts) {
-                existingProduct.discounts = [];
+            if (!existingProduct.disconts) {
+                existingProduct.disconts = [];
             }
-            existingProduct.discounts.push(discount);
+            existingProduct.disconts.push(discont);
         }
+        service.recalculateSale(state);
     },
-    removeDiscountFromProduct(state, { product, discountCode }) {
+    removediscontFromProduct(state, { product, discontCode }) {
         const existingProduct = state.items.find(item => item.sku === product.sku);
-        if (existingProduct && existingProduct.discounts) {
-            existingProduct.discounts = existingProduct.discounts.filter(discount => discount.code !== discountCode);
+        if (existingProduct && existingProduct.disconts) {
+            existingProduct.disconts = existingProduct.disconts.filter(discont => discont.code !== discontCode);
         }
+        service.recalculateSale(state);
     },
 
 
@@ -109,12 +112,8 @@ const mutations = {
         }else{
             state.cupoms.push(discont)
         }
-        switch(discont.label){
-            case 'client': state.forceCustomer = true; break;
-            case 'funcionario': state.forceEmployee = true; break;
-            case 'funcionarioParc': state.forceEmployeeParc = true; break;
-            default: break;
-        }
+        state.forceLabel = discont.label;
+        service.recalculateSale(state);
     },
     removecupoms (state, discont){
         state.status = 'em cupoms'
@@ -124,9 +123,11 @@ const mutations = {
         }else{
             alert('impossivel remover discont')
         }
+        service.recalculateSale(state);
     },
-    clearDiscounts(state) {
+    cleardisconts(state) {
         state.cupoms = [];
+        service.recalculateSale(state);
     },
 
 
@@ -140,7 +141,7 @@ const mutations = {
             payment.method_value = parseFloat(payment.method_value.replace(/\D/g, ''))/100;
             state.payments.push(payment);
         }
-        console.log('addpayment',state.payments)
+        service.recalculateSale(state);
     },
     removePayment(state, payment){
         state.status = 'em pagamento'
@@ -150,9 +151,11 @@ const mutations = {
         }else{
             alert('impossivel remover este apgamento')
         }
+        service.recalculateSale(state);
     },
     clearMethods(state) {
         state.payments = [];
+        service.recalculateSale(state);
     },
 
 
@@ -160,26 +163,30 @@ const mutations = {
     addCustomer(state, customer){
         console.log(customer);
         state.customer = customer
+        service.recalculateSale(state);
     },
     removeCustomer(state){
         state.customer = null;
+        service.recalculateSale(state);
     },
     //customer and salesman
     clearPerson(state){   
         state.customer = null;
         state.salesman = null;
+        service.recalculateSale(state);
     },
 
 
     //sale mutation submodule
     addObs(state, obs){
         state.obs = obs
+        service.recalculateSale(state);
     },
     cleanThisSale(state) {
         state.change_value = 0;
         state.qtd_items = 0;
         state.qtd_payments = 0;
-        state.forceCustomer = false;
+        state.forceLabel = null;
         state.payment_method = '';
         state.valid_sale = false;
         state.number = '';
@@ -208,6 +215,7 @@ const mutations = {
 const actions = {
     //cart action submodule
     addToCart({ state, commit }, product) {
+        product.total = product.price * product.quantity;
         return new Promise(resolve => {
             const existingProduct = state.items.find(item => item.sku === product.sku);
     
@@ -221,12 +229,14 @@ const actions = {
         });
     },
     incrementProductCart({ commit }, product){
+        product.total = product.price * product.quantity;
         return new Promise(resolve => {
             commit('incrementQuantity', product);
             resolve();
         });
     },
     decrementProductCart({ commit }, product){
+        product.total = product.price * product.quantity;
         return new Promise(resolve => {
             commit('decrementQuantity', product);
             resolve();
@@ -244,12 +254,12 @@ const actions = {
             resolve();
         }); 
     },
-    addDiscount({ commit }, { product, code, value }) {
-        const discount = { code, value };
-        commit('addDiscountToProduct', { product, discount });
+    adddiscont({ commit }, { product, code, value }) {
+        const discont = { code, value };
+        commit('adddiscontToProduct', { product, discont });
       },
-    removeDiscount({ commit }, { product, discountCode }) {
-        commit('removeDiscountFromProduct', { product, discountCode });
+    removediscont({ commit }, { product, discontCode }) {
+        commit('removediscontFromProduct', { product, discontCode });
     },
 
 
@@ -261,7 +271,7 @@ const actions = {
         commit('removecupoms', discont);
     },
     clearCupoms({ commit }) {
-        commit('clearDiscounts');
+        commit('cleardisconts');
     },
       
 
@@ -325,26 +335,87 @@ const actions = {
 
 //calculateds functions
 const service ={
+    calculateItemsValue(items) {
+        return items.reduce((total, item) => {
+            return total + item.quantity * item.price;
+        }, 0).toFixed(2);
+    },
     calculateProductValues(product) {
         const itemTotal = product.price * product.quantity;
-        if (product.discounts) {
-            const totalDiscount = product.discounts.reduce((total, discount) => total + discount.value, 0);
-            return itemTotal - totalDiscount;
+        if (product.disconts) {
+            const totaldiscont = product.disconts.reduce((total, discont) => total + discont.value, 0);
+            return itemTotal - totaldiscont;
         }
         return itemTotal;
     },
     recalculateSale(state){
-        console.log(state,'')
+        //calculate disconts_array and set each product discont
+        const discontCalculated  = service.calculatedisconts(state); //this will return a array [items, disconts, discont_value]
+        state.discont_value = discontCalculated[0];
+        state.items = discontCalculated[1];
+        state.products_value = service.calculateItemsValue(state.items)
+        state.total_value = state.items.reduce((total, item) => total + parseFloat(item.total), 0).toFixed(2);
+        state.payments_value = state.payments.reduce((total, payment) => total + parseFloat(payment.method_value), 0).toFixed(2);
+        state.change_value = (state.payments_value - state.products_value).toFixed(2);
+        state.valid_sale = state.change_value >= 0; 
+        // state.total_value = 99999;
+        
+        console.log("TESTE RECALCULATE SALE", state)
     },
-    setForceLabel(state){
-        state.forceLabel = true
-        service.total(state)
-    },
-    removeForceLabel(state){
-        state.forceLabel = false
-        service.total(state)
+    calculatedisconts(state) {
+        let discontValue = 0;
+        let disconts = state.cupoms;
+        let itemsTotal = state.products_value;
+        let items = JSON.parse(JSON.stringify(state.items));
+        let discontValueNonPercent = 0;
+        disconts.forEach(discont => {
+            if(discont.percent){
+                discontValue += itemsTotal * (discont.value/100);
+            }else{
+                discontValueNonPercent += discont.value;
+                discontValue += discont.value;
+            }
+        });    
+            
+        //calculate discont per item, per porcentage and fixed value
+        items.forEach(item => {
+            item.disconts = [];
+            let total = item.quantity * item.price;
+            let totalDiscont = total;
+            disconts.forEach(discont => {
+                if (discont.percent) {
+                    let discontForItem = total * (discont.value / 100);
+                    totalDiscont -= discontForItem;
+                    item.disconts.push({ ...discont, value: discontForItem.toFixed(2) });
+                } else {
+                    if (discontValueNonPercent === 0) {
+                        throw new Error('Desconto do tipo valor está zerado.');
+                    }
+                    let itemPercentOfSale = total / itemsTotal;
+                    let discontForItem = itemPercentOfSale * discontValueNonPercent;
+                    totalDiscont -= discontForItem / item.quantity;
+                    item.disconts.push({ ...discont, value: discontForItem });
+                }
+            });
+            item.total = totalDiscont.toFixed(2);
+        });
+        if(discontValue > itemsTotal){
+            throw new Error('Desconto maior que o valor da venda');
+        }
+        return [discontValue,items];
     },
     
+    calculatePayments(state){
+        return state
+    },
+    processCustomerLabel(state){
+        if(state.customer && state.customer.label){
+            state.customer_label = state.customer.name
+            state.forceCustomer
+        }else{
+            state.customer_label = 'Cliente não informado'
+        }
+    }
     
 
 }
