@@ -2,7 +2,7 @@
     <div class="background d-flex justify-center align-center" >
         <LoadComponent :overlay="loading" />
         <v-card  
-            width="30%"
+            width="60%"
             elevation='24'
             class="pa-4 text-center ">
                 <v-avatar size="90">
