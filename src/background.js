@@ -9,7 +9,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
-
+// test
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
